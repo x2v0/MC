@@ -12,16 +12,17 @@
 class mcSourceAcceleratedBeam : public mcSource
 {
 public:
-	mcSourceAcceleratedBeam(const char* name, int nThreads, double z);
+   mcSourceAcceleratedBeam(const char* name, int nThreads, double z);
 
-	void sample(mcParticle& p, mcThread* thread) override;
-	void loadData(istream& is);
-	void dumpVRML(ostream& os) const override;
+   void sample(mcParticle& p, mcThread* thread) override;
 
-protected:
-	// Смещение источника (содержащего частицы в собственной системе координат) по оси Z
-	double z_;
-	int nparticles_;
-	std::vector<int> idx_;
-	std::vector<mcParticle> particles_;
+   void loadData(istream& is);
+
+   void dumpVRML(ostream& os) const override;
+
+protected: // Смещение источника (содержащего частицы в собственной системе координат) по оси Z
+   double z_;
+   int nparticles_;
+   std::vector<int> idx_;
+   std::vector<mcParticle> particles_;
 };

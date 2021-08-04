@@ -13,17 +13,18 @@
 class mcTransportAxialSymmetricSplitter : public mcTransport
 {
 public:
-	mcTransportAxialSymmetricSplitter(const geomVector3D& orgn, const geomVector3D& z, const geomVector3D& x, mc_particle_t ptype, int nsplit);
-	~mcTransportAxialSymmetricSplitter(void);
+   mcTransportAxialSymmetricSplitter(const geomVector3D& orgn, const geomVector3D& z, const geomVector3D& x,
+                                     mc_particle_t ptype, int nsplit);
 
-	// Начало транспорта переписано, так как не нужно запускать симуляцию частиц.
-	// Их просто нужно зарегистрировать и пропустить дальше.
-	void beginTransport(mcParticle& p) override;
+   ~mcTransportAxialSymmetricSplitter(void);
 
-	void dumpVRML(ostream& os)const override;
+   // Начало транспорта переписано, так как не нужно запускать симуляцию частиц.
+   // Их просто нужно зарегистрировать и пропустить дальше.
+   void beginTransport(mcParticle& p) override;
+
+   void dumpVRML(ostream& os) const override;
 
 protected:
-	enum mc_particle_t ptype_;
-	int nsplit_;
+   enum mc_particle_t ptype_;
+   int nsplit_;
 };
-

@@ -16,30 +16,35 @@
 class mcScoreSpectraFluence : public mcScore
 {
 public:
-	mcScoreSpectraFluence(const char* module_name, int nThreads, mc_particle_t pt, double ecut, int nr, int ne, double rmax, double emax);
-	virtual ~mcScoreSpectraFluence();
+   mcScoreSpectraFluence(const char* module_name, int nThreads, mc_particle_t pt, double ecut, int nr, int ne,
+                         double rmax, double emax);
 
-	void ScoreFluence(const mcParticle& particle) override;
+   virtual ~mcScoreSpectraFluence();
 
-	void dumpVRML(ostream&) const override;
-	void dumpStatistic(ostream&) const override;
+   void ScoreFluence(const mcParticle& particle) override;
 
-	friend ostream& operator << (ostream&, const mcScoreSpectraFluence&);
+   void dumpVRML(ostream&) const override;
+
+   void dumpStatistic(ostream&) const override;
+
+   friend ostream& operator <<(ostream&, const mcScoreSpectraFluence&);
 
 protected:
-	double eFluenceBin(int ir) const;
-	double nSpectrumBin(int ir, int ie) const;
-	double eSpectrumBin(int ir, int ie) const;
+   double eFluenceBin(int ir) const;
 
-	mc_particle_t pt_;
-	int nr_;
-	double rstep_;
-	double rmax_;
-	int ne_;
-	double estep_;
-	double emax_;
-	double ecut_;	// энергия, ниже которой частицы исключаются из статистики
-	std::vector<std::vector<double>> energy_fluence_;
-	std::vector<std::vector<std::vector<double>>> number_spectra_;
-	std::vector<std::vector<std::vector<double>>> energy_spectra_;
+   double nSpectrumBin(int ir, int ie) const;
+
+   double eSpectrumBin(int ir, int ie) const;
+
+   mc_particle_t pt_;
+   int nr_;
+   double rstep_;
+   double rmax_;
+   int ne_;
+   double estep_;
+   double emax_;
+   double ecut_; // энергия, ниже которой частицы исключаются из статистики
+   std::vector<std::vector<double>> energy_fluence_;
+   std::vector<std::vector<std::vector<double>>> number_spectra_;
+   std::vector<std::vector<std::vector<double>>> energy_spectra_;
 };

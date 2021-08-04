@@ -9,26 +9,26 @@
 class mcSourceSphereC60 : public mcSource
 {
 public:
-	mcSourceSphereC60(const char* name, int nThreads,
-		const geomVector3D& p, const geomVector3D& v, double r);
-	virtual ~mcSourceSphereC60(void);
+   mcSourceSphereC60(const char* name, int nThreads, const geomVector3D& p, const geomVector3D& v, double r);
 
-	void sample(mcParticle& p, mcThread* thread) override;
+   virtual ~mcSourceSphereC60(void);
 
-	void dumpVRML(ostream& os) const override;
+   void sample(mcParticle& p, mcThread* thread) override;
 
-	friend ostream& operator << (ostream& os, const mcSourceSphereC60& s)
-	{
-		os << (const mcSource&)s;
-		os << "TYPE = \tC60" << endl;
-		os << "NAME = \t" << s.getName() << endl;
-		os << "DIAMETER = \t" << 2 * s.r_ << endl;
-		os << "POSITION = \t" << s.p_ << endl;
-		return os;
-	}
+   void dumpVRML(ostream& os) const override;
+
+   friend ostream& operator <<(ostream& os, const mcSourceSphereC60& s)
+   {
+      os << static_cast<const mcSource&>(s);
+      os << "TYPE = \tC60" << endl;
+      os << "NAME = \t" << s.getName() << endl;
+      os << "DIAMETER = \t" << 2 * s.r_ << endl;
+      os << "POSITION = \t" << s.p_ << endl;
+      return os;
+   }
 
 protected:
-	geomVector3D p_;
-	geomVector3D v_;
-	double r_;
+   geomVector3D p_;
+   geomVector3D v_;
+   double r_;
 };

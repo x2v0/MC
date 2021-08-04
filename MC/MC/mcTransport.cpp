@@ -1,4 +1,4 @@
-#include ".\mctransport.h"
+п»ї#include "./mctransport.h"
 #include "../geometry/vec3d.h"
 #include "mcMedia.h"
 #include "mcRng.h"
@@ -8,997 +8,834 @@
 #include "mcThread.h"
 #include <float.h>
 
-mcTransport::mcTransport()
-	:mcObj()
-	, transCutoff_phot(0)
-	, transCutoff_elec(0)
-	, score_(nullptr)
-	, previousTransport_(nullptr)
-	, nextTransport_(nullptr)
-	, internalTransport_(nullptr)
-	, externalTransport_(nullptr)
-	, media_(nullptr)
-	, defmedidx_(0)
-	, defdensity_(1.0)
-	, stamp_(0)
-	, isMultiRegions_(false)
-{
-}
+mcTransport::mcTransport() : mcObj(), transCutoff_phot(0), transCutoff_elec(0), score_(nullptr),
+                             previousTransport_(nullptr), nextTransport_(nullptr), internalTransport_(nullptr),
+                             externalTransport_(nullptr), media_(nullptr), defmedidx_(0), defdensity_(1.0), stamp_(0),
+                             isMultiRegions_(false) {}
 
-mcTransport::mcTransport(const geomVector3D& orgn, const geomVector3D& z, const geomVector3D& x)
-	:mcObj()
-	, transCutoff_phot(0)
-	, transCutoff_elec(0)
-	, score_(nullptr)
-	, previousTransport_(nullptr)
-	, nextTransport_(nullptr)
-	, internalTransport_(nullptr)
-	, externalTransport_(nullptr)
-	, media_(nullptr)
-	, defmedidx_(0)
-	, defdensity_(1.0)
-	, isMultiRegions_(false)
+mcTransport::mcTransport(const geomVector3D& orgn, const geomVector3D& z, const geomVector3D& x) :
+   mcObj(), transCutoff_phot(0), transCutoff_elec(0), score_(nullptr), previousTransport_(nullptr),
+   nextTransport_(nullptr), internalTransport_(nullptr), externalTransport_(nullptr), media_(nullptr), defmedidx_(0),
+   defdensity_(1.0), isMultiRegions_(false)
 {
-	setPosition(orgn, z, x);
+   setPosition(orgn, z, x);
 }
 
 mcTransport::~mcTransport(void)
 {
-	if (score_ != nullptr) delete score_;
-	for (unsigned i = 0; i < regions_.size(); i++)
-		delete regions_[i];
+   if (score_ != nullptr)
+      delete score_;
+   for (unsigned i = 0; i < regions_.size(); i++)
+      delete regions_[i];
 }
-
 #pragma region Initialization
-
 void mcTransport::setPosition(const geomVector3D& orgn, const geomVector3D& z, const geomVector3D& x)
 {
-	geomVector3D ax(x);
-	geomVector3D az(z);
-	ax.normalize();
-	az.normalize();
-	geomVector3D ay = az ^ ax;
-
-	mwtot_ = geomMatrix3D::ParallelShift(-orgn.x(), -orgn.y(), -orgn.z()) *
-		geomMatrix3D::BuildFromAxis(ax, ay, az);
-	mttow_ = mwtot_;
-	mttow_.makeInverse();
+   geomVector3D ax(x);
+   geomVector3D az(z);
+   ax.normalize();
+   az.normalize();
+   geomVector3D ay = az ^ ax;
+   mwtot_ = geomMatrix3D::ParallelShift(-orgn.x(), -orgn.y(), -orgn.z()) * geomMatrix3D::BuildFromAxis(ax, ay, az);
+   mttow_ = mwtot_;
+   mttow_.makeInverse();
 }
 
 void mcTransport::setMediaRef(const mcMedia* media)
 {
-	media_ = media;
+   media_ = media;
 }
 
 void mcTransport::setMediumMono(const char* mname)
 {
-	if (media_ == nullptr)
-		throw std::exception("Media should be set before assigning transport medium");
-	defmedidx_ = media_->getMediumIdx(mname);
+   if (media_ == nullptr)
+      throw std::exception("Media should be set before assigning transport medium");
+   defmedidx_ = media_->getMediumIdx(mname);
 }
 
 void mcTransport::addRegion(mcTransport* region)
 {
-	// Преобразовать в мировую систему
-	geomVector3D orgn = (geomVector3D(0, 0, 0) * region->MT2W()) * this->MT2W();
-	geomVector3D z = (geomVector3D(0, 0, 1).transformDirection(region->MT2W())).transformDirection(this->MT2W());
-	geomVector3D x = (geomVector3D(1, 0, 0).transformDirection(region->MT2W())).transformDirection(this->MT2W());
-	region->setPosition(orgn, z, x);
-	regions_.push_back(region);
-	isMultiRegions_ = true;
+   // РџСЂРµРѕР±СЂР°Р·РѕРІР°С‚СЊ РІ РјРёСЂРѕРІСѓСЋ СЃРёСЃС‚РµРјСѓ
+   geomVector3D orgn = (geomVector3D(0, 0, 0) * region->MT2W()) * this->MT2W();
+   geomVector3D z = (geomVector3D(0, 0, 1).transformDirection(region->MT2W())).transformDirection(this->MT2W());
+   geomVector3D x = (geomVector3D(1, 0, 0).transformDirection(region->MT2W())).transformDirection(this->MT2W());
+   region->setPosition(orgn, z, x);
+   regions_.push_back(region);
+   isMultiRegions_ = true;
 }
-
 #pragma endregion
-
 #pragma region Transport
-
 void mcTransport::beginTransport(mcParticle& p)
 {
-	if (this->media_ == nullptr)
-		throw std::exception((string("Media not set in the module \"") + this->getName() + "\"").c_str());
-
-	// Указатель на транспортный объект, в котором частица находится в данный момент
-	p.transport_ = this;
-
-	// Объекты транспорта могут ставить печать в момент											
-	// BeginTransport обозначая, что частица в них находилась.
-	p.regionFlags |= stamp_;
-
-	mcParticle* particle = p.thread_->NextParticle();
-	*particle = p;
-	particle->p = p.p * mwtot_;
-	particle->plast = p.plast * mwtot_;
-	particle->u = particle->u.transformDirection(mwtot_);
-	particle->dnear = 0;
-	particle->mfps = HowManyMFPs(p.thread_->rng());
-
-	particle->region.idx_ = 0;
-	particle->region.medidx_ = 0;
-	particle->regDensityRatio = DBL_EPSILON;
-
-	if (score_)
-		score_->ScoreFluence(*particle);
-
-	// Транспорт в локальной системе координат
-	simulate(p.thread_);
-}
-
-// GG 20140910 Если частица внутри, то не нужно переносить ее на поверхность.
-// Проблема проявилась при использовании с источником C-60,
-// когда частицы начинали транспортироваться внутри и код пытался перенести частицу на поверхность.
+   if (this->media_ == nullptr)
+      throw std::exception((string("Media not set in the module \"") + this->getName() + "\"").c_str());
+   // РЈРєР°Р·Р°С‚РµР»СЊ РЅР° С‚СЂР°РЅСЃРїРѕСЂС‚РЅС‹Р№ РѕР±СЉРµРєС‚, РІ РєРѕС‚РѕСЂРѕРј С‡Р°СЃС‚РёС†Р° РЅР°С…РѕРґРёС‚СЃСЏ РІ РґР°РЅРЅС‹Р№ РјРѕРјРµРЅС‚
+   p.transport_ = this; // РћР±СЉРµРєС‚С‹ С‚СЂР°РЅСЃРїРѕСЂС‚Р° РјРѕРіСѓС‚ СЃС‚Р°РІРёС‚СЊ РїРµС‡Р°С‚СЊ РІ РјРѕРјРµРЅС‚											
+   // BeginTransport РѕР±РѕР·РЅР°С‡Р°СЏ, С‡С‚Рѕ С‡Р°СЃС‚РёС†Р° РІ РЅРёС… РЅР°С…РѕРґРёР»Р°СЃСЊ.
+   p.regionFlags |= stamp_;
+   mcParticle* particle = p.thread_->NextParticle();
+   *particle = p;
+   particle->p = p.p * mwtot_;
+   particle->plast = p.plast * mwtot_;
+   particle->u = particle->u.transformDirection(mwtot_);
+   particle->dnear = 0;
+   particle->mfps = HowManyMFPs(p.thread_->rng());
+   particle->region.idx_ = 0;
+   particle->region.medidx_ = 0;
+   particle->regDensityRatio = DBL_EPSILON;
+   if (score_)
+      score_->ScoreFluence(*particle); // РўСЂР°РЅСЃРїРѕСЂС‚ РІ Р»РѕРєР°Р»СЊРЅРѕР№ СЃРёСЃС‚РµРјРµ РєРѕРѕСЂРґРёРЅР°С‚
+   simulate(p.thread_);
+} // GG 20140910 Р•СЃР»Рё С‡Р°СЃС‚РёС†Р° РІРЅСѓС‚СЂРё, С‚Рѕ РЅРµ РЅСѓР¶РЅРѕ РїРµСЂРµРЅРѕСЃРёС‚СЊ РµРµ РЅР° РїРѕРІРµСЂС…РЅРѕСЃС‚СЊ.
+// РџСЂРѕР±Р»РµРјР° РїСЂРѕСЏРІРёР»Р°СЃСЊ РїСЂРё РёСЃРїРѕР»СЊР·РѕРІР°РЅРёРё СЃ РёСЃС‚РѕС‡РЅРёРєРѕРј C-60,
+// РєРѕРіРґР° С‡Р°СЃС‚РёС†С‹ РЅР°С‡РёРЅР°Р»Рё С‚СЂР°РЅСЃРїРѕСЂС‚РёСЂРѕРІР°С‚СЊСЃСЏ РІРЅСѓС‚СЂРё Рё РєРѕРґ РїС‹С‚Р°Р»СЃСЏ РїРµСЂРµРЅРµСЃС‚Рё С‡Р°СЃС‚РёС†Сѓ РЅР° РїРѕРІРµСЂС…РЅРѕСЃС‚СЊ.
 void mcTransport::beginTransportInside(mcParticle& p)
 {
-	if (this->media_ == nullptr)
-		throw std::exception((string("Media not set in the module \"") + this->getName() + "\"").c_str());
-
-	p.transport_ = this;
-	p.regionFlags |= stamp_;
-
-	mcParticle* particle = p.thread_->NextParticle();
-	*particle = p;
-	particle->p = p.p * mwtot_;
-	particle->plast = p.plast * mwtot_;
-	particle->u = particle->u.transformDirection(mwtot_);
-	particle->dnear = 0;
-	particle->mfps = HowManyMFPs(p.thread_->rng());
-
-	particle->region.idx_ = 1;
-	particle->region.medidx_ = defmedidx_;
-	particle->regDensityRatio = defdensity_;
-
-	if (score_)
-		score_->ScoreFluence(*particle);
-
-	// Транспорт в локальной системе координат
-	simulate(p.thread_);
+   if (this->media_ == nullptr)
+      throw std::exception((string("Media not set in the module \"") + this->getName() + "\"").c_str());
+   p.transport_ = this;
+   p.regionFlags |= stamp_;
+   mcParticle* particle = p.thread_->NextParticle();
+   *particle = p;
+   particle->p = p.p * mwtot_;
+   particle->plast = p.plast * mwtot_;
+   particle->u = particle->u.transformDirection(mwtot_);
+   particle->dnear = 0;
+   particle->mfps = HowManyMFPs(p.thread_->rng());
+   particle->region.idx_ = 1;
+   particle->region.medidx_ = defmedidx_;
+   particle->regDensityRatio = defdensity_;
+   if (score_)
+      score_->ScoreFluence(*particle); // РўСЂР°РЅСЃРїРѕСЂС‚ РІ Р»РѕРєР°Р»СЊРЅРѕР№ СЃРёСЃС‚РµРјРµ РєРѕРѕСЂРґРёРЅР°С‚
+   simulate(p.thread_);
 }
 
 void mcTransport::endTransport(mcParticle* particle)
 {
-	// Если модуль встроет в цепочку вложенных объъектов, 
-	// что определеяется наличием внутреннего или внешнего объекта или обоих,
-	// то должна быть указано какая поверхность пересекается.
-	// В противном случае речь о неприятной ошибки конфигурации или неправильном использования типов модулей.
-	if (particle->exitSurface_ == mcParticle::temb_shit_t::Undefined &&
-		(externalTransport_ != nullptr || internalTransport_ != nullptr))
-		throw std::exception("All Get Distance functions of embedded transports should take care about indication wihich surface will be hitted");
-
-	else if (particle->exitSurface_ == mcParticle::temb_shit_t::Internal && internalTransport_ == nullptr)
-		throw std::exception("It should not be possible to hit internal surface if internal object does not exist or not indicated");
-
-	mcParticle pp = **particle->thread_->CurrentParticle();
-	particle->thread_->RemoveParticle();
-	if (pp.ke == 0) return;
-
-	pp.p = pp.p * mttow_;
-	pp.plast = pp.plast * mttow_;
-	pp.u = pp.u.transformDirection(mttow_);
-
-	// Если пересекаем внешнюю поверхность и нет охватывающего объекта, 
-	// то мы просто передаем управления стандартной однонитиевой цепочке объектов.
-	if ((particle->exitSurface_ == mcParticle::temb_shit_t::External && externalTransport_ == nullptr) ||
-		(externalTransport_ == nullptr && internalTransport_ == nullptr))
-	{
-		if (pp.u.z() < 0 && previousTransport_ != nullptr)
-			previousTransport_->beginTransport(pp);
-		else if (pp.u.z() >= 0 && nextTransport_ != nullptr)
-			nextTransport_->beginTransport(pp);
-		else if (pp.trackScore_)
-			pp.trackScore_->score(particle->thread_->id(), pp.t, pp.p, pp.p + (pp.u * 100), pp.ke);
-	}
-	else
-	{
-		if (particle->exitSurface_ == mcParticle::temb_shit_t::Internal && internalTransport_ != nullptr)
-			internalTransport_->beginTransportInside(pp);
-		else if (particle->exitSurface_ == mcParticle::temb_shit_t::External && externalTransport_ != nullptr)
-			externalTransport_->beginTransportInside(pp);
-		else if (pp.trackScore_)
-			pp.trackScore_->score(particle->thread_->id(), pp.t, pp.p, pp.p + (pp.u * 100), pp.ke);
-	}
+   // Р•СЃР»Рё РјРѕРґСѓР»СЊ РІСЃС‚СЂРѕРµС‚ РІ С†РµРїРѕС‡РєСѓ РІР»РѕР¶РµРЅРЅС‹С… РѕР±СЉСЉРµРєС‚РѕРІ, 
+   // С‡С‚Рѕ РѕРїСЂРµРґРµР»РµСЏРµС‚СЃСЏ РЅР°Р»РёС‡РёРµРј РІРЅСѓС‚СЂРµРЅРЅРµРіРѕ РёР»Рё РІРЅРµС€РЅРµРіРѕ РѕР±СЉРµРєС‚Р° РёР»Рё РѕР±РѕРёС…,
+   // С‚Рѕ РґРѕР»Р¶РЅР° Р±С‹С‚СЊ СѓРєР°Р·Р°РЅРѕ РєР°РєР°СЏ РїРѕРІРµСЂС…РЅРѕСЃС‚СЊ РїРµСЂРµСЃРµРєР°РµС‚СЃСЏ.
+   // Р’ РїСЂРѕС‚РёРІРЅРѕРј СЃР»СѓС‡Р°Рµ СЂРµС‡СЊ Рѕ РЅРµРїСЂРёСЏС‚РЅРѕР№ РѕС€РёР±РєРё РєРѕРЅС„РёРіСѓСЂР°С†РёРё РёР»Рё РЅРµРїСЂР°РІРёР»СЊРЅРѕРј РёСЃРїРѕР»СЊР·РѕРІР°РЅРёСЏ С‚РёРїРѕРІ РјРѕРґСѓР»РµР№.
+   if (particle->exitSurface_ == mcParticle::temb_shit_t::Undefined && (
+          externalTransport_ != nullptr || internalTransport_ != nullptr))
+      throw std::exception(
+         "All Get Distance functions of embedded transports should take care about indication wihich surface will be hitted");
+   if (particle->exitSurface_ == mcParticle::temb_shit_t::Internal && internalTransport_ == nullptr)
+      throw std::exception(
+         "It should not be possible to hit internal surface if internal object does not exist or not indicated");
+   mcParticle pp = **particle->thread_->CurrentParticle();
+   particle->thread_->RemoveParticle();
+   if (pp.ke == 0)
+      return;
+   pp.p = pp.p * mttow_;
+   pp.plast = pp.plast * mttow_;
+   pp.u = pp.u.transformDirection(mttow_); // Р•СЃР»Рё РїРµСЂРµСЃРµРєР°РµРј РІРЅРµС€РЅСЋСЋ РїРѕРІРµСЂС…РЅРѕСЃС‚СЊ Рё РЅРµС‚ РѕС…РІР°С‚С‹РІР°СЋС‰РµРіРѕ РѕР±СЉРµРєС‚Р°, 
+   // С‚Рѕ РјС‹ РїСЂРѕСЃС‚Рѕ РїРµСЂРµРґР°РµРј СѓРїСЂР°РІР»РµРЅРёСЏ СЃС‚Р°РЅРґР°СЂС‚РЅРѕР№ РѕРґРЅРѕРЅРёС‚РёРµРІРѕР№ С†РµРїРѕС‡РєРµ РѕР±СЉРµРєС‚РѕРІ.
+   if ((particle->exitSurface_ == mcParticle::temb_shit_t::External && externalTransport_ == nullptr) || (
+          externalTransport_ == nullptr && internalTransport_ == nullptr)) {
+      if (pp.u.z() < 0 && previousTransport_ != nullptr)
+         previousTransport_->beginTransport(pp);
+      else if (pp.u.z() >= 0 && nextTransport_ != nullptr)
+         nextTransport_->beginTransport(pp);
+      else if (pp.trackScore_)
+         pp.trackScore_->score(particle->thread_->id(), pp.t, pp.p, pp.p + (pp.u * 100), pp.ke);
+   } else {
+      if (particle->exitSurface_ == mcParticle::temb_shit_t::Internal && internalTransport_ != nullptr)
+         internalTransport_->beginTransportInside(pp);
+      else if (particle->exitSurface_ == mcParticle::temb_shit_t::External && externalTransport_ != nullptr)
+         externalTransport_->beginTransportInside(pp);
+      else if (pp.trackScore_)
+         pp.trackScore_->score(particle->thread_->id(), pp.t, pp.p, pp.p + (pp.u * 100), pp.ke);
+   }
 }
-
 #pragma endregion
-
 #pragma region Standard simulation
-
 void mcTransport::simulate(mcThread* thread)
 {
-	mcParticle** pCurParticle = thread->CurrentParticle();
-	mcParticle* particleStack = thread->ParticleStack();
-
-	while ((*pCurParticle) >= particleStack)
-	{
-		mcTransport* t = (*pCurParticle)->transport_;// Указатель на транспортный объект,
-		// в котором частица находится в данный момент
-
-		// Сохраняем стартовую точку для скоринга трэка.
-		// Конечная точка хранится в текущей частице.
-		geomVector3D point((*pCurParticle)->p);
-		enum mc_particle_t pt = (*pCurParticle)->t;
-		mcRegionReference region = (*pCurParticle)->region;
-		double weight = (*pCurParticle)->weight;
-
-		if ((*pCurParticle)->mfps <= 0)
-			(*pCurParticle)->mfps = HowManyMFPs(thread->rng());
-
-		double step, edep;																					//step & edep???
-		mc_move_result_t mres = t->moveParticle(*pCurParticle, step, edep);									//f12 moveParticle
-		if (mres == MCMR_DISCARGE)
-		{
-			if (edep > 0 && t->score_ != nullptr)
-				t->score_->ScorePoint(edep * weight, thread->id(), region, pt, point);
-			continue;
-		}
-
-		if (edep > 0 && t->score_ != nullptr)
-			t->score_->ScoreLine(edep * weight, thread->id(), region, pt, point, (*pCurParticle)->p);
-
-		// Если частица после израсходования пути остается в транспорте, то разыгрываем взаимодействие.
-		// Если частица покидает транспорт, берем следующую частицу из стэка или прерываем симуляцию.
-
-		if (mres == MCMR_INTERUCT)
-		{
-			const mcPhysics* phys = t->media_->getPhysics((*pCurParticle)->t);
-			const mcMedium* med = t->media_->getMedium((*pCurParticle)->t, (*pCurParticle)->region.medidx_);
-
-			point = (*pCurParticle)->p;
-			pt = (*pCurParticle)->t;
-			region = (*pCurParticle)->region;
-			weight = (*pCurParticle)->weight;
-
-			// Частицы с энергией ниже критической должны быть уничтожены раньше любых расчетов транспорта.
-			if (phys->Discarge(*pCurParticle, *med, edep))
-			{
-				if (edep > 0 && t->score_ != nullptr)
-					t->score_->ScorePoint(edep * weight, thread->id(), region, pt, point);
-				continue;
-			}
-
-			edep = phys->DoInterruction((*pCurParticle), med);
-			if (edep > 0 && t->score_ != nullptr)
-				t->score_->ScorePoint(edep * weight, thread->id(), region, pt, point);
-			if ((*pCurParticle)->ke == 0)
-				thread->RemoveParticle();
-			else
-				(*pCurParticle)->mfps = 0;
-
-			continue;
-		}
-		else if (mres == MCMR_EXIT)
-		{
-			t->endTransport(*pCurParticle);
-			continue;
-		}
-		else if (mres == MCMR_CONTINUE)
-		{
-			// По некоторым причнам частица осталась в стэке нужно продолжить ее транспорт.
-			// Например, частица переместилась без изменения энергии на поверхность объекта.
-			continue;
-		}
-		else
-			throw std::exception("Unexpected partical move result in simulator");
-	}
+   mcParticle** pCurParticle = thread->CurrentParticle();
+   mcParticle* particleStack = thread->ParticleStack();
+   while ((*pCurParticle) >= particleStack) {
+      mcTransport* t = (*pCurParticle)->transport_; // РЈРєР°Р·Р°С‚РµР»СЊ РЅР° С‚СЂР°РЅСЃРїРѕСЂС‚РЅС‹Р№ РѕР±СЉРµРєС‚,
+      // РІ РєРѕС‚РѕСЂРѕРј С‡Р°СЃС‚РёС†Р° РЅР°С…РѕРґРёС‚СЃСЏ РІ РґР°РЅРЅС‹Р№ РјРѕРјРµРЅС‚
+      // РЎРѕС…СЂР°РЅСЏРµРј СЃС‚Р°СЂС‚РѕРІСѓСЋ С‚РѕС‡РєСѓ РґР»СЏ СЃРєРѕСЂРёРЅРіР° С‚СЂСЌРєР°.
+      // РљРѕРЅРµС‡РЅР°СЏ С‚РѕС‡РєР° С…СЂР°РЅРёС‚СЃСЏ РІ С‚РµРєСѓС‰РµР№ С‡Р°СЃС‚РёС†Рµ.
+      geomVector3D point((*pCurParticle)->p);
+      enum mc_particle_t pt = (*pCurParticle)->t;
+      mcRegionReference region = (*pCurParticle)->region;
+      double weight = (*pCurParticle)->weight;
+      if ((*pCurParticle)->mfps <= 0)
+         (*pCurParticle)->mfps = HowManyMFPs(thread->rng());
+      double step, edep;                                                  //step & edep???
+      mc_move_result_t mres = t->moveParticle(*pCurParticle, step, edep); //f12 moveParticle
+      if (mres == MCMR_DISCARGE) {
+         if (edep > 0 && t->score_ != nullptr)
+            t->score_->ScorePoint(edep * weight, thread->id(), region, pt, point);
+         continue;
+      }
+      if (edep > 0 && t->score_ != nullptr)
+         t->score_->ScoreLine(edep * weight, thread->id(), region, pt, point, (*pCurParticle)->p);
+      // Р•СЃР»Рё С‡Р°СЃС‚РёС†Р° РїРѕСЃР»Рµ РёР·СЂР°СЃС…РѕРґРѕРІР°РЅРёСЏ РїСѓС‚Рё РѕСЃС‚Р°РµС‚СЃСЏ РІ С‚СЂР°РЅСЃРїРѕСЂС‚Рµ, С‚Рѕ СЂР°Р·С‹РіСЂС‹РІР°РµРј РІР·Р°РёРјРѕРґРµР№СЃС‚РІРёРµ.
+      // Р•СЃР»Рё С‡Р°СЃС‚РёС†Р° РїРѕРєРёРґР°РµС‚ С‚СЂР°РЅСЃРїРѕСЂС‚, Р±РµСЂРµРј СЃР»РµРґСѓСЋС‰СѓСЋ С‡Р°СЃС‚РёС†Сѓ РёР· СЃС‚СЌРєР° РёР»Рё РїСЂРµСЂС‹РІР°РµРј СЃРёРјСѓР»СЏС†РёСЋ.
+      if (mres == MCMR_INTERUCT) {
+         const mcPhysics* phys = t->media_->getPhysics((*pCurParticle)->t);
+         const mcMedium* med = t->media_->getMedium((*pCurParticle)->t, (*pCurParticle)->region.medidx_);
+         point = (*pCurParticle)->p;
+         pt = (*pCurParticle)->t;
+         region = (*pCurParticle)->region;
+         weight = (*pCurParticle)->weight;
+         // Р§Р°СЃС‚РёС†С‹ СЃ СЌРЅРµСЂРіРёРµР№ РЅРёР¶Рµ РєСЂРёС‚РёС‡РµСЃРєРѕР№ РґРѕР»Р¶РЅС‹ Р±С‹С‚СЊ СѓРЅРёС‡С‚РѕР¶РµРЅС‹ СЂР°РЅСЊС€Рµ Р»СЋР±С‹С… СЂР°СЃС‡РµС‚РѕРІ С‚СЂР°РЅСЃРїРѕСЂС‚Р°.
+         if (phys->Discarge(*pCurParticle, *med, edep)) {
+            if (edep > 0 && t->score_ != nullptr)
+               t->score_->ScorePoint(edep * weight, thread->id(), region, pt, point);
+            continue;
+         }
+         edep = phys->DoInterruction((*pCurParticle), med);
+         if (edep > 0 && t->score_ != nullptr)
+            t->score_->ScorePoint(edep * weight, thread->id(), region, pt, point);
+         if ((*pCurParticle)->ke == 0)
+            thread->RemoveParticle();
+         else
+            (*pCurParticle)->mfps = 0;
+         continue;
+      }
+      if (mres == MCMR_EXIT) {
+         t->endTransport(*pCurParticle);
+         continue;
+      }
+      if (mres == MCMR_CONTINUE) {
+         // РџРѕ РЅРµРєРѕС‚РѕСЂС‹Рј РїСЂРёС‡РЅР°Рј С‡Р°СЃС‚РёС†Р° РѕСЃС‚Р°Р»Р°СЃСЊ РІ СЃС‚СЌРєРµ РЅСѓР¶РЅРѕ РїСЂРѕРґРѕР»Р¶РёС‚СЊ РµРµ С‚СЂР°РЅСЃРїРѕСЂС‚.
+         // РќР°РїСЂРёРјРµСЂ, С‡Р°СЃС‚РёС†Р° РїРµСЂРµРјРµСЃС‚РёР»Р°СЃСЊ Р±РµР· РёР·РјРµРЅРµРЅРёСЏ СЌРЅРµСЂРіРёРё РЅР° РїРѕРІРµСЂС…РЅРѕСЃС‚СЊ РѕР±СЉРµРєС‚Р°.
+         continue;
+      }
+      throw std::exception("Unexpected partical move result in simulator");
+   }
 }
 
 mc_move_result_t mcTransport::moveParticle(mcParticle* particle, double& step, double& edep)
 {
-	edep = 0;
-
-	// HACK!!
-	// По непонятным причинам координаты частицы могут быть абсурдными.
-	// Удалаяем такие частицы
-	if (_isnan(particle->p.x()) != 0)
-	{
-		//cout << "Non number position or direction in object: " << this->getName() << endl;
-		cout << "Non number position in object: " << this->getName() << endl;
-		cout << "Position: " << particle->p;
-		cout << "Direction: " << particle->u;
-		particle->thread_->RemoveParticle();
-		return MCMR_DISCARGE;
-	}
-
-	// Переместить частицу на поверхность, если она еще не внутри
-	step = DBL_MAX;
-	if (particle->region.idx_ == 0)
-	{
-		int iregion = 0;
-		if (isMultiRegions_)
-		{
-			for (unsigned i = 0; i < regions_.size(); i++)
-			{
-				double f = regions_[i]->getDistanceOutside(*particle) + DBL_EPSILON;
-				if (f < step)
-				{
-					iregion = i;
-					step = f;
-				}
-			}
-		}
-		// Если установлен флаг типа пересекаемой поверхности как внутренней,
-		// То определенно речь не о повторной возможности входа в данный объект,
-		// а о преходе в следующий
-		else if (particle->exitSurface_ != mcParticle::temb_shit_t::Internal)
-			step = getDistanceOutside(*particle) + DBL_EPSILON;
-
-		if (step == DBL_MAX) { // промазали, летим в следующий слой
-			endTransport(particle);
-			return MCMR_CONTINUE;
-		}
-
-		// При необходимости запоминаем отрезок в мировой системе координат
-		if (particle->trackScore_)
-			particle->trackScore_->score(particle->thread_->id(), particle->t, particle->p * mttow_, (particle->p + (particle->u * step)) * mttow_, particle->ke);
-
-		particle->p += particle->u * step;
-		particle->dnear = 0;
-		particle->region.idx_ = iregion + 1;
-
-		if (isMultiRegions_)
-		{
-			particle->regDensityRatio = regions_[iregion]->getDefDensity();
-			particle->region.medidx_ = regions_[iregion]->getDefMedIdx();
-		}
-		else
-		{
-			particle->regDensityRatio = defdensity_;
-			particle->region.medidx_ = defmedidx_;
-		}
-
-		// Возвращаемся, чтобы повторить шаг.
-		// В противном случае шаг до поверхности будет включен в
-		// потери энергии заряженной частицы.
-		if (step > DBL_EPSILON)
-			return MCMR_CONTINUE;
-	}
-
-	const mcPhysics* phys = media_->getPhysics(particle->t);
-	const mcMedium* med = media_->getMedium(particle->t, particle->region.medidx_);//Параметры сред транспорта фотонов и электронов
-
-	// Частицы с энергией ниже критической должны быть уничтожены раньше любых расчетов транспорта.
-	if (phys->Discarge(particle, *med, edep))
-		return MCMR_DISCARGE;
-
-	// Hack!!! GG 20171030
-	if (_isnan(particle->ke) != 0)
-	{
-		cout << "Non number energy: " << this->getName() << endl;
-		cout << "Position: " << particle->p;
-		cout << "Direction: " << particle->u;
-		particle->thread_->RemoveParticle();
-		return MCMR_DISCARGE;
-	}
-
-	double freepath = phys->MeanFreePath(particle->ke, *med, defdensity_);
-	step = freepath * particle->mfps;
-
-	if (step < particle->dnear)
-	{
-		double stepRequested = step;
-		edep = phys->TakeOneStep(particle, *med, step);
-
-		// Сохраняем фрагмент трека после шага, который может меняться в процессе последнего.
-		// К тому же координаты точки имеют значение после шага. Поэтому в следующих расчетах шаг отрицательный.
-		if (particle->trackScore_)
-			particle->trackScore_->score(particle->thread_->id(), particle->t, particle->p * mttow_, (particle->p - (particle->u * step)) * mttow_, particle->ke);
-
-		// Шаг может быть меньше запрошенного только в случае заряженных частиц
-		// и означает, что просто выполнен шаг при нерерывных потерях энергии и рассения 
-		// и дискретного события не случилось.
-		if (step < stepRequested)
-			return MCMR_CONTINUE;
-		else
-			return MCMR_INTERUCT;
-	}
-
-	double dist;
-	if (isMultiRegions_)
-	{
-		dist = regions_[particle->region.idx_ - 1]->getDistanceInside(*particle);
-	}
-	else
-	{
-		dist = getDistanceInside(*particle) + DBL_EPSILON;	// Новый трик с тем, чтобы частица чуть-чуть заступала за границу;
-	}
-
-	// HACK!!
-	// По непонятным причинам частицы могут быть за пределами объекта,
-	// хотя транспорт как внутри. До выяснения причин вывод сообщений о подобных событиях.
-	if (dist == DBL_MAX || dist < -0.01)
-	{
-		cout << "Wrong particle transport inside object:" << this->getName() << endl;
-		cout << "Position: " << particle->p;
-		cout << "Direction: " << particle->u;
-		cout << "Dnear: " << particle->dnear << endl;
-		cout << "Distance = " << dist << endl;
-		particle->thread_->RemoveParticle();
-		return MCMR_DISCARGE;
-	}
-
-	if (step < dist)
-	{
-		double stepRequested = step;
-		edep = phys->TakeOneStep(particle, *med, step);
-
-		if (particle->trackScore_)
-			particle->trackScore_->score(particle->thread_->id(), particle->t, particle->p * mttow_, (particle->p - (particle->u * step)) * mttow_, particle->ke);
-
-		if (isMultiRegions_)
-			particle->dnear = regions_[particle->region.idx_ - 1]->getDNearInside(particle->p);
-		else
-			particle->dnear = getDNearInside(particle->p);
-		if (step < stepRequested)
-			return MCMR_CONTINUE;
-		else
-			return MCMR_INTERUCT;
-	}
-	else
-	{
-		// HACK! На поверхности возможно залипание, если расстояние в пределах погрешности вычислений.
-		static const double epsln = DBL_EPSILON * 10;
-		if (dist < epsln)
-			dist = epsln;
-		step = dist;
-		edep = phys->TakeOneStep(particle, *med, step);
-
-		if (particle->trackScore_)
-			particle->trackScore_->score(particle->thread_->id(), particle->t, particle->p * mttow_, (particle->p - (particle->u * step)) * mttow_, particle->ke);
-
-		particle->mfps -= step / freepath;
-		if (step == dist)
-		{
-			// !! Для поддержки композитных модулей и модулей с невыпуклыми поверхностями 
-			// (например, цилиндрические кольца) мы не устанавливаем шаг выхода а меняем индес региона на 0.
-			// В этом случае данная функция будет вызвана вновь и предпринята попытка продолжить транспорт в модуле.
-			// В случае отсутствия попадания частица будет, наконец, передана следующему транспорту.
-			particle->region.idx_ = 0;
-		}
-		return MCMR_CONTINUE;
-	}
+   edep = 0; // HACK!!
+   // РџРѕ РЅРµРїРѕРЅСЏС‚РЅС‹Рј РїСЂРёС‡РёРЅР°Рј РєРѕРѕСЂРґРёРЅР°С‚С‹ С‡Р°СЃС‚РёС†С‹ РјРѕРіСѓС‚ Р±С‹С‚СЊ Р°Р±СЃСѓСЂРґРЅС‹РјРё.
+   // РЈРґР°Р»Р°СЏРµРј С‚Р°РєРёРµ С‡Р°СЃС‚РёС†С‹
+   if (_isnan(particle->p.x()) != 0) {
+      //cout << "Non number position or direction in object: " << this->getName() << endl;
+      cout << "Non number position in object: " << this->getName() << endl;
+      cout << "Position: " << particle->p;
+      cout << "Direction: " << particle->u;
+      particle->thread_->RemoveParticle();
+      return MCMR_DISCARGE;
+   } // РџРµСЂРµРјРµСЃС‚РёС‚СЊ С‡Р°СЃС‚РёС†Сѓ РЅР° РїРѕРІРµСЂС…РЅРѕСЃС‚СЊ, РµСЃР»Рё РѕРЅР° РµС‰Рµ РЅРµ РІРЅСѓС‚СЂРё
+   step = DBL_MAX;
+   if (particle->region.idx_ == 0) {
+      int iregion = 0;
+      if (isMultiRegions_) {
+         for (unsigned i = 0; i < regions_.size(); i++) {
+            double f = regions_[i]->getDistanceOutside(*particle) + DBL_EPSILON;
+            if (f < step) {
+               iregion = i;
+               step = f;
+            }
+         }
+      } // Р•СЃР»Рё СѓСЃС‚Р°РЅРѕРІР»РµРЅ С„Р»Р°Рі С‚РёРїР° РїРµСЂРµСЃРµРєР°РµРјРѕР№ РїРѕРІРµСЂС…РЅРѕСЃС‚Рё РєР°Рє РІРЅСѓС‚СЂРµРЅРЅРµР№,
+         // РўРѕ РѕРїСЂРµРґРµР»РµРЅРЅРѕ СЂРµС‡СЊ РЅРµ Рѕ РїРѕРІС‚РѕСЂРЅРѕР№ РІРѕР·РјРѕР¶РЅРѕСЃС‚Рё РІС…РѕРґР° РІ РґР°РЅРЅС‹Р№ РѕР±СЉРµРєС‚,
+         // Р° Рѕ РїСЂРµС…РѕРґРµ РІ СЃР»РµРґСѓСЋС‰РёР№
+      else if (particle->exitSurface_ != mcParticle::temb_shit_t::Internal)
+         step = getDistanceOutside(*particle) + DBL_EPSILON;
+      if (step == DBL_MAX) {
+         // РїСЂРѕРјР°Р·Р°Р»Рё, Р»РµС‚РёРј РІ СЃР»РµРґСѓСЋС‰РёР№ СЃР»РѕР№
+         endTransport(particle);
+         return MCMR_CONTINUE;
+      } // РџСЂРё РЅРµРѕР±С…РѕРґРёРјРѕСЃС‚Рё Р·Р°РїРѕРјРёРЅР°РµРј РѕС‚СЂРµР·РѕРє РІ РјРёСЂРѕРІРѕР№ СЃРёСЃС‚РµРјРµ РєРѕРѕСЂРґРёРЅР°С‚
+      if (particle->trackScore_)
+         particle->trackScore_->score(particle->thread_->id(), particle->t, particle->p * mttow_,
+                                      (particle->p + (particle->u * step)) * mttow_, particle->ke);
+      particle->p += particle->u * step;
+      particle->dnear = 0;
+      particle->region.idx_ = iregion + 1;
+      if (isMultiRegions_) {
+         particle->regDensityRatio = regions_[iregion]->getDefDensity();
+         particle->region.medidx_ = regions_[iregion]->getDefMedIdx();
+      } else {
+         particle->regDensityRatio = defdensity_;
+         particle->region.medidx_ = defmedidx_;
+      } // Р’РѕР·РІСЂР°С‰Р°РµРјСЃСЏ, С‡С‚РѕР±С‹ РїРѕРІС‚РѕСЂРёС‚СЊ С€Р°Рі.
+      // Р’ РїСЂРѕС‚РёРІРЅРѕРј СЃР»СѓС‡Р°Рµ С€Р°Рі РґРѕ РїРѕРІРµСЂС…РЅРѕСЃС‚Рё Р±СѓРґРµС‚ РІРєР»СЋС‡РµРЅ РІ
+      // РїРѕС‚РµСЂРё СЌРЅРµСЂРіРёРё Р·Р°СЂСЏР¶РµРЅРЅРѕР№ С‡Р°СЃС‚РёС†С‹.
+      if (step > DBL_EPSILON)
+         return MCMR_CONTINUE;
+   }
+   const mcPhysics* phys = media_->getPhysics(particle->t);
+   const mcMedium* med = media_->getMedium(particle->t, particle->region.medidx_);
+   //РџР°СЂР°РјРµС‚СЂС‹ СЃСЂРµРґ С‚СЂР°РЅСЃРїРѕСЂС‚Р° С„РѕС‚РѕРЅРѕРІ Рё СЌР»РµРєС‚СЂРѕРЅРѕРІ
+   // Р§Р°СЃС‚РёС†С‹ СЃ СЌРЅРµСЂРіРёРµР№ РЅРёР¶Рµ РєСЂРёС‚РёС‡РµСЃРєРѕР№ РґРѕР»Р¶РЅС‹ Р±С‹С‚СЊ СѓРЅРёС‡С‚РѕР¶РµРЅС‹ СЂР°РЅСЊС€Рµ Р»СЋР±С‹С… СЂР°СЃС‡РµС‚РѕРІ С‚СЂР°РЅСЃРїРѕСЂС‚Р°.
+   if (phys->Discarge(particle, *med, edep))
+      return MCMR_DISCARGE; // Hack!!! GG 20171030
+   if (_isnan(particle->ke) != 0) {
+      cout << "Non number energy: " << this->getName() << endl;
+      cout << "Position: " << particle->p;
+      cout << "Direction: " << particle->u;
+      particle->thread_->RemoveParticle();
+      return MCMR_DISCARGE;
+   }
+   double freepath = phys->MeanFreePath(particle->ke, *med, defdensity_);
+   step = freepath * particle->mfps;
+   if (step < particle->dnear) {
+      double stepRequested = step;
+      edep = phys->TakeOneStep(particle, *med, step);
+      // РЎРѕС…СЂР°РЅСЏРµРј С„СЂР°РіРјРµРЅС‚ С‚СЂРµРєР° РїРѕСЃР»Рµ С€Р°РіР°, РєРѕС‚РѕСЂС‹Р№ РјРѕР¶РµС‚ РјРµРЅСЏС‚СЊСЃСЏ РІ РїСЂРѕС†РµСЃСЃРµ РїРѕСЃР»РµРґРЅРµРіРѕ.
+      // Рљ С‚РѕРјСѓ Р¶Рµ РєРѕРѕСЂРґРёРЅР°С‚С‹ С‚РѕС‡РєРё РёРјРµСЋС‚ Р·РЅР°С‡РµРЅРёРµ РїРѕСЃР»Рµ С€Р°РіР°. РџРѕСЌС‚РѕРјСѓ РІ СЃР»РµРґСѓСЋС‰РёС… СЂР°СЃС‡РµС‚Р°С… С€Р°Рі РѕС‚СЂРёС†Р°С‚РµР»СЊРЅС‹Р№.
+      if (particle->trackScore_)
+         particle->trackScore_->score(particle->thread_->id(), particle->t, particle->p * mttow_,
+                                      (particle->p - (particle->u * step)) * mttow_, particle->ke);
+      // РЁР°Рі РјРѕР¶РµС‚ Р±С‹С‚СЊ РјРµРЅСЊС€Рµ Р·Р°РїСЂРѕС€РµРЅРЅРѕРіРѕ С‚РѕР»СЊРєРѕ РІ СЃР»СѓС‡Р°Рµ Р·Р°СЂСЏР¶РµРЅРЅС‹С… С‡Р°СЃС‚РёС†
+      // Рё РѕР·РЅР°С‡Р°РµС‚, С‡С‚Рѕ РїСЂРѕСЃС‚Рѕ РІС‹РїРѕР»РЅРµРЅ С€Р°Рі РїСЂРё РЅРµСЂРµСЂС‹РІРЅС‹С… РїРѕС‚РµСЂСЏС… СЌРЅРµСЂРіРёРё Рё СЂР°СЃСЃРµРЅРёСЏ 
+      // Рё РґРёСЃРєСЂРµС‚РЅРѕРіРѕ СЃРѕР±С‹С‚РёСЏ РЅРµ СЃР»СѓС‡РёР»РѕСЃСЊ.
+      if (step < stepRequested)
+         return MCMR_CONTINUE;
+      return MCMR_INTERUCT;
+   }
+   double dist;
+   if (isMultiRegions_) {
+      dist = regions_[particle->region.idx_ - 1]->getDistanceInside(*particle);
+   } else {
+      dist = getDistanceInside(*particle) + DBL_EPSILON;
+      // РќРѕРІС‹Р№ С‚СЂРёРє СЃ С‚РµРј, С‡С‚РѕР±С‹ С‡Р°СЃС‚РёС†Р° С‡СѓС‚СЊ-С‡СѓС‚СЊ Р·Р°СЃС‚СѓРїР°Р»Р° Р·Р° РіСЂР°РЅРёС†Сѓ;
+   } // HACK!!
+   // РџРѕ РЅРµРїРѕРЅСЏС‚РЅС‹Рј РїСЂРёС‡РёРЅР°Рј С‡Р°СЃС‚РёС†С‹ РјРѕРіСѓС‚ Р±С‹С‚СЊ Р·Р° РїСЂРµРґРµР»Р°РјРё РѕР±СЉРµРєС‚Р°,
+   // С…РѕС‚СЏ С‚СЂР°РЅСЃРїРѕСЂС‚ РєР°Рє РІРЅСѓС‚СЂРё. Р”Рѕ РІС‹СЏСЃРЅРµРЅРёСЏ РїСЂРёС‡РёРЅ РІС‹РІРѕРґ СЃРѕРѕР±С‰РµРЅРёР№ Рѕ РїРѕРґРѕР±РЅС‹С… СЃРѕР±С‹С‚РёСЏС….
+   if (dist == DBL_MAX || dist < -0.01) {
+      cout << "Wrong particle transport inside object:" << this->getName() << endl;
+      cout << "Position: " << particle->p;
+      cout << "Direction: " << particle->u;
+      cout << "Dnear: " << particle->dnear << endl;
+      cout << "Distance = " << dist << endl;
+      particle->thread_->RemoveParticle();
+      return MCMR_DISCARGE;
+   }
+   if (step < dist) {
+      double stepRequested = step;
+      edep = phys->TakeOneStep(particle, *med, step);
+      if (particle->trackScore_)
+         particle->trackScore_->score(particle->thread_->id(), particle->t, particle->p * mttow_,
+                                      (particle->p - (particle->u * step)) * mttow_, particle->ke);
+      if (isMultiRegions_)
+         particle->dnear = regions_[particle->region.idx_ - 1]->getDNearInside(particle->p);
+      else
+         particle->dnear = getDNearInside(particle->p);
+      if (step < stepRequested)
+         return MCMR_CONTINUE;
+      return MCMR_INTERUCT;
+   } // HACK! РќР° РїРѕРІРµСЂС…РЅРѕСЃС‚Рё РІРѕР·РјРѕР¶РЅРѕ Р·Р°Р»РёРїР°РЅРёРµ, РµСЃР»Рё СЂР°СЃСЃС‚РѕСЏРЅРёРµ РІ РїСЂРµРґРµР»Р°С… РїРѕРіСЂРµС€РЅРѕСЃС‚Рё РІС‹С‡РёСЃР»РµРЅРёР№.
+   static const double epsln = DBL_EPSILON * 10;
+   if (dist < epsln)
+      dist = epsln;
+   step = dist;
+   edep = phys->TakeOneStep(particle, *med, step);
+   if (particle->trackScore_)
+      particle->trackScore_->score(particle->thread_->id(), particle->t, particle->p * mttow_,
+                                   (particle->p - (particle->u * step)) * mttow_, particle->ke);
+   particle->mfps -= step / freepath;
+   if (step == dist) {
+      // !! Р”Р»СЏ РїРѕРґРґРµСЂР¶РєРё РєРѕРјРїРѕР·РёС‚РЅС‹С… РјРѕРґСѓР»РµР№ Рё РјРѕРґСѓР»РµР№ СЃ РЅРµРІС‹РїСѓРєР»С‹РјРё РїРѕРІРµСЂС…РЅРѕСЃС‚СЏРјРё 
+      // (РЅР°РїСЂРёРјРµСЂ, С†РёР»РёРЅРґСЂРёС‡РµСЃРєРёРµ РєРѕР»СЊС†Р°) РјС‹ РЅРµ СѓСЃС‚Р°РЅР°РІР»РёРІР°РµРј С€Р°Рі РІС‹С…РѕРґР° Р° РјРµРЅСЏРµРј РёРЅРґРµСЃ СЂРµРіРёРѕРЅР° РЅР° 0.
+      // Р’ СЌС‚РѕРј СЃР»СѓС‡Р°Рµ РґР°РЅРЅР°СЏ С„СѓРЅРєС†РёСЏ Р±СѓРґРµС‚ РІС‹Р·РІР°РЅР° РІРЅРѕРІСЊ Рё РїСЂРµРґРїСЂРёРЅСЏС‚Р° РїРѕРїС‹С‚РєР° РїСЂРѕРґРѕР»Р¶РёС‚СЊ С‚СЂР°РЅСЃРїРѕСЂС‚ РІ РјРѕРґСѓР»Рµ.
+      // Р’ СЃР»СѓС‡Р°Рµ РѕС‚СЃСѓС‚СЃС‚РІРёСЏ РїРѕРїР°РґР°РЅРёСЏ С‡Р°СЃС‚РёС†Р° Р±СѓРґРµС‚, РЅР°РєРѕРЅРµС†, РїРµСЂРµРґР°РЅР° СЃР»РµРґСѓСЋС‰РµРјСѓ С‚СЂР°РЅСЃРїРѕСЂС‚Сѓ.
+      particle->region.idx_ = 0;
+   }
+   return MCMR_CONTINUE;
 }
 
 double mcTransport::HowManyMFPs(mcRng& rng)
 {
-	double howMany = -log(1.0 - rng.rnd());
-	return MAX(howMany, DBL_EPSILON);
+   double howMany = -log(1.0 - rng.rnd());
+   return MAX(howMany, DBL_EPSILON);
 }
 
 double mcTransport::etotal() const
 {
-	return score_ != nullptr ? score_->etotal() : 0;
+   return score_ != nullptr ? score_->etotal() : 0;
 }
-
 #pragma endregion
-
 #pragma region Scoring
-
 void mcTransport::setScore(mcScore* score)
 {
-	if (score_ != nullptr) delete score_;
-	score_ = score;
-	score_->setTransport(this);
+   if (score_ != nullptr)
+      delete score_;
+   score_ = score;
+   score_->setTransport(this);
 }
 
 void mcTransport::setDefaultScore(int nThreads)
 {
-	setScore(new mcScore(this->getName(), nThreads));
+   setScore(new mcScore(this->getName(), nThreads));
 }
 
 void mcTransport::setInternalTransport(mcTransport* t)
 {
-	internalTransport_ = t;
-
-	if (t != nullptr)
-	{
-		// Для ускорения расчетов иницилизируем матрицы преобразования координат
-		// из системы данного объекта в систему вложенного объекта.
-		mtoe_ = mttow_ * t->MW2T();
-	}
+   internalTransport_ = t;
+   if (t != nullptr) {
+      // Р”Р»СЏ СѓСЃРєРѕСЂРµРЅРёСЏ СЂР°СЃС‡РµС‚РѕРІ РёРЅРёС†РёР»РёР·РёСЂСѓРµРј РјР°С‚СЂРёС†С‹ РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёСЏ РєРѕРѕСЂРґРёРЅР°С‚
+      // РёР· СЃРёСЃС‚РµРјС‹ РґР°РЅРЅРѕРіРѕ РѕР±СЉРµРєС‚Р° РІ СЃРёСЃС‚РµРјСѓ РІР»РѕР¶РµРЅРЅРѕРіРѕ РѕР±СЉРµРєС‚Р°.
+      mtoe_ = mttow_ * t->MW2T();
+   }
 }
 
 void mcTransport::setExternalTransport(mcTransport* t)
 {
-	externalTransport_ = t;
-	t->setInternalTransport(this);
+   externalTransport_ = t;
+   t->setInternalTransport(this);
 }
 
 mcTransport* mcTransport::getInternalTransportByName(const char* name)
 {
-	if (strcmp(this->getName(), name) == 0)
-		return this;
-
-	auto ti = this->getInternalTransport();
-	if (ti != nullptr)
-	{
-		// Рекурсивный поиск транспорта
-		auto t = ti->getInternalTransportByName(name);
-		if (t != nullptr)
-			return t;
-	}
-	return nullptr;
+   if (strcmp(this->getName(), name) == 0)
+      return this;
+   auto ti = this->getInternalTransport();
+   if (ti != nullptr) {
+      // Р РµРєСѓСЂСЃРёРІРЅС‹Р№ РїРѕРёСЃРє С‚СЂР°РЅСЃРїРѕСЂС‚Р°
+      auto t = ti->getInternalTransportByName(name);
+      if (t != nullptr)
+         return t;
+   }
+   return nullptr;
 }
-
 #pragma endregion
-
-#pragma region Геометрия (методы нужны для поддержки стандартной функции moveParticle)
-
+#pragma region Р“РµРѕРјРµС‚СЂРёСЏ (РјРµС‚РѕРґС‹ РЅСѓР¶РЅС‹ РґР»СЏ РїРѕРґРґРµСЂР¶РєРё СЃС‚Р°РЅРґР°СЂС‚РЅРѕР№ С„СѓРЅРєС†РёРё moveParticle)
 double mcTransport::getDistanceInside(mcParticle& p) const
 {
-	implementException();
-	return 0;
+   implementException();
+   return 0;
 }
 
 double mcTransport::getDistanceOutside(mcParticle& p) const
 {
-	double dist = DBL_MAX;
-	if (isMultiRegions_)	// Поддержка вложений в группрвром транспорте
-	{
-		for (unsigned i = 0; i < regions_.size(); i++)
-		{
-			double f = regions_[i]->getDistanceOutside(p) + DBL_EPSILON;
-			if (f < dist) dist = f;
-		}
-	}
-	else
-		implementException();
-	return dist;
+   double dist = DBL_MAX;
+   if (isMultiRegions_) // РџРѕРґРґРµСЂР¶РєР° РІР»РѕР¶РµРЅРёР№ РІ РіСЂСѓРїРїСЂРІСЂРѕРј С‚СЂР°РЅСЃРїРѕСЂС‚Рµ
+   {
+      for (unsigned i = 0; i < regions_.size(); i++) {
+         double f = regions_[i]->getDistanceOutside(p) + DBL_EPSILON;
+         if (f < dist)
+            dist = f;
+      }
+   } else
+      implementException();
+   return dist;
 }
 
 double mcTransport::getDNearInside(const geomVector3D& p) const
 {
-	// Разрешаем не имплементировать функцию ближайшего расстояния.
-	// Возвращение нуля автоматически означает просто отказ от ускорения за счет
-	// экономии на вызовах функций вычисления расстояний вдоль направления.
-	return 0;
+   // Р Р°Р·СЂРµС€Р°РµРј РЅРµ РёРјРїР»РµРјРµРЅС‚РёСЂРѕРІР°С‚СЊ С„СѓРЅРєС†РёСЋ Р±Р»РёР¶Р°Р№С€РµРіРѕ СЂР°СЃСЃС‚РѕСЏРЅРёСЏ.
+   // Р’РѕР·РІСЂР°С‰РµРЅРёРµ РЅСѓР»СЏ Р°РІС‚РѕРјР°С‚РёС‡РµСЃРєРё РѕР·РЅР°С‡Р°РµС‚ РїСЂРѕСЃС‚Рѕ РѕС‚РєР°Р· РѕС‚ СѓСЃРєРѕСЂРµРЅРёСЏ Р·Р° СЃС‡РµС‚
+   // СЌРєРѕРЅРѕРјРёРё РЅР° РІС‹Р·РѕРІР°С… С„СѓРЅРєС†РёР№ РІС‹С‡РёСЃР»РµРЅРёСЏ СЂР°СЃСЃС‚РѕСЏРЅРёР№ РІРґРѕР»СЊ РЅР°РїСЂР°РІР»РµРЅРёСЏ.
+   return 0;
 }
 
 void mcTransport::implementException()
 {
-	throw std::exception("Please implement or do not use default geometry");
+   throw std::exception("Please implement or do not use default geometry");
 }
-
 #pragma endregion
-
 #pragma region Auxilary
-
 void mcTransport::MoveToCoordinateSystem(const geomMatrix3D& m)
 {
-	mttow_ = mttow_ * m;
-	mwtot_ = mttow_;
-	mwtot_.makeInverse();
+   mttow_ = mttow_ * m;
+   mwtot_ = mttow_;
+   mwtot_.makeInverse();
 }
 
 mcMediumXE* mcTransport::getParticleMedium()
 {
-	throw std::exception("mcTransport::getParticleMedium: method should be implemented in each transport class");
+   throw std::exception("mcTransport::getParticleMedium: method should be implemented in each transport class");
 }
 
 double mcTransport::getRegionRelDensity()
 {
-	throw std::exception("mcTransport::getRegionRelDensity: method should be implemented in each transport class");
+   throw std::exception("mcTransport::getRegionRelDensity: method should be implemented in each transport class");
 }
 
 void mcTransport::dumpVRML(ostream& os) const
 {
-	if (score_ != nullptr)
-		score_->dumpVRML(os);
-	if (isMultiRegions_)
-	{
-		for (unsigned i = 0; i < regions_.size(); i++)
-			regions_[i]->dumpVRML(os);
-	}
-	else
-		os << "# VRML dump for transport is not implemented" << endl;
+   if (score_ != nullptr)
+      score_->dumpVRML(os);
+   if (isMultiRegions_) {
+      for (unsigned i = 0; i < regions_.size(); i++)
+         regions_[i]->dumpVRML(os);
+   } else
+      os << "# VRML dump for transport is not implemented" << endl;
 }
 
 void mcTransport::dump(ostream& os) const
 {
-	os << *(const mcObj*)this << endl;
-	os << "Energy = " << etotal() << endl;
-	os << "transCutoff_phot = " << transCutoff_phot << endl;
-	os << "transCutoff_elec = " << transCutoff_elec << endl;
-	os << "MWTOT:" << endl;
-	os << mwtot_ << endl;
-	os << "MTTOW:" << endl;
-	os << mttow_ << endl;
-	if (isMultiRegions_)
-	{
-		for (unsigned i = 0; i < regions_.size(); i++)
-		{
-			os << std::endl;
-			regions_[i]->dump(os);
-		}
-		os << std::endl;
-	}
+   os << *static_cast<const mcObj*>(this) << endl;
+   os << "Energy = " << etotal() << endl;
+   os << "transCutoff_phot = " << transCutoff_phot << endl;
+   os << "transCutoff_elec = " << transCutoff_elec << endl;
+   os << "MWTOT:" << endl;
+   os << mwtot_ << endl;
+   os << "MTTOW:" << endl;
+   os << mttow_ << endl;
+   if (isMultiRegions_) {
+      for (unsigned i = 0; i < regions_.size(); i++) {
+         os << std::endl;
+         regions_[i]->dump(os);
+      }
+      os << std::endl;
+   }
 }
-
 #pragma endregion
-
 #pragma region VRML utilities
-
-void mcTransport::dumpVRMLRing(ostream& os, double r1, double r2, double z, bool normPositive, double x0, double y0) const
+void mcTransport::dumpVRMLRing(ostream& os, double r1, double r2, double z, bool normPositive, double x0,
+                               double y0) const
 {
-	int i, na = 24;
-	double da = 6.2832 / na;
-	double f1 = normPositive ? r1 : r2;
-	double f2 = normPositive ? r2 : r1;
-
-	// Преобразование из системы объекта в мировую систему 
-	// с учетом смещения цилиндра в плоскости XY собственной системы координат
-	geomMatrix3D mttow = geomMatrix3D::ParallelShift(x0, y0, 0) * mttow_;
-
-	os << "    Transform {" << endl;
-	os << "      children Shape {" << endl;
-	os << "        appearance Appearance {" << endl;
-	os << "          material Material {" << endl;
-	os << "            diffuseColor " << red_ << ' ' << green_ << ' ' << blue_ << endl;
-	os << "            transparency " << transparancy_ << endl;
-	os << "          }" << endl;
-	os << "        }" << endl;
-	os << "        geometry IndexedFaceSet {" << endl;
-	os << "            coord Coordinate {" << endl;
-	os << "                point [" << endl;
-
-	for (i = 0; i < na; i++) {
-		geomVector3D p = geomVector3D(f1*cos(i*da), f1*sin(i*da), z) * mttow;
-		os << "                    " << p.x() << ' ' << p.y() << ' ' << p.z() << ", " << endl;
-		p = geomVector3D(f2*cos(i*da), f2*sin(i*da), z) * mttow;
-		os << "                    " << p.x() << ' ' << p.y() << ' ' << p.z();
-		if (i < na - 1) os << ", ";
-		os << endl;
-	}
-
-	os << "                ]" << endl;
-	os << "            }" << endl;
-	os << "            coordIndex [" << endl;
-
-	for (i = 0; i < na; i++) {
-		os << "                " << 2 * i << ", " << 2 * i + 1 << ", " << 2 * ((i + 1) % na) + 1 << ", " << 2 * ((i + 1) % na);
-		if (i < na - 1) os << ", -1,";
-		os << endl;
-	}
-
-	os << "            ]" << endl;
-	os << "        }" << endl;
-	os << "      }" << endl;
-	os << "    }" << endl;
+   int i, na = 24;
+   double da = 6.2832 / na;
+   double f1 = normPositive ? r1 : r2;
+   double f2 = normPositive ? r2 : r1; // РџСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ РёР· СЃРёСЃС‚РµРјС‹ РѕР±СЉРµРєС‚Р° РІ РјРёСЂРѕРІСѓСЋ СЃРёСЃС‚РµРјСѓ 
+   // СЃ СѓС‡РµС‚РѕРј СЃРјРµС‰РµРЅРёСЏ С†РёР»РёРЅРґСЂР° РІ РїР»РѕСЃРєРѕСЃС‚Рё XY СЃРѕР±СЃС‚РІРµРЅРЅРѕР№ СЃРёСЃС‚РµРјС‹ РєРѕРѕСЂРґРёРЅР°С‚
+   geomMatrix3D mttow = geomMatrix3D::ParallelShift(x0, y0, 0) * mttow_;
+   os << "    Transform {" << endl;
+   os << "      children Shape {" << endl;
+   os << "        appearance Appearance {" << endl;
+   os << "          material Material {" << endl;
+   os << "            diffuseColor " << red_ << ' ' << green_ << ' ' << blue_ << endl;
+   os << "            transparency " << transparancy_ << endl;
+   os << "          }" << endl;
+   os << "        }" << endl;
+   os << "        geometry IndexedFaceSet {" << endl;
+   os << "            coord Coordinate {" << endl;
+   os << "                point [" << endl;
+   for (i = 0; i < na; i++) {
+      geomVector3D p = geomVector3D(f1 * cos(i * da), f1 * sin(i * da), z) * mttow;
+      os << "                    " << p.x() << ' ' << p.y() << ' ' << p.z() << ", " << endl;
+      p = geomVector3D(f2 * cos(i * da), f2 * sin(i * da), z) * mttow;
+      os << "                    " << p.x() << ' ' << p.y() << ' ' << p.z();
+      if (i < na - 1)
+         os << ", ";
+      os << endl;
+   }
+   os << "                ]" << endl;
+   os << "            }" << endl;
+   os << "            coordIndex [" << endl;
+   for (i = 0; i < na; i++) {
+      os << "                " << 2 * i << ", " << 2 * i + 1 << ", " << 2 * ((i + 1) % na) + 1 << ", " << 2 * (
+         (i + 1) % na);
+      if (i < na - 1)
+         os << ", -1,";
+      os << endl;
+   }
+   os << "            ]" << endl;
+   os << "        }" << endl;
+   os << "      }" << endl;
+   os << "    }" << endl;
 }
 
 void mcTransport::dumpVRMLSemiCircle(ostream& os, double r, double z, bool normPositive, const geomMatrix3D& M) const
 {
-	int i, na = 24;
-	double da = PI / na;
-
-	os << "    Transform {" << endl;
-	os << "      children Shape {" << endl;
-	os << "        appearance Appearance {" << endl;
-	os << "          material Material {" << endl;
-	os << "            diffuseColor " << red_ << ' ' << green_ << ' ' << blue_ << endl;
-	os << "            transparency " << transparancy_ << endl;
-	os << "          }" << endl;
-	os << "        }" << endl;
-	os << "        geometry IndexedFaceSet {" << endl;
-	os << "            coord Coordinate {" << endl;
-	os << "                point [" << endl;
-
-	geomVector3D p = geomVector3D(0, 0, z) * M;
-	os << "                    " << p.x() << ' ' << p.y() << ' ' << p.z() << ", " << endl;
-
-	for (i = 0; i <= na; i++) 
-	{
-		double a = i*da + PI * 0.5;
-		geomVector3D p = geomVector3D(r*cos(a), r*sin(a), z) * M;
-		os << "                    " << p.x() << ' ' << p.y() << ' ' << p.z();
-		if (i < na) os << ", ";
-		os << endl;
-	}
-
-	os << "                ]" << endl;
-	os << "            }" << endl;
-	os << "            coordIndex [" << endl;
-
-	for (i = 0; i < na; i++) {
-		if (normPositive)
-			os << "                " << i + 1 << ", " << i + 2 << ", " << 0;
-		else
-			os << "                " << i + 2 << ", " << i + 1 << ", " << 0;
-		if (i < na) os << ", -1,";
-		os << endl;
-	}
-
-	os << "            ]" << endl;
-	os << "        }" << endl;
-	os << "      }" << endl;
-	os << "    }" << endl;
+   int i, na = 24;
+   double da = PI / na;
+   os << "    Transform {" << endl;
+   os << "      children Shape {" << endl;
+   os << "        appearance Appearance {" << endl;
+   os << "          material Material {" << endl;
+   os << "            diffuseColor " << red_ << ' ' << green_ << ' ' << blue_ << endl;
+   os << "            transparency " << transparancy_ << endl;
+   os << "          }" << endl;
+   os << "        }" << endl;
+   os << "        geometry IndexedFaceSet {" << endl;
+   os << "            coord Coordinate {" << endl;
+   os << "                point [" << endl;
+   geomVector3D p = geomVector3D(0, 0, z) * M;
+   os << "                    " << p.x() << ' ' << p.y() << ' ' << p.z() << ", " << endl;
+   for (i = 0; i <= na; i++) {
+      double a = i * da + PI * 0.5;
+      geomVector3D p = geomVector3D(r * cos(a), r * sin(a), z) * M;
+      os << "                    " << p.x() << ' ' << p.y() << ' ' << p.z();
+      if (i < na)
+         os << ", ";
+      os << endl;
+   }
+   os << "                ]" << endl;
+   os << "            }" << endl;
+   os << "            coordIndex [" << endl;
+   for (i = 0; i < na; i++) {
+      if (normPositive)
+         os << "                " << i + 1 << ", " << i + 2 << ", " << 0;
+      else
+         os << "                " << i + 2 << ", " << i + 1 << ", " << 0;
+      if (i < na)
+         os << ", -1,";
+      os << endl;
+   }
+   os << "            ]" << endl;
+   os << "        }" << endl;
+   os << "      }" << endl;
+   os << "    }" << endl;
 }
 
-void mcTransport::dumpVRMLCylinderSide(ostream& os, double r, double z1, double z2, bool normPositive, double x0, double y0) const
+void mcTransport::dumpVRMLCylinderSide(ostream& os, double r, double z1, double z2, bool normPositive, double x0,
+                                       double y0) const
 {
-	dumpVRMLConicalCylinderSide(os, r, z1, z2, 0, normPositive, x0, y0);
+   dumpVRMLConicalCylinderSide(os, r, z1, z2, 0, normPositive, x0, y0);
 }
 
-void mcTransport::dumpVRMLConicalCylinderSide(ostream& os, double r, double z1, double z2, double f, bool normPositive, double x0, double y0) const
+void mcTransport::dumpVRMLConicalCylinderSide(ostream& os, double r, double z1, double z2, double f, bool normPositive,
+                                              double x0, double y0) const
 {
-	int i, na = 24;
-	double da = 6.2832 / na;
-	double f1, f2, s1 = 1, s2 = 1;
-	if (normPositive)
-	{
-		f1 = z1; f2 = z2;
-		if (f != 0) s2 = (f - z2 + z1) / f;
-	}
-	else
-	{
-		f1 = z2; f2 = z1;
-		if (f != 0) s1 = (f - z2 + z1) / f;
-	}
-
-	// Преобразование из системы объекта в мировую систему 
-	// с учетом смещения цилиндра в плоскости XY собственной системы координат
-	geomMatrix3D mttow = geomMatrix3D::ParallelShift(x0, y0, 0) * mttow_;
-
-	os << "    Transform {" << endl;
-	os << "      children Shape {" << endl;
-	os << "        appearance Appearance {" << endl;
-	os << "          material Material {" << endl;
-	os << "            diffuseColor " << red_ << ' ' << green_ << ' ' << blue_ << endl;
-	os << "            transparency " << transparancy_ << endl;
-	os << "          }" << endl;
-	os << "        }" << endl;
-	os << "        geometry IndexedFaceSet {" << endl;
-	os << "            coord Coordinate {" << endl;
-	os << "                point [" << endl;
-
-	for (i = 0; i < na; i++) {
-		geomVector3D p = geomVector3D(r*s1*cos(i*da), r*s1*sin(i*da), f1) * mttow;
-		os << "                    " << p.x() << ' ' << p.y() << ' ' << p.z() << ", " << endl;
-		p = geomVector3D(r*s2*cos(i*da), r*s2*sin(i*da), f2) * mttow;
-		os << "                    " << p.x() << ' ' << p.y() << ' ' << p.z();
-		if (i < na - 1) os << ", ";
-		os << endl;
-	}
-
-	os << "                ]" << endl;
-	os << "            }" << endl;
-	os << "            coordIndex [" << endl;
-
-	for (i = 0; i < na; i++) {
-		os << "                " << 2 * i << ", " << 2 * i + 1 << ", " << 2 * ((i + 1) % na) + 1 << ", " << 2 * ((i + 1) % na);
-		if (i < na - 1) os << ", -1,";
-		os << endl;
-	}
-
-	os << "            ]" << endl;
-	os << "        }" << endl;
-	os << "      }" << endl;
-	os << "    }" << endl;
+   int i, na = 24;
+   double da = 6.2832 / na;
+   double f1, f2, s1 = 1, s2 = 1;
+   if (normPositive) {
+      f1 = z1;
+      f2 = z2;
+      if (f != 0)
+         s2 = (f - z2 + z1) / f;
+   } else {
+      f1 = z2;
+      f2 = z1;
+      if (f != 0)
+         s1 = (f - z2 + z1) / f;
+   } // РџСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ РёР· СЃРёСЃС‚РµРјС‹ РѕР±СЉРµРєС‚Р° РІ РјРёСЂРѕРІСѓСЋ СЃРёСЃС‚РµРјСѓ 
+   // СЃ СѓС‡РµС‚РѕРј СЃРјРµС‰РµРЅРёСЏ С†РёР»РёРЅРґСЂР° РІ РїР»РѕСЃРєРѕСЃС‚Рё XY СЃРѕР±СЃС‚РІРµРЅРЅРѕР№ СЃРёСЃС‚РµРјС‹ РєРѕРѕСЂРґРёРЅР°С‚
+   geomMatrix3D mttow = geomMatrix3D::ParallelShift(x0, y0, 0) * mttow_;
+   os << "    Transform {" << endl;
+   os << "      children Shape {" << endl;
+   os << "        appearance Appearance {" << endl;
+   os << "          material Material {" << endl;
+   os << "            diffuseColor " << red_ << ' ' << green_ << ' ' << blue_ << endl;
+   os << "            transparency " << transparancy_ << endl;
+   os << "          }" << endl;
+   os << "        }" << endl;
+   os << "        geometry IndexedFaceSet {" << endl;
+   os << "            coord Coordinate {" << endl;
+   os << "                point [" << endl;
+   for (i = 0; i < na; i++) {
+      geomVector3D p = geomVector3D(r * s1 * cos(i * da), r * s1 * sin(i * da), f1) * mttow;
+      os << "                    " << p.x() << ' ' << p.y() << ' ' << p.z() << ", " << endl;
+      p = geomVector3D(r * s2 * cos(i * da), r * s2 * sin(i * da), f2) * mttow;
+      os << "                    " << p.x() << ' ' << p.y() << ' ' << p.z();
+      if (i < na - 1)
+         os << ", ";
+      os << endl;
+   }
+   os << "                ]" << endl;
+   os << "            }" << endl;
+   os << "            coordIndex [" << endl;
+   for (i = 0; i < na; i++) {
+      os << "                " << 2 * i << ", " << 2 * i + 1 << ", " << 2 * ((i + 1) % na) + 1 << ", " << 2 * (
+         (i + 1) % na);
+      if (i < na - 1)
+         os << ", -1,";
+      os << endl;
+   }
+   os << "            ]" << endl;
+   os << "        }" << endl;
+   os << "      }" << endl;
+   os << "    }" << endl;
 }
 
 void mcTransport::dumpVRMLCylinderSemiSide(ostream& os, double r, double h, const geomMatrix3D& M) const
 {
-	int i, na = 24;
-	double da = PI / na;
-
-	os << "    Transform {" << endl;
-	os << "      children Shape {" << endl;
-	os << "        appearance Appearance {" << endl;
-	os << "          material Material {" << endl;
-	os << "            diffuseColor " << red_ << ' ' << green_ << ' ' << blue_ << endl;
-	os << "            transparency " << transparancy_ << endl;
-	os << "          }" << endl;
-	os << "        }" << endl;
-	os << "        geometry IndexedFaceSet {" << endl;
-	os << "            coord Coordinate {" << endl;
-	os << "                point [" << endl;
-
-	for (i = 0; i <= na; i++) {
-		double a = i*da + PI * 0.5;
-		geomVector3D p = geomVector3D(r*cos(a), r*sin(a), h) * M;
-		os << "                    " << p.x() << ' ' << p.y() << ' ' << p.z() << ", " << endl;
-		p = geomVector3D(r*cos(a), r*sin(a), 0) * M;
-		os << "                    " << p.x() << ' ' << p.y() << ' ' << p.z();
-		if (i < na) os << ", ";
-		os << endl;
-	}
-
-	os << "                ]" << endl;
-	os << "            }" << endl;
-	os << "            coordIndex [" << endl;
-
-	for (i = 0; i < na; i++) {
-		os << "                " << 2 * i << ", " << 2 * i + 1 << ", " << 2 * (i + 1) + 1 << ", " << 2 * (i + 1);
-		if (i < na - 1) os << ", -1,";
-		os << endl;
-	}
-
-	os << "            ]" << endl;
-	os << "        }" << endl;
-	os << "      }" << endl;
-	os << "    }" << endl;
+   int i, na = 24;
+   double da = PI / na;
+   os << "    Transform {" << endl;
+   os << "      children Shape {" << endl;
+   os << "        appearance Appearance {" << endl;
+   os << "          material Material {" << endl;
+   os << "            diffuseColor " << red_ << ' ' << green_ << ' ' << blue_ << endl;
+   os << "            transparency " << transparancy_ << endl;
+   os << "          }" << endl;
+   os << "        }" << endl;
+   os << "        geometry IndexedFaceSet {" << endl;
+   os << "            coord Coordinate {" << endl;
+   os << "                point [" << endl;
+   for (i = 0; i <= na; i++) {
+      double a = i * da + PI * 0.5;
+      geomVector3D p = geomVector3D(r * cos(a), r * sin(a), h) * M;
+      os << "                    " << p.x() << ' ' << p.y() << ' ' << p.z() << ", " << endl;
+      p = geomVector3D(r * cos(a), r * sin(a), 0) * M;
+      os << "                    " << p.x() << ' ' << p.y() << ' ' << p.z();
+      if (i < na)
+         os << ", ";
+      os << endl;
+   }
+   os << "                ]" << endl;
+   os << "            }" << endl;
+   os << "            coordIndex [" << endl;
+   for (i = 0; i < na; i++) {
+      os << "                " << 2 * i << ", " << 2 * i + 1 << ", " << 2 * (i + 1) + 1 << ", " << 2 * (i + 1);
+      if (i < na - 1)
+         os << ", -1,";
+      os << endl;
+   }
+   os << "            ]" << endl;
+   os << "        }" << endl;
+   os << "      }" << endl;
+   os << "    }" << endl;
 }
 
 void mcTransport::dumpVRMLCylinder(ostream& os, double r, double z1, double z2, double x0, double y0) const
 {
-	dumpVRMLCylinderSide(os, r, z1, z2, false, x0, y0);
-	dumpVRMLRing(os, 0, r, z1, false, x0, y0);
-	dumpVRMLRing(os, 0, r, z2, true, x0, y0);
+   dumpVRMLCylinderSide(os, r, z1, z2, false, x0, y0);
+   dumpVRMLRing(os, 0, r, z1, false, x0, y0);
+   dumpVRMLRing(os, 0, r, z2, true, x0, y0);
 }
 
 void mcTransport::dumpVRMLCylinderRing(ostream& os, double r1, double r2, double z1, double z2) const
 {
-	dumpVRMLCylinderSide(os, r1, z1, z2, true);
-	dumpVRMLCylinderSide(os, r2, z1, z2, false);
-	dumpVRMLRing(os, r1, r2, z1, false);
-	dumpVRMLRing(os, r1, r2, z2, true);
+   dumpVRMLCylinderSide(os, r1, z1, z2, true);
+   dumpVRMLCylinderSide(os, r2, z1, z2, false);
+   dumpVRMLRing(os, r1, r2, z1, false);
+   dumpVRMLRing(os, r1, r2, z2, true);
 }
 
 void mcTransport::dumpVRMLConicalRing(ostream& os, double r1, double r2, double z1, double z2, double f) const
 {
-	double s = (f - z2 + z1) / f;
-	dumpVRMLConicalCylinderSide(os, r1, z1, z2, f, true);
-	dumpVRMLConicalCylinderSide(os, r2, z1, z2, f, false);
-	dumpVRMLRing(os, r1, r2, z1, false);
-	dumpVRMLRing(os, r1 * s, r2 *s, z2, true);
+   double s = (f - z2 + z1) / f;
+   dumpVRMLConicalCylinderSide(os, r1, z1, z2, f, true);
+   dumpVRMLConicalCylinderSide(os, r2, z1, z2, f, false);
+   dumpVRMLRing(os, r1, r2, z1, false);
+   dumpVRMLRing(os, r1 * s, r2 * s, z2, true);
 }
 
-void mcTransport::dumpVRMLCylinderWithConicalHole(ostream& os, double r1, double r2, double z1, double z2, double f) const
+void mcTransport::dumpVRMLCylinderWithConicalHole(ostream& os, double r1, double r2, double z1, double z2,
+                                                  double f) const
 {
-	double s = (f - z2 + z1) / f;
-	dumpVRMLConicalCylinderSide(os, r1, z1, z2, f, true);
-	dumpVRMLCylinderSide(os, r2, z1, z2, false);
-	dumpVRMLRing(os, r1, r2, z1, false);
-	dumpVRMLRing(os, r1 * s, r2, z2, true);
+   double s = (f - z2 + z1) / f;
+   dumpVRMLConicalCylinderSide(os, r1, z1, z2, f, true);
+   dumpVRMLCylinderSide(os, r2, z1, z2, false);
+   dumpVRMLRing(os, r1, r2, z1, false);
+   dumpVRMLRing(os, r1 * s, r2, z2, true);
 }
 
-void mcTransport::dumpVRMLRectangleRing(ostream& os, double x1, double x2, double y1, double y2, double d, double h) const
+void mcTransport::dumpVRMLRectangleRing(ostream& os, double x1, double x2, double y1, double y2, double d,
+                                        double h) const
 {
-	geomVector3D p[16];
-	p[0] = geomVector3D(x1 - d, y1 - d, 0) * mttow_;
-	p[1] = geomVector3D(x1 - d, y2 + d, 0) * mttow_;
-	p[2] = geomVector3D(x2 + d, y2 + d, 0) * mttow_;
-	p[3] = geomVector3D(x2 + d, y1 - d, 0) * mttow_;
-	p[4] = geomVector3D(x1, y1, 0) * mttow_;
-	p[5] = geomVector3D(x1, y2, 0) * mttow_;
-	p[6] = geomVector3D(x2, y2, 0) * mttow_;
-	p[7] = geomVector3D(x2, y1, 0) * mttow_;
-	p[8] = geomVector3D(x1 - d, y1 - d, h) * mttow_;
-	p[9] = geomVector3D(x1 - d, y2 + d, h) * mttow_;
-	p[10] = geomVector3D(x2 + d, y2 + d, h) * mttow_;
-	p[11] = geomVector3D(x2 + d, y1 - d, h) * mttow_;
-	p[12] = geomVector3D(x1, y1, h) * mttow_;
-	p[13] = geomVector3D(x1, y2, h) * mttow_;
-	p[14] = geomVector3D(x2, y2, h) * mttow_;
-	p[15] = geomVector3D(x2, y1, h) * mttow_;
-
-	os << "    Transform {" << endl;
-	os << "      children Shape {" << endl;
-	os << "        appearance Appearance {" << endl;
-	os << "          material Material {" << endl;
-	os << "            diffuseColor " << red_ << ' ' << green_ << ' ' << blue_ << endl;
-	os << "            transparency " << transparancy_ << endl;
-	os << "          }" << endl;
-	os << "        }" << endl;
-	os << "        geometry IndexedFaceSet {" << endl;
-	os << "            coord Coordinate {" << endl;
-	os << "                point [" << endl;
-
-	for (int i = 0; i < 16; i++) {
-		os << "                    " << p[i].x() << ' ' << p[i].y() << ' ' << p[i].z();
-		if (i < 15) os << ", ";
-		os << endl;
-	}
-
-	os << "                ]" << endl;
-	os << "            }" << endl;
-	os << "            coordIndex [" << endl;
-
-	// Внешняя боковая поверхность
-	os << "                0, 8, 9, 1, -1," << endl;
-	os << "                1, 9, 10, 2, -1," << endl;
-	os << "                2, 10, 11, 3, -1," << endl;
-	os << "                3, 11, 8, 0, -1," << endl;
-
-	// Внутренняя боковая поверхность
-	os << "                4, 5, 13, 12, -1," << endl;
-	os << "                5, 6, 14, 13, -1," << endl;
-	os << "                6, 7, 15, 14, -1," << endl;
-	os << "                7, 4, 12, 15, -1," << endl;
-
-	// Нижний торец
-	os << "                0, 1, 5, 4, -1," << endl;
-	os << "                1, 2, 6, 5, -1," << endl;
-	os << "                2, 3, 7, 6, -1," << endl;
-	os << "                3, 0, 4, 7, -1," << endl;
-
-	// Верхний торец
-	os << "                8, 12, 13, 9, -1," << endl;
-	os << "                9, 13, 14, 10, -1," << endl;
-	os << "                10, 14, 15, 11, -1," << endl;
-	os << "                11, 15, 12, 8, -1" << endl;
-
-	os << "            ]" << endl;
-	os << "        }" << endl;
-	os << "      }" << endl;
-	os << "    }" << endl;
+   geomVector3D p[16];
+   p[0] = geomVector3D(x1 - d, y1 - d, 0) * mttow_;
+   p[1] = geomVector3D(x1 - d, y2 + d, 0) * mttow_;
+   p[2] = geomVector3D(x2 + d, y2 + d, 0) * mttow_;
+   p[3] = geomVector3D(x2 + d, y1 - d, 0) * mttow_;
+   p[4] = geomVector3D(x1, y1, 0) * mttow_;
+   p[5] = geomVector3D(x1, y2, 0) * mttow_;
+   p[6] = geomVector3D(x2, y2, 0) * mttow_;
+   p[7] = geomVector3D(x2, y1, 0) * mttow_;
+   p[8] = geomVector3D(x1 - d, y1 - d, h) * mttow_;
+   p[9] = geomVector3D(x1 - d, y2 + d, h) * mttow_;
+   p[10] = geomVector3D(x2 + d, y2 + d, h) * mttow_;
+   p[11] = geomVector3D(x2 + d, y1 - d, h) * mttow_;
+   p[12] = geomVector3D(x1, y1, h) * mttow_;
+   p[13] = geomVector3D(x1, y2, h) * mttow_;
+   p[14] = geomVector3D(x2, y2, h) * mttow_;
+   p[15] = geomVector3D(x2, y1, h) * mttow_;
+   os << "    Transform {" << endl;
+   os << "      children Shape {" << endl;
+   os << "        appearance Appearance {" << endl;
+   os << "          material Material {" << endl;
+   os << "            diffuseColor " << red_ << ' ' << green_ << ' ' << blue_ << endl;
+   os << "            transparency " << transparancy_ << endl;
+   os << "          }" << endl;
+   os << "        }" << endl;
+   os << "        geometry IndexedFaceSet {" << endl;
+   os << "            coord Coordinate {" << endl;
+   os << "                point [" << endl;
+   for (int i = 0; i < 16; i++) {
+      os << "                    " << p[i].x() << ' ' << p[i].y() << ' ' << p[i].z();
+      if (i < 15)
+         os << ", ";
+      os << endl;
+   }
+   os << "                ]" << endl;
+   os << "            }" << endl;
+   os << "            coordIndex [" << endl; // Р’РЅРµС€РЅСЏСЏ Р±РѕРєРѕРІР°СЏ РїРѕРІРµСЂС…РЅРѕСЃС‚СЊ
+   os << "                0, 8, 9, 1, -1," << endl;
+   os << "                1, 9, 10, 2, -1," << endl;
+   os << "                2, 10, 11, 3, -1," << endl;
+   os << "                3, 11, 8, 0, -1," << endl; // Р’РЅСѓС‚СЂРµРЅРЅСЏСЏ Р±РѕРєРѕРІР°СЏ РїРѕРІРµСЂС…РЅРѕСЃС‚СЊ
+   os << "                4, 5, 13, 12, -1," << endl;
+   os << "                5, 6, 14, 13, -1," << endl;
+   os << "                6, 7, 15, 14, -1," << endl;
+   os << "                7, 4, 12, 15, -1," << endl; // РќРёР¶РЅРёР№ С‚РѕСЂРµС†
+   os << "                0, 1, 5, 4, -1," << endl;
+   os << "                1, 2, 6, 5, -1," << endl;
+   os << "                2, 3, 7, 6, -1," << endl;
+   os << "                3, 0, 4, 7, -1," << endl; // Р’РµСЂС…РЅРёР№ С‚РѕСЂРµС†
+   os << "                8, 12, 13, 9, -1," << endl;
+   os << "                9, 13, 14, 10, -1," << endl;
+   os << "                10, 14, 15, 11, -1," << endl;
+   os << "                11, 15, 12, 8, -1" << endl;
+   os << "            ]" << endl;
+   os << "        }" << endl;
+   os << "      }" << endl;
+   os << "    }" << endl;
 }
 
 void mcTransport::dumpVRMLPrism(ostream& os, double ax, double ay, double az) const
 {
-	int i = 0;
-	geomVector3D p[8];
-
-	p[i++] = geomVector3D(-0.5*ax, -0.5*ay, 0) * mttow_;
-	p[i++] = geomVector3D(-0.5*ax, 0.5*ay, 0) * mttow_;
-	p[i++] = geomVector3D(0.5*ax, 0.5*ay, 0) * mttow_;
-	p[i++] = geomVector3D(0.5*ax, -0.5*ay, 0) * mttow_;
-	p[i++] = geomVector3D(-0.5*ax, -0.5*ay, az) * mttow_;
-	p[i++] = geomVector3D(-0.5*ax, 0.5*ay, az) * mttow_;
-	p[i++] = geomVector3D(0.5*ax, 0.5*ay, az) * mttow_;
-	p[i++] = geomVector3D(0.5*ax, -0.5*ay, az) * mttow_;
-
-	os << "    Transform {" << endl;
-	os << "      children Shape {" << endl;
-	os << "        appearance Appearance {" << endl;
-	os << "          material Material {" << endl;
-	os << "            diffuseColor " << red_ << ' ' << green_ << ' ' << blue_ << endl;
-	os << "            transparency " << transparancy_ << endl;
-	os << "          }" << endl;
-	os << "        }" << endl;
-	os << "        geometry IndexedFaceSet {" << endl;
-	os << "            coord Coordinate {" << endl;
-	os << "                point [" << endl;
-
-	for (i = 0; i < 8; i++) {
-		os << "                    " << p[i].x() << ' ' << p[i].y() << ' ' << p[i].z();
-		if (i < 7) os << ", ";
-		os << endl;
-	}
-
-	os << "                ]" << endl;
-	os << "            }" << endl;
-	os << "            coordIndex [" << endl;
-
-	os << "                0, 1, 2, 3, -1," << endl;
-	os << "                0, 4, 5, 1, -1," << endl;
-	os << "                1, 5, 6, 2, -1," << endl;
-	os << "                2, 6, 7, 3, -1," << endl;
-	os << "                3, 7, 4, 0, -1," << endl;
-	os << "                4, 7, 6, 5, -1" << endl;
-
-	os << "            ]" << endl;
-	os << "        }" << endl;
-	os << "      }" << endl;
-	os << "    }" << endl;
-
+   int i = 0;
+   geomVector3D p[8];
+   p[i++] = geomVector3D(-0.5 * ax, -0.5 * ay, 0) * mttow_;
+   p[i++] = geomVector3D(-0.5 * ax, 0.5 * ay, 0) * mttow_;
+   p[i++] = geomVector3D(0.5 * ax, 0.5 * ay, 0) * mttow_;
+   p[i++] = geomVector3D(0.5 * ax, -0.5 * ay, 0) * mttow_;
+   p[i++] = geomVector3D(-0.5 * ax, -0.5 * ay, az) * mttow_;
+   p[i++] = geomVector3D(-0.5 * ax, 0.5 * ay, az) * mttow_;
+   p[i++] = geomVector3D(0.5 * ax, 0.5 * ay, az) * mttow_;
+   p[i++] = geomVector3D(0.5 * ax, -0.5 * ay, az) * mttow_;
+   os << "    Transform {" << endl;
+   os << "      children Shape {" << endl;
+   os << "        appearance Appearance {" << endl;
+   os << "          material Material {" << endl;
+   os << "            diffuseColor " << red_ << ' ' << green_ << ' ' << blue_ << endl;
+   os << "            transparency " << transparancy_ << endl;
+   os << "          }" << endl;
+   os << "        }" << endl;
+   os << "        geometry IndexedFaceSet {" << endl;
+   os << "            coord Coordinate {" << endl;
+   os << "                point [" << endl;
+   for (i = 0; i < 8; i++) {
+      os << "                    " << p[i].x() << ' ' << p[i].y() << ' ' << p[i].z();
+      if (i < 7)
+         os << ", ";
+      os << endl;
+   }
+   os << "                ]" << endl;
+   os << "            }" << endl;
+   os << "            coordIndex [" << endl;
+   os << "                0, 1, 2, 3, -1," << endl;
+   os << "                0, 4, 5, 1, -1," << endl;
+   os << "                1, 5, 6, 2, -1," << endl;
+   os << "                2, 6, 7, 3, -1," << endl;
+   os << "                3, 7, 4, 0, -1," << endl;
+   os << "                4, 7, 6, 5, -1" << endl;
+   os << "            ]" << endl;
+   os << "        }" << endl;
+   os << "      }" << endl;
+   os << "    }" << endl;
 }
 
 void mcTransport::dumpVRMLPolygonCircle(ostream& os, const std::vector<double>& pz, const std::vector<double>& pr) const
 {
-	if(pz.size() < 2)
-		throw std::exception("dumpVRMLPolygonCircle: less thet 2 polygon points");
-
-	for (unsigned i = 1; i < pz.size(); i++)
-	{
-		bool normPositive = false;
-		double r1 = pr[i - 1], r2 = pr[i];
-		double z1 = pz[i - 1], z2 = pz[i];
-		if(z1 >= z2)
-			throw std::exception("dumpVRMLPolygonCircle: Z step must be positive and not zero");
-
-		double f = r1 == r2 ? 1e6 : r1 * (z2 - z1) / (r1 - r2);
-		if (f < 0)
-		{
-			double r = r1; r1 = r2; r2 = r;
-			double z = z1; z1 = z2; z2 = z;
-			f = r1 * (z2 - z1) / (r1 - r2);
-			normPositive = true;
-		}
-		dumpVRMLConicalCylinderSide(os, r1, z1, z2, f, normPositive);
-	}
-
-	// Торцы
-	dumpVRMLRing(os, 0, pr.front(), pz.front(), false);
-	dumpVRMLRing(os, 0, pr.back(), pz.back(), true);
-
+   if (pz.size() < 2)
+      throw std::exception("dumpVRMLPolygonCircle: less thet 2 polygon points");
+   for (unsigned i = 1; i < pz.size(); i++) {
+      bool normPositive = false;
+      double r1 = pr[i - 1], r2 = pr[i];
+      double z1 = pz[i - 1], z2 = pz[i];
+      if (z1 >= z2)
+         throw std::exception("dumpVRMLPolygonCircle: Z step must be positive and not zero");
+      double f = r1 == r2 ? 1e6 : r1 * (z2 - z1) / (r1 - r2);
+      if (f < 0) {
+         double r = r1;
+         r1 = r2;
+         r2 = r;
+         double z = z1;
+         z1 = z2;
+         z2 = z;
+         f = r1 * (z2 - z1) / (r1 - r2);
+         normPositive = true;
+      }
+      dumpVRMLConicalCylinderSide(os, r1, z1, z2, f, normPositive);
+   } // РўРѕСЂС†С‹
+   dumpVRMLRing(os, 0, pr.front(), pz.front(), false);
+   dumpVRMLRing(os, 0, pr.back(), pz.back(), true);
 }
-
 #pragma endregion

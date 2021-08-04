@@ -1,203 +1,170 @@
-#include "XmlParseReaderBase.h"
+ï»¿#include "XmlParseReaderBase.h"
 #include <xmllite.h>
 #include <comdef.h>
 #include <shlwapi.h>
-
 using namespace std;
-
 #define SAFE_RELEASE(I)         do { if (I){ I->Release(); } I = NULL; } while(0)
 
 inline void XmlParseReaderBase::ThrowIfFailed(HRESULT hr, const char* s)
 {
-	if (FAILED(hr))
-	{
-		if (s == nullptr)
-		{
-			auto msg = _com_error(hr).ErrorMessage();
-			auto len = lstrlenW(msg);
-			std::string str((size_t)len + 1, 0);
-			WideCharToMultiByte(CP_ACP, 0, msg, -1, &str[0], len, nullptr, nullptr);
-			throw std::exception(str.c_str());
-		}
-		else
-			throw std::exception(s);
-	}
+   if (FAILED(hr)) {
+      if (s == nullptr) {
+         auto msg = _com_error(hr).ErrorMessage();
+         auto len = lstrlenW(msg);
+         std::string str(static_cast<size_t>(len) + 1, 0);
+         WideCharToMultiByte(CP_ACP, 0, msg, -1, &str[0], len, nullptr, nullptr);
+         throw std::exception(str.c_str());
+      }
+      throw std::exception(s);
+   }
 }
 
 XPRNode::XPRNode() : ParentNode(nullptr) {}
 
 XPRNode::XPRNode(const wchar_t* name, const wchar_t* text) : ParentNode(nullptr)
 {
-	if (name != nullptr) Name = name;
-	if (text != nullptr) Text = text;
+   if (name != nullptr)
+      Name = name;
+   if (text != nullptr)
+      Text = text;
 }
 
 XPRNode* XPRNode::AddNode(const wchar_t* name, const wchar_t* text)
 {
-	XPRNode node(name, text);
-	node.ParentNode = this;
-	Nodes.push_back(node);
-	return &Nodes.back();
+   XPRNode node(name, text);
+   node.ParentNode = this;
+   Nodes.push_back(node);
+   return &Nodes.back();
 }
 
 string XmlParseReaderBase::copyWStringToStlString(const wchar_t* from)
 {
-	if (from == nullptr) return string();
-	auto len = lstrlenW(from);
-	std::string str((size_t)len + 1, 0);
-	WideCharToMultiByte(CP_ACP, 0, from, -1, &str[0], len, nullptr, nullptr);
-	return str;
+   if (from == nullptr)
+      return string();
+   auto len = lstrlenW(from);
+   std::string str(static_cast<size_t>(len) + 1, 0);
+   WideCharToMultiByte(CP_ACP, 0, from, -1, &str[0], len, nullptr, nullptr);
+   return str;
 }
 
 void XmlParseReaderBase::CreateXPRDocumentFromFile(wchar_t* fname, XPRNode& doc)
 {
-	string errmsg = "Error creating XML reader for file: " + copyWStringToStlString(fname);
-	IStream *pFileStream = nullptr;
-	ThrowIfFailed(SHCreateStreamOnFile(fname, STGM_READ, &pFileStream), errmsg.c_str());
-	CreateXPRDocumentFromStream(pFileStream, doc);
-	SAFE_RELEASE(pFileStream);
+   string errmsg = "Error creating XML reader for file: " + copyWStringToStlString(fname);
+   IStream* pFileStream = nullptr;
+   ThrowIfFailed(SHCreateStreamOnFile(fname, STGM_READ, &pFileStream), errmsg.c_str());
+   CreateXPRDocumentFromStream(pFileStream, doc);
+   SAFE_RELEASE(pFileStream);
 }
 
 void XmlParseReaderBase::CreateXPRDocumentFromStream(IStream* is, XPRNode& doc)
 {
-	// Ñîçäàíèå COM îáåêòà - ðèäåð XML
-	IXmlReader *reader = nullptr;
-	XmlParseReaderBase::ThrowIfFailed(CreateXmlReader(
-		__uuidof(IXmlReader), (void**)&reader, nullptr), "Error creating xml reader");
-
-	// Ðåæèìà ðàáîòû ðèäåðà
-	XmlParseReaderBase::ThrowIfFailed(
-		reader->SetProperty(XmlReaderProperty_DtdProcessing, DtdProcessing_Prohibit), "Error setting XmlReaderProperty_DtdProcessing");
-
-	// Ïîäêëþ÷åíèå ê ïîòîêó äàííûõ
-	XmlParseReaderBase::ThrowIfFailed(reader->SetInput(is), "Error setting input for reader");
-
-	XmlNodeType nodeType;
-	LPCWSTR pwszPrefix = nullptr;
-	LPCWSTR pwszLocalName = nullptr;
-	LPCWSTR pwszValue = nullptr;
-	UINT cwchPrefix = 0, cwchLocalName = 0, cwchValue = 0;
-	XPRNode* currentNode = nullptr;
-	UINT currentDepth = 0, nodeDepth = 0, attrCount = 0;
-
-	// Reads until there are no more nodes.
-	while (S_OK == reader->Read(&nodeType))
-	{
-		switch (nodeType)
-		{
-		case XmlNodeType_XmlDeclaration:
-			//text += L"XmlDeclaration\n";
-			//ThrowIfFailed(ReadAttributes(reader.Get(), text));
-			break;
-
-		case XmlNodeType_Element:
-			ThrowIfFailed(reader->GetPrefix(&pwszPrefix, &cwchPrefix));
-			ThrowIfFailed(reader->GetLocalName(&pwszLocalName, &cwchLocalName));
-			ThrowIfFailed(reader->GetDepth(&nodeDepth));
-			ThrowIfFailed(reader->GetAttributeCount(&attrCount));
-
-			// Åñëè ýòî êîðíåâîé óçåë, òî ïðîñòî ÷èòàåì â íåãî.
-			// â ïðîòèâíîì ñëó÷àå ñîçäàåì íîâûé âëîæåííûé.
-			if (nodeDepth == 0)
-			{
-				currentNode = &doc;
-				currentDepth = 0;
-			}
-			else if (nodeDepth > currentDepth)
-			{
-				currentNode = currentNode->AddNode(nullptr, nullptr);
-				currentDepth = nodeDepth;
-			}
-			else
-			{
-				currentNode = currentNode->ParentNode->AddNode(nullptr, nullptr);
-				currentDepth = nodeDepth;
-			}
-			currentNode->Name = wstring(pwszPrefix, 0, cwchPrefix) + wstring(pwszLocalName, 0, cwchLocalName);
-
-			// Read attributes
-			if (attrCount > 0)
-			{
-				ThrowIfFailed(reader->MoveToFirstAttribute());
-				while (true)
-				{
-					ThrowIfFailed(reader->GetPrefix(&pwszPrefix, &cwchPrefix));
-					ThrowIfFailed(reader->GetLocalName(&pwszLocalName, &cwchLocalName));
-					ThrowIfFailed(reader->GetValue(&pwszValue, &cwchValue));
-
-					if (cwchValue > 0)
-					{
-						currentNode->AddNode(
-							(wstring(pwszPrefix, 0, cwchPrefix) + wstring(pwszLocalName, 0, cwchLocalName)).c_str(),
-							wstring(pwszValue, 0, cwchValue).c_str());
-					}
-					if (S_OK != reader->MoveToNextAttribute())
-						break;
-				}
-			}
-			break;
-
-		case XmlNodeType_EndElement:
-			ThrowIfFailed(reader->GetPrefix(&pwszPrefix, &cwchPrefix));
-			ThrowIfFailed(reader->GetLocalName(&pwszLocalName, &cwchLocalName));
-			currentNode = currentNode->ParentNode;
-			currentDepth--;
-			break;
-
-		case XmlNodeType_Whitespace:
-			//ThrowIfFailed(reader->GetValue(&pwszValue, &cwchValue));
-			//text += L"Whitespace: >";
-			//text += ref new String(pwszValue, cwchValue);
-			//text += L"<\n";
-			break;
-
-		case XmlNodeType_Text:
-			ThrowIfFailed(reader->GetValue(&pwszValue, &cwchValue));
-			currentNode->Text = wstring(pwszValue, 0, cwchValue);
-			break;
-
-		case XmlNodeType_CDATA:
-			//ThrowIfFailed(reader->GetValue(&pwszValue, &cwchValue));
-			//text += L"CDATA: ";
-			//text += ref new String(pwszValue, cwchValue);
-			//text += L"\n";
-			break;
-		case XmlNodeType_ProcessingInstruction:
-			//ThrowIfFailed(reader->GetLocalName(&pwszLocalName, &cwchLocalName));
-			//ThrowIfFailed(reader->GetValue(&pwszValue, &cwchValue));
-			//text += L"Processing Instruction name:";
-			//text += ref new String(pwszLocalName, cwchLocalName);
-			//text += L"value:";
-			//text += ref new String(pwszValue, cwchValue);
-			//text += L"\n";
-			break;
-		case XmlNodeType_Comment:
-			//ThrowIfFailed(reader->GetValue(&pwszValue, &cwchValue));
-			//text += L"Comment: ";
-			//text += ref new String(pwszValue, cwchValue);
-			//text += L"\n";
-			break;
-		case XmlNodeType_DocumentType:
-			//text += L"DOCTYPE is not printed\n";
-			break;
-		case XmlNodeType_None: break;
-		case XmlNodeType_Attribute: break;
-		default: break;
-		}
-	}
-	SAFE_RELEASE(reader);
+   // Ð¡Ð¾Ð·Ð´Ð°Ð½Ð¸Ðµ COM Ð¾Ð±ÐµÐºÑ‚Ð° - Ñ€Ð¸Ð´ÐµÑ€ XML
+   IXmlReader* reader = nullptr;
+   ThrowIfFailed(CreateXmlReader(__uuidof(IXmlReader), (void**)&reader, nullptr), "Error creating xml reader");
+   // Ð ÐµÐ¶Ð¸Ð¼Ð° Ñ€Ð°Ð±Ð¾Ñ‚Ñ‹ Ñ€Ð¸Ð´ÐµÑ€Ð°
+   ThrowIfFailed(reader->SetProperty(XmlReaderProperty_DtdProcessing, DtdProcessing_Prohibit),
+                 "Error setting XmlReaderProperty_DtdProcessing"); // ÐŸÐ¾Ð´ÐºÐ»ÑŽÑ‡ÐµÐ½Ð¸Ðµ Ðº Ð¿Ð¾Ñ‚Ð¾ÐºÑƒ Ð´Ð°Ð½Ð½Ñ‹Ñ…
+   ThrowIfFailed(reader->SetInput(is), "Error setting input for reader");
+   XmlNodeType nodeType;
+   LPCWSTR pwszPrefix = nullptr;
+   LPCWSTR pwszLocalName = nullptr;
+   LPCWSTR pwszValue = nullptr;
+   UINT cwchPrefix = 0, cwchLocalName = 0, cwchValue = 0;
+   XPRNode* currentNode = nullptr;
+   UINT currentDepth = 0, nodeDepth = 0, attrCount = 0; // Reads until there are no more nodes.
+   while (S_OK == reader->Read(&nodeType)) {
+      switch (nodeType) {
+         case XmlNodeType_XmlDeclaration: //text += L"XmlDeclaration\n";
+            //ThrowIfFailed(ReadAttributes(reader.Get(), text));
+            break;
+         case XmlNodeType_Element:
+            ThrowIfFailed(reader->GetPrefix(&pwszPrefix, &cwchPrefix));
+            ThrowIfFailed(reader->GetLocalName(&pwszLocalName, &cwchLocalName));
+            ThrowIfFailed(reader->GetDepth(&nodeDepth));
+            ThrowIfFailed(reader->GetAttributeCount(&attrCount)); // Ð•ÑÐ»Ð¸ ÑÑ‚Ð¾ ÐºÐ¾Ñ€Ð½ÐµÐ²Ð¾Ð¹ ÑƒÐ·ÐµÐ», Ñ‚Ð¾ Ð¿Ñ€Ð¾ÑÑ‚Ð¾ Ñ‡Ð¸Ñ‚Ð°ÐµÐ¼ Ð² Ð½ÐµÐ³Ð¾.
+            // Ð² Ð¿Ñ€Ð¾Ñ‚Ð¸Ð²Ð½Ð¾Ð¼ ÑÐ»ÑƒÑ‡Ð°Ðµ ÑÐ¾Ð·Ð´Ð°ÐµÐ¼ Ð½Ð¾Ð²Ñ‹Ð¹ Ð²Ð»Ð¾Ð¶ÐµÐ½Ð½Ñ‹Ð¹.
+            if (nodeDepth == 0) {
+               currentNode = &doc;
+               currentDepth = 0;
+            } else if (nodeDepth > currentDepth) {
+               currentNode = currentNode->AddNode(nullptr, nullptr);
+               currentDepth = nodeDepth;
+            } else {
+               currentNode = currentNode->ParentNode->AddNode(nullptr, nullptr);
+               currentDepth = nodeDepth;
+            }
+            currentNode->Name = wstring(pwszPrefix, 0, cwchPrefix) + wstring(pwszLocalName, 0, cwchLocalName);
+            // Read attributes
+            if (attrCount > 0) {
+               ThrowIfFailed(reader->MoveToFirstAttribute());
+               while (true) {
+                  ThrowIfFailed(reader->GetPrefix(&pwszPrefix, &cwchPrefix));
+                  ThrowIfFailed(reader->GetLocalName(&pwszLocalName, &cwchLocalName));
+                  ThrowIfFailed(reader->GetValue(&pwszValue, &cwchValue));
+                  if (cwchValue > 0) {
+                     currentNode->AddNode(
+                        (wstring(pwszPrefix, 0, cwchPrefix) + wstring(pwszLocalName, 0, cwchLocalName)).c_str(),
+                        wstring(pwszValue, 0, cwchValue).c_str());
+                  }
+                  if (S_OK != reader->MoveToNextAttribute())
+                     break;
+               }
+            }
+            break;
+         case XmlNodeType_EndElement:
+            ThrowIfFailed(reader->GetPrefix(&pwszPrefix, &cwchPrefix));
+            ThrowIfFailed(reader->GetLocalName(&pwszLocalName, &cwchLocalName));
+            currentNode = currentNode->ParentNode;
+            currentDepth--;
+            break;
+         case XmlNodeType_Whitespace: //ThrowIfFailed(reader->GetValue(&pwszValue, &cwchValue));
+            //text += L"Whitespace: >";
+            //text += ref new String(pwszValue, cwchValue);
+            //text += L"<\n";
+            break;
+         case XmlNodeType_Text:
+            ThrowIfFailed(reader->GetValue(&pwszValue, &cwchValue));
+            currentNode->Text = wstring(pwszValue, 0, cwchValue);
+            break;
+         case XmlNodeType_CDATA: //ThrowIfFailed(reader->GetValue(&pwszValue, &cwchValue));
+            //text += L"CDATA: ";
+            //text += ref new String(pwszValue, cwchValue);
+            //text += L"\n";
+            break;
+         case XmlNodeType_ProcessingInstruction: //ThrowIfFailed(reader->GetLocalName(&pwszLocalName, &cwchLocalName));
+            //ThrowIfFailed(reader->GetValue(&pwszValue, &cwchValue));
+            //text += L"Processing Instruction name:";
+            //text += ref new String(pwszLocalName, cwchLocalName);
+            //text += L"value:";
+            //text += ref new String(pwszValue, cwchValue);
+            //text += L"\n";
+            break;
+         case XmlNodeType_Comment: //ThrowIfFailed(reader->GetValue(&pwszValue, &cwchValue));
+            //text += L"Comment: ";
+            //text += ref new String(pwszValue, cwchValue);
+            //text += L"\n";
+            break;
+         case XmlNodeType_DocumentType: //text += L"DOCTYPE is not printed\n";
+            break;
+         case XmlNodeType_None:
+            break;
+         case XmlNodeType_Attribute:
+            break;
+         default:
+            break;
+      }
+   }
+   SAFE_RELEASE(reader);
 }
 
 wstring XmlParseReaderBase::readElementNodeText(const XPRNode& n, const wchar_t* name)
 {
-	wstring text;
-	for (auto node : n.Nodes)
-	{
-		if (node.Name == name)
-		{
-			text = node.Text;
-			break;
-		}
-	}
-	return text;
+   wstring text;
+   for (auto node : n.Nodes) {
+      if (node.Name == name) {
+         text = node.Text;
+         break;
+      }
+   }
+   return text;
 }

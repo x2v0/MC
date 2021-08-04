@@ -3,24 +3,14 @@
 #include "mcParticle.h"
 #include "mcThread.h"
 #include "../geometry/vec3d.h"
-
-mcPhysics::mcPhysics(void)
-{
-}
-
-mcPhysics::~mcPhysics(void)
-{
-}
-
-// Returns the cosine and sine of a random angle between zero and two pi.
+mcPhysics::mcPhysics(void) {}
+mcPhysics::~mcPhysics(void) {} // Returns the cosine and sine of a random angle between zero and two pi.
 void mcPhysics::GetRandomPhi(double rnum, double* cosPhi, double* sinPhi)
 {
-	double phi = rnum * TWOPI;
-	*cosPhi = cos(phi);
-	*sinPhi = sin(phi);
-}
-
-// Generates new direction cosines from the scattering angles and old direc-
+   double phi = rnum * TWOPI;
+   *cosPhi = cos(phi);
+   *sinPhi = sin(phi);
+} // Generates new direction cosines from the scattering angles and old direc-
 // tion cosines. Theta is the polar scattering angle in the transport frame,
 // and phi is the azimuthal scattering angle in the transport frame. In the
 // laboratory frame, let psi be the polar angle and delta the azimuthal angle
@@ -43,52 +33,47 @@ void mcPhysics::GetRandomPhi(double rnum, double* cosPhi, double* sinPhi)
 //  |    0          0      1 |  | -sinPsi  0  cosPsi |  | cosTheta        |
 //  \                        /  \                    /  \                 /
 //
-void mcPhysics::ChangeDirection(double cosTheta, double sinTheta,
-	double cosPhi, double sinPhi, geomVector3D& u)
+void mcPhysics::ChangeDirection(double cosTheta, double sinTheta, double cosPhi, double sinPhi, geomVector3D& u)
 {
-	static const double minSinPsiSquared = 1.0e-10;
-	double sinPsiCosDelta = u.x();
-	double sinPsiSinDelta = u.y();
-	double cosPsi = u.z();
-	double sinThetaCosPhi = sinTheta * cosPhi;
-	double sinThetaSinPhi = sinTheta * sinPhi;
-	double sinPsiSquared = sinPsiCosDelta * sinPsiCosDelta + sinPsiSinDelta * sinPsiSinDelta;
-
-	if (sinPsiSquared < minSinPsiSquared) {
-		if (cosPsi > 0)
-			u.set(sinThetaCosPhi, sinThetaSinPhi, cosTheta);
-		else
-			u.set(-sinThetaCosPhi, -sinThetaSinPhi, -cosTheta);
-	}
-	else {
-		double sinPsi = sqrt(sinPsiSquared);
-		double cosDelta = sinPsiCosDelta / sinPsi;
-		double sinDelta = sinPsiSinDelta / sinPsi;
-		u.set((cosPsi * cosDelta * sinThetaCosPhi) - (sinDelta * sinThetaSinPhi) + (sinPsiCosDelta * cosTheta),
-			(cosPsi * sinDelta * sinThetaCosPhi) + (cosDelta * sinThetaSinPhi) + (sinPsiSinDelta * cosTheta),
-			-(sinPsi * sinThetaCosPhi) + (cosPsi * cosTheta));
-	}
-}
-
-// Computes a set of direction cosines from an isotropic distribution.
+   static const double minSinPsiSquared = 1.0e-10;
+   double sinPsiCosDelta = u.x();
+   double sinPsiSinDelta = u.y();
+   double cosPsi = u.z();
+   double sinThetaCosPhi = sinTheta * cosPhi;
+   double sinThetaSinPhi = sinTheta * sinPhi;
+   double sinPsiSquared = sinPsiCosDelta * sinPsiCosDelta + sinPsiSinDelta * sinPsiSinDelta;
+   if (sinPsiSquared < minSinPsiSquared) {
+      if (cosPsi > 0)
+         u.set(sinThetaCosPhi, sinThetaSinPhi, cosTheta);
+      else
+         u.set(-sinThetaCosPhi, -sinThetaSinPhi, -cosTheta);
+   } else {
+      double sinPsi = sqrt(sinPsiSquared);
+      double cosDelta = sinPsiCosDelta / sinPsi;
+      double sinDelta = sinPsiSinDelta / sinPsi;
+      u.set((cosPsi * cosDelta * sinThetaCosPhi) - (sinDelta * sinThetaSinPhi) + (sinPsiCosDelta * cosTheta),
+            (cosPsi * sinDelta * sinThetaCosPhi) + (cosDelta * sinThetaSinPhi) + (sinPsiSinDelta * cosTheta),
+            -(sinPsi * sinThetaCosPhi) + (cosPsi * cosTheta));
+   }
+} // Computes a set of direction cosines from an isotropic distribution.
 void mcPhysics::GoInRandomDirection(double rnum1, double rnum2, geomVector3D& u)
 {
-	double cosTheta = 1.0 - 2.0 * rnum1;
-	double sinSquared = (1.0 - cosTheta) * (1.0 + cosTheta);
-	sinSquared = MAX(0, sinSquared);
-	double sinTheta = sqrt(sinSquared);
-	double cosPhi, sinPhi;
-	GetRandomPhi(rnum2, &cosPhi, &sinPhi);
-	u.set(sinTheta * cosPhi, sinTheta * sinPhi, cosTheta);
+   double cosTheta = 1.0 - 2.0 * rnum1;
+   double sinSquared = (1.0 - cosTheta) * (1.0 + cosTheta);
+   sinSquared = MAX(0, sinSquared);
+   double sinTheta = sqrt(sinSquared);
+   double cosPhi, sinPhi;
+   GetRandomPhi(rnum2, &cosPhi, &sinPhi);
+   u.set(sinTheta * cosPhi, sinTheta * sinPhi, cosTheta);
 }
 
 mcParticle* mcPhysics::DuplicateParticle(mcParticle* p)
 {
-	p->plast = p->p;
-	return p->thread_->DuplicateParticle();
+   p->plast = p->p;
+   return p->thread_->DuplicateParticle();
 }
 
 void mcPhysics::DiscardParticle(mcParticle* p)
 {
-	p->thread_->RemoveParticle();
+   p->thread_->RemoveParticle();
 }

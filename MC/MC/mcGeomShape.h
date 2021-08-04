@@ -1,4 +1,4 @@
-// Radiation Oncology Monte Carlo open source project
+п»ї// Radiation Oncology Monte Carlo open source project
 //
 // Author: [2005-2017] Gennady Gorlachev (ggorlachev@roiss.ru) 
 //---------------------------------------------------------------------------
@@ -6,38 +6,41 @@
 #include "../geometry/mtrx3d.h"
 #include "mcGeomSide.h"
 
-//Purpose:  Базовый класс геометрических объектов с произвольной формой,
-//задаваемой списком ограничивающих его граней.
+//Purpose:  Р‘Р°Р·РѕРІС‹Р№ РєР»Р°СЃСЃ РіРµРѕРјРµС‚СЂРёС‡РµСЃРєРёС… РѕР±СЉРµРєС‚РѕРІ СЃ РїСЂРѕРёР·РІРѕР»СЊРЅРѕР№ С„РѕСЂРјРѕР№,
+//Р·Р°РґР°РІР°РµРјРѕР№ СЃРїРёСЃРєРѕРј РѕРіСЂР°РЅРёС‡РёРІР°СЋС‰РёС… РµРіРѕ РіСЂР°РЅРµР№.
 class mcGeomShape
 {
 public:
-	mcGeomShape();
-	virtual ~mcGeomShape();
+   mcGeomShape();
 
-	virtual double getDistanceInside(const geomVector3D& p, const geomVector3D& v) const;
-	virtual double getDistanceOutside(const geomVector3D& p, const geomVector3D& v) const;
-	virtual double getDNearInside(const geomVector3D& p) const;
+   virtual ~mcGeomShape();
 
-	friend ostream& operator << (ostream& os, const mcGeomShape& g)
-	{
-		os << "Number of sides:\t" << g.nSides_ << endl;
-		for (unsigned int i = 0; i < g.nSides_; i++) g.Sides_[i]->dump(os);
-		return os;
-	}
+   virtual double getDistanceInside(const geomVector3D& p, const geomVector3D& v) const;
 
-protected:
-	// Инициализация матрицы преобразования координат.
-	// Пользователь может переопределить преобразование координат.
-	// Рекомендуемый путь - задание точки начала координат и векторов
-	// осей X и Y системы объекта в мировой системе с последующим
-	// вызовом данной функции инициализации базового класса.
-	virtual void initTransformation() = 0;
+   virtual double getDistanceOutside(const geomVector3D& p, const geomVector3D& v) const;
 
-	inline double getDistance(const geomVector3D& p, const geomVector3D& v, bool inside) const;
-	inline double getDNear(const geomVector3D& p) const;
+   virtual double getDNearInside(const geomVector3D& p) const;
 
-protected:
-	// Массив граней, формирующих тело клина
-	unsigned int nSides_;
-	mcGeomSide** Sides_;
+   friend ostream& operator <<(ostream& os, const mcGeomShape& g)
+   {
+      os << "Number of sides:\t" << g.nSides_ << endl;
+      for (unsigned int i = 0; i < g.nSides_; i++)
+         g.Sides_[i]->dump(os);
+      return os;
+   }
+
+protected: // РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РјР°С‚СЂРёС†С‹ РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёСЏ РєРѕРѕСЂРґРёРЅР°С‚.
+   // РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ РјРѕР¶РµС‚ РїРµСЂРµРѕРїСЂРµРґРµР»РёС‚СЊ РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ РєРѕРѕСЂРґРёРЅР°С‚.
+   // Р РµРєРѕРјРµРЅРґСѓРµРјС‹Р№ РїСѓС‚СЊ - Р·Р°РґР°РЅРёРµ С‚РѕС‡РєРё РЅР°С‡Р°Р»Р° РєРѕРѕСЂРґРёРЅР°С‚ Рё РІРµРєС‚РѕСЂРѕРІ
+   // РѕСЃРµР№ X Рё Y СЃРёСЃС‚РµРјС‹ РѕР±СЉРµРєС‚Р° РІ РјРёСЂРѕРІРѕР№ СЃРёСЃС‚РµРјРµ СЃ РїРѕСЃР»РµРґСѓСЋС‰РёРј
+   // РІС‹Р·РѕРІРѕРј РґР°РЅРЅРѕР№ С„СѓРЅРєС†РёРё РёРЅРёС†РёР°Р»РёР·Р°С†РёРё Р±Р°Р·РѕРІРѕРіРѕ РєР»Р°СЃСЃР°.
+   virtual void initTransformation() = 0;
+
+   inline double getDistance(const geomVector3D& p, const geomVector3D& v, bool inside) const;
+
+   inline double getDNear(const geomVector3D& p) const;
+
+protected: // РњР°СЃСЃРёРІ РіСЂР°РЅРµР№, С„РѕСЂРјРёСЂСѓСЋС‰РёС… С‚РµР»Рѕ РєР»РёРЅР°
+   unsigned int nSides_;
+   mcGeomSide** Sides_;
 };

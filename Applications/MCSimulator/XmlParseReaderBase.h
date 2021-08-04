@@ -1,4 +1,4 @@
-// Radiation Oncology Monte Carlo open source project
+п»ї// Radiation Oncology Monte Carlo open source project
 //
 // Author: [2005-2018] Gennady Gorlachev (ggorlachev@roiss.ru) 
 //---------------------------------------------------------------------------
@@ -7,35 +7,34 @@
 #include <string>
 #include <vector>
 
-// Аналог узла XML документа.
-// В отличие от последнего аттрибуты превращаются в узлы, не имеющие детей.
+// РђРЅР°Р»РѕРі СѓР·Р»Р° XML РґРѕРєСѓРјРµРЅС‚Р°.
+// Р’ РѕС‚Р»РёС‡РёРµ РѕС‚ РїРѕСЃР»РµРґРЅРµРіРѕ Р°С‚С‚СЂРёР±СѓС‚С‹ РїСЂРµРІСЂР°С‰Р°СЋС‚СЃСЏ РІ СѓР·Р»С‹, РЅРµ РёРјРµСЋС‰РёРµ РґРµС‚РµР№.
 class XPRNode
 {
 public:
-	XPRNode();
-	XPRNode(const wchar_t* name, const wchar_t* text);
+   XPRNode();
 
-	XPRNode* AddNode(const wchar_t* name, const wchar_t* text);
+   XPRNode(const wchar_t* name, const wchar_t* text);
 
-	std::wstring Name;
-	std::wstring Text;
-	std::vector<XPRNode> Nodes;
+   XPRNode* AddNode(const wchar_t* name, const wchar_t* text);
 
-	// Указатель, необходимый для закрывания узла и возвращения на уровень выше.
-	XPRNode* ParentNode;
-};
-
-// Класс использует xmllite парсер типа SAX с поддержкой encoding.
-// Реализация основана на идее формирования дерева данных по аналогии 
-// с DOM, но в сильно упрощенном варианте.
+   std::wstring Name;
+   std::wstring Text;
+   std::vector<XPRNode> Nodes; // РЈРєР°Р·Р°С‚РµР»СЊ, РЅРµРѕР±С…РѕРґРёРјС‹Р№ РґР»СЏ Р·Р°РєСЂС‹РІР°РЅРёСЏ СѓР·Р»Р° Рё РІРѕР·РІСЂР°С‰РµРЅРёСЏ РЅР° СѓСЂРѕРІРµРЅСЊ РІС‹С€Рµ.
+   XPRNode* ParentNode;
+}; // РљР»Р°СЃСЃ РёСЃРїРѕР»СЊР·СѓРµС‚ xmllite РїР°СЂСЃРµСЂ С‚РёРїР° SAX СЃ РїРѕРґРґРµСЂР¶РєРѕР№ encoding.
+// Р РµР°Р»РёР·Р°С†РёСЏ РѕСЃРЅРѕРІР°РЅР° РЅР° РёРґРµРµ С„РѕСЂРјРёСЂРѕРІР°РЅРёСЏ РґРµСЂРµРІР° РґР°РЅРЅС‹С… РїРѕ Р°РЅР°Р»РѕРіРёРё 
+// СЃ DOM, РЅРѕ РІ СЃРёР»СЊРЅРѕ СѓРїСЂРѕС‰РµРЅРЅРѕРј РІР°СЂРёР°РЅС‚Рµ.
 class XmlParseReaderBase
 {
 public:
-	static std::string copyWStringToStlString(const wchar_t* from);
-	static inline void ThrowIfFailed(HRESULT hr, const char* s = nullptr);
+   static std::string copyWStringToStlString(const wchar_t* from);
 
-	static void CreateXPRDocumentFromFile(wchar_t* fname, XPRNode& doc);
-	static void CreateXPRDocumentFromStream(IStream * is, XPRNode& doc);
+   static inline void ThrowIfFailed(HRESULT hr, const char* s = nullptr);
 
-	static std::wstring readElementNodeText(const XPRNode& n, const wchar_t* name);
+   static void CreateXPRDocumentFromFile(wchar_t* fname, XPRNode& doc);
+
+   static void CreateXPRDocumentFromStream(IStream* is, XPRNode& doc);
+
+   static std::wstring readElementNodeText(const XPRNode& n, const wchar_t* name);
 };

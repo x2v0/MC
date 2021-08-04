@@ -1,4 +1,4 @@
-// Radiation Oncology Monte Carlo open source project
+п»ї// Radiation Oncology Monte Carlo open source project
 //
 // Author: [2005-2017] Gennady Gorlachev (ggorlachev@roiss.ru) 
 //---------------------------------------------------------------------------
@@ -6,37 +6,29 @@
 #include "mcgeomside.h"
 #include "../geometry/vec2d.h"
 
-//Purpose:  Вспомогательный класс для расчета расстояния до.
-//треугольника, произвольно расположенного в пространстве и 
-//представляющего грань трехмерного объекта.
+//Purpose:  Р’СЃРїРѕРјРѕРіР°С‚РµР»СЊРЅС‹Р№ РєР»Р°СЃСЃ РґР»СЏ СЂР°СЃС‡РµС‚Р° СЂР°СЃСЃС‚РѕСЏРЅРёСЏ РґРѕ.
+//С‚СЂРµСѓРіРѕР»СЊРЅРёРєР°, РїСЂРѕРёР·РІРѕР»СЊРЅРѕ СЂР°СЃРїРѕР»РѕР¶РµРЅРЅРѕРіРѕ РІ РїСЂРѕСЃС‚СЂР°РЅСЃС‚РІРµ Рё 
+//РїСЂРµРґСЃС‚Р°РІР»СЏСЋС‰РµРіРѕ РіСЂР°РЅСЊ С‚СЂРµС…РјРµСЂРЅРѕРіРѕ РѕР±СЉРµРєС‚Р°.
 class mcGeomTriangleSide : public mcGeomSide
 {
 public:
-	mcGeomTriangleSide(const geomVector3D& p
-		, const geomVector3D& Vx
-		, const geomVector3D& Vy
-		, double ax, double ay);
+   mcGeomTriangleSide(const geomVector3D& p, const geomVector3D& Vx, const geomVector3D& Vy, double ax, double ay);
 
-	double getDistance(const geomVector3D& p, const geomVector3D& v, bool inside) const override;
-	double getDNear(const geomVector3D& p) const override;
+   double getDistance(const geomVector3D& p, const geomVector3D& v, bool inside) const override;
 
-	void dump(ostream& os) const override {}
+   double getDNear(const geomVector3D& p) const override;
 
-protected:
-	// Параметры сообщаемые извне
-	geomVector3D P_;        // координаты основной вершины
-	geomVector3D Vx_;       // векторы сторон из вершины (в мировой системе)
-	geomVector3D Vy_;
-	double ax_;             // размеры сторон треугольника
-	double ay_;
-
-	// Производные параметры
-	geomVector3D N_;        // нормаль к плоскости треугольника
-	geomVector3D VRy_;      // ось Y системы треугольника в мировой системе
-
-	geomVector2D p_[3];     // вершин треугольника
-	geomVector2D v_[3];     // векторы ребер
-	geomVector2D n_[3];     // левые нормали ребер
-
-	double a_[3];           // длины ребер
+   void dump(ostream& os) const override {}
+protected:           // РџР°СЂР°РјРµС‚СЂС‹ СЃРѕРѕР±С‰Р°РµРјС‹Рµ РёР·РІРЅРµ
+   geomVector3D P_;  // РєРѕРѕСЂРґРёРЅР°С‚С‹ РѕСЃРЅРѕРІРЅРѕР№ РІРµСЂС€РёРЅС‹
+   geomVector3D Vx_; // РІРµРєС‚РѕСЂС‹ СЃС‚РѕСЂРѕРЅ РёР· РІРµСЂС€РёРЅС‹ (РІ РјРёСЂРѕРІРѕР№ СЃРёСЃС‚РµРјРµ)
+   geomVector3D Vy_;
+   double ax_;         // СЂР°Р·РјРµСЂС‹ СЃС‚РѕСЂРѕРЅ С‚СЂРµСѓРіРѕР»СЊРЅРёРєР°
+   double ay_;         // РџСЂРѕРёР·РІРѕРґРЅС‹Рµ РїР°СЂР°РјРµС‚СЂС‹
+   geomVector3D N_;    // РЅРѕСЂРјР°Р»СЊ Рє РїР»РѕСЃРєРѕСЃС‚Рё С‚СЂРµСѓРіРѕР»СЊРЅРёРєР°
+   geomVector3D VRy_;  // РѕСЃСЊ Y СЃРёСЃС‚РµРјС‹ С‚СЂРµСѓРіРѕР»СЊРЅРёРєР° РІ РјРёСЂРѕРІРѕР№ СЃРёСЃС‚РµРјРµ
+   geomVector2D p_[3]; // РІРµСЂС€РёРЅ С‚СЂРµСѓРіРѕР»СЊРЅРёРєР°
+   geomVector2D v_[3]; // РІРµРєС‚РѕСЂС‹ СЂРµР±РµСЂ
+   geomVector2D n_[3]; // Р»РµРІС‹Рµ РЅРѕСЂРјР°Р»Рё СЂРµР±РµСЂ
+   double a_[3];       // РґР»РёРЅС‹ СЂРµР±РµСЂ
 };

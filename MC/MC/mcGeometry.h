@@ -1,91 +1,89 @@
-// Radiation Oncology Monte Carlo open source project
+п»ї// Radiation Oncology Monte Carlo open source project
 //
 // Author: [2005-2017] Gennady Gorlachev (ggorlachev@roiss.ru) 
 //---------------------------------------------------------------------------
 #pragma once
 #include <vector>
-
 class geomVector3D;
 
 class mcGeometry
 {
-public:
-	/// <summary>
-	/// Расстояние от указанной точки до цилиндра в указанном единичным вектором направлении
-	/// до бесконечного цилиндра радиуса R, ось которого совпадает с осью Z.
+public: /// <summary>
+	/// вЂ“Р°СЃСЃС‚РѕВ¤РЅРёРµ РѕС‚ СѓРєР°Р·Р°РЅРЅРѕР№ С‚РѕС‡РєРё РґРѕ С†РёР»РёРЅРґСЂР° РІ СѓРєР°Р·Р°РЅРЅРѕРј РµРґРёРЅРёС‡РЅС‹Рј РІРµРєС‚РѕСЂРѕРј РЅР°РїСЂР°РІР»РµРЅРёРё
+	/// РґРѕ Р±РµСЃРєРѕРЅРµС‡РЅРѕРіРѕ С†РёР»РёРЅРґСЂР° СЂР°РґРёСѓСЃР° R, РѕСЃСЊ РєРѕС‚РѕСЂРѕРіРѕ СЃРѕРІРїР°РґР°РµС‚ СЃ РѕСЃСЊСЋ Z.
 	/// </summary>
-	static double getDistanceToInfiniteCylinderInside(const geomVector3D& p, const geomVector3D& v, double r);
-	static double getDistanceToInfiniteCylinderOutside(const geomVector3D& p, const geomVector3D& v, double r);
+   static double getDistanceToInfiniteCylinderInside(const geomVector3D& p, const geomVector3D& v, double r);
 
-	/// <summary>
-	/// В отличие от предыдущего бесконечного цилиндра этот имеет торцы, 
-	/// определяемые плоскостями Z=0 и Z=h
-	/// </summary>
-	static double getDistanceToCylinderInside(const geomVector3D& p, const geomVector3D& v, double r, double h);
-	static double getDistanceToCylinderOutside(const geomVector3D& p, const geomVector3D& v, double r, double h);
+   static double getDistanceToInfiniteCylinderOutside(const geomVector3D& p, const geomVector3D& v, double r);
 
-	/// <summary>
-	/// Расстояние от указанной точки до паралелепипеда со сторонами ax и ay и высотой h,
-	/// зажатого между плоскостям Z = 0 и Z = h.
-	/// </summary>
-	static double getDistanceToPrismInside(const geomVector3D& p, const geomVector3D& v, double ax, double ay, double h);
-	static double getDistanceToPrismOutside(const geomVector3D& p, const geomVector3D& v, double ax, double ay, double h);
+   /// <summary>
+     /// В¬ РѕС‚Р»РёС‡РёРµ РѕС‚ РїСЂРµРґС‹РґСѓС‰РµРіРѕ Р±РµСЃРєРѕРЅРµС‡РЅРѕРіРѕ С†РёР»РёРЅРґСЂР° СЌС‚РѕС‚ РёРјРµРµС‚ С‚РѕСЂС†С‹, 
+     /// РѕРїСЂРµРґРµР»В¤РµРјС‹Рµ РїР»РѕСЃРєРѕСЃС‚В¤РјРё Z=0 Рё Z=h
+     /// </summary>
+   static double getDistanceToCylinderInside(const geomVector3D& p, const geomVector3D& v, double r, double h);
 
-	/// <summary>
-	/// Пересечение с круглым конусом
-	/// Фокус должен быть положительным, т.е. конус должен быть ориентирован так,
-	/// что его острая часть должна указывать в положительном направлении Z.
-	/// </summary>
-	static double getDistanceToConeInside(const geomVector3D& p, const geomVector3D& v, double r, double f);
-	static double getDistanceToConeOutside(const geomVector3D& p, const geomVector3D& v, double r, double f);
+   static double getDistanceToCylinderOutside(const geomVector3D& p, const geomVector3D& v, double r, double h);
 
-	/// <summary>
-	/// Пересечение с конусообразной боковой поверхностью между z1 b z2 и r1 и r2.
-	/// Важно: должно выполняться условие z1 < p.z < z2.
-	/// </summary>
-	static double getDistanceToConeSlabInside(const geomVector3D& p, const geomVector3D& v, double z1, double z2, double r1, double r2);
-	static double getDistanceToConeSlabOutside(const geomVector3D& p, const geomVector3D& v, double z1, double z2, double r1, double r2);
+   /// <summary>
+     /// вЂ“Р°СЃСЃС‚РѕВ¤РЅРёРµ РѕС‚ СѓРєР°Р·Р°РЅРЅРѕР№ С‚РѕС‡РєРё РґРѕ РїР°СЂР°Р»РµР»РµРїРёРїРµРґР° СЃРѕ СЃС‚РѕСЂРѕРЅР°РјРё ax Рё ay Рё РІС‹СЃРѕС‚РѕР№ h,
+     /// Р·Р°Р¶Р°С‚РѕРіРѕ РјРµР¶РґСѓ РїР»РѕСЃРєРѕСЃС‚В¤Рј Z = 0 Рё Z = h.
+     /// </summary>
+   static double getDistanceToPrismInside(const geomVector3D& p, const geomVector3D& v, double ax, double ay, double h);
 
-	/// <summary>
-	/// Пересечение с ассиметричной бесконечной плоскопараллельной трубой
-	/// </summary>
-	static double getDistanceToRectanglePipeInside(const geomVector3D& p, const geomVector3D& v,
-		double x1, double x2, double y1, double y2);
-	static double getDistanceToRectanglePipeOutside(const geomVector3D& p, const geomVector3D& v,
-		double x1, double x2, double y1, double y2);
+   static double
+   getDistanceToPrismOutside(const geomVector3D& p, const geomVector3D& v, double ax, double ay, double h);
 
-	/// <summary>
-	/// Пересечение с конусом с прямоугольным симметричным сечением
-	/// </summary>
-	static double getDistanceToRectangleConeInside(const geomVector3D& p, const geomVector3D& v,
-		double x1, double x2, double cosx, double sinx, 
-		double y1, double y2, double cosy, double siny, double z);
-	static double getDistanceToRectangleConeOutside(const geomVector3D& p, const geomVector3D& v,
-		double x1, double x2, double cosx, double sinx,
-		double y1, double y2, double cosy, double siny, double z);
+   /// <summary>
+     /// С•РµСЂРµСЃРµС‡РµРЅРёРµ СЃ РєСЂСѓРіР»С‹Рј РєРѕРЅСѓСЃРѕРј
+     /// вЂРѕРєСѓСЃ РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ РїРѕР»РѕР¶РёС‚РµР»СЊРЅС‹Рј, С‚.Рµ. РєРѕРЅСѓСЃ РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ РѕСЂРёРµРЅС‚РёСЂРѕРІР°РЅ С‚Р°Рє,
+     /// С‡С‚Рѕ РµРіРѕ РѕСЃС‚СЂР°В¤ С‡Р°СЃС‚СЊ РґРѕР»Р¶РЅР° СѓРєР°Р·С‹РІР°С‚СЊ РІ РїРѕР»РѕР¶РёС‚РµР»СЊРЅРѕРј РЅР°РїСЂР°РІР»РµРЅРёРё Z.
+     /// </summary>
+   static double getDistanceToConeInside(const geomVector3D& p, const geomVector3D& v, double r, double f);
 
-	/// <summary>
-	/// Расчет длины трека в вокселе.
-	/// В аргументах сначала идут координаты начала и конца трека,
-	/// затем координаты вершина параллелепипеда.
-	/// </summary>
-	static double TrLenInVoxel(double x1, double y1, double z1
-		, double x2, double y2, double z2
-		, double xv1, double yv1, double zv1
-		, double xv2, double yv2, double zv2);
+   static double getDistanceToConeOutside(const geomVector3D& p, const geomVector3D& v, double r, double f);
 
-	/// <summary>
-	/// Расстояние от указанной точки до сферы в указанном единичным вектором направлении
-	/// до сферы радиуса R, ось которого совпадает с осью Z.
-	/// </summary>
-	static double getDistanceToSphereInside(const geomVector3D& p, const geomVector3D& v, double r);
-	static double getDistanceToSphereOutside(const geomVector3D& p, const geomVector3D& v, double r);
+   /// <summary>
+     /// С•РµСЂРµСЃРµС‡РµРЅРёРµ СЃ РєРѕРЅСѓСЃРѕРѕР±СЂР°Р·РЅРѕР№ Р±РѕРєРѕРІРѕР№ РїРѕРІРµСЂС…РЅРѕСЃС‚СЊСЋ РјРµР¶РґСѓ z1 b z2 Рё r1 Рё r2.
+     /// В¬Р°Р¶РЅРѕ: РґРѕР»Р¶РЅРѕ РІС‹РїРѕР»РЅВ¤С‚СЊСЃВ¤ СѓСЃР»РѕРІРёРµ z1 < p.z < z2.
+     /// </summary>
+   static double getDistanceToConeSlabInside(const geomVector3D& p, const geomVector3D& v, double z1, double z2,
+                                             double r1, double r2);
 
-	/// <summary>
-	/// Расстояние до выпуклого объекта образованном вращением полигона
+   static double getDistanceToConeSlabOutside(const geomVector3D& p, const geomVector3D& v, double z1, double z2,
+                                              double r1, double r2); /// <summary>
+	/// С•РµСЂРµСЃРµС‡РµРЅРёРµ СЃ Р°СЃСЃРёРјРµС‚СЂРёС‡РЅРѕР№ Р±РµСЃРєРѕРЅРµС‡РЅРѕР№ РїР»РѕСЃРєРѕРїР°СЂР°Р»Р»РµР»СЊРЅРѕР№ С‚СЂСѓР±РѕР№
 	/// </summary>
-	static double getDistanceToConvexPolygonCircleInside(const geomVector3D& p, const geomVector3D& v, const std::vector<double>& pz, const std::vector<double>& pr);
-	static double getDistanceToConvexPolygonCircleOutside(const geomVector3D& p, const geomVector3D& v, const std::vector<double>& pz, const std::vector<double>& pr);
+   static double getDistanceToRectanglePipeInside(const geomVector3D& p, const geomVector3D& v, double x1, double x2,
+                                                  double y1, double y2);
+
+   static double getDistanceToRectanglePipeOutside(const geomVector3D& p, const geomVector3D& v, double x1, double x2,
+                                                   double y1, double y2); /// <summary>
+	/// С•РµСЂРµСЃРµС‡РµРЅРёРµ СЃ РєРѕРЅСѓСЃРѕРј СЃ РїСЂВ¤РјРѕСѓРіРѕР»СЊРЅС‹Рј СЃРёРјРјРµС‚СЂРёС‡РЅС‹Рј СЃРµС‡РµРЅРёРµРј
+	/// </summary>
+   static double getDistanceToRectangleConeInside(const geomVector3D& p, const geomVector3D& v, double x1, double x2,
+                                                  double cosx, double sinx, double y1, double y2, double cosy,
+                                                  double siny, double z);
+
+   static double getDistanceToRectangleConeOutside(const geomVector3D& p, const geomVector3D& v, double x1, double x2,
+                                                   double cosx, double sinx, double y1, double y2, double cosy,
+                                                   double siny, double z); /// <summary>
+	/// вЂ“Р°СЃС‡РµС‚ РґР»РёРЅС‹ С‚СЂРµРєР° РІ РІРѕРєСЃРµР»Рµ.
+	/// В¬ Р°СЂРіСѓРјРµРЅС‚Р°С… СЃРЅР°С‡Р°Р»Р° РёРґСѓС‚ РєРѕРѕСЂРґРёРЅР°С‚С‹ РЅР°С‡Р°Р»Р° Рё РєРѕРЅС†Р° С‚СЂРµРєР°,
+	/// Р·Р°С‚РµРј РєРѕРѕСЂРґРёРЅР°С‚С‹ РІРµСЂС€РёРЅР° РїР°СЂР°Р»Р»РµР»РµРїРёРїРµРґР°.
+	/// </summary>
+   static double TrLenInVoxel(double x1, double y1, double z1, double x2, double y2, double z2, double xv1, double yv1,
+                              double zv1, double xv2, double yv2, double zv2); /// <summary>
+	/// вЂ“Р°СЃСЃС‚РѕВ¤РЅРёРµ РѕС‚ СѓРєР°Р·Р°РЅРЅРѕР№ С‚РѕС‡РєРё РґРѕ СЃС„РµСЂС‹ РІ СѓРєР°Р·Р°РЅРЅРѕРј РµРґРёРЅРёС‡РЅС‹Рј РІРµРєС‚РѕСЂРѕРј РЅР°РїСЂР°РІР»РµРЅРёРё
+	/// РґРѕ СЃС„РµСЂС‹ СЂР°РґРёСѓСЃР° R, РѕСЃСЊ РєРѕС‚РѕСЂРѕРіРѕ СЃРѕРІРїР°РґР°РµС‚ СЃ РѕСЃСЊСЋ Z.
+	/// </summary>
+   static double getDistanceToSphereInside(const geomVector3D& p, const geomVector3D& v, double r);
+
+   static double getDistanceToSphereOutside(const geomVector3D& p, const geomVector3D& v, double r); /// <summary>
+	/// вЂ“Р°СЃСЃС‚РѕВ¤РЅРёРµ РґРѕ РІС‹РїСѓРєР»РѕРіРѕ РѕР±СЉРµРєС‚Р° РѕР±СЂР°Р·РѕРІР°РЅРЅРѕРј РІСЂР°С‰РµРЅРёРµРј РїРѕР»РёРіРѕРЅР°
+	/// </summary>
+   static double getDistanceToConvexPolygonCircleInside(const geomVector3D& p, const geomVector3D& v,
+                                                        const std::vector<double>& pz, const std::vector<double>& pr);
+
+   static double getDistanceToConvexPolygonCircleOutside(const geomVector3D& p, const geomVector3D& v,
+                                                         const std::vector<double>& pz, const std::vector<double>& pr);
 };
-
-

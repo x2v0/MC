@@ -4,166 +4,206 @@
 #include <fstream>
 #include <strstream>
 #include <map>
-
 using namespace RO::Dicom;
-using namespace RO::Dicom::Vr;
-using namespace std;
-
-// Определено в element.cpp
+using namespace Vr;
+using namespace std; // Определено в element.cpp
 short GetTwoStringsFromLine(const string& line, string& s1, string& s2, const char* mask);
 
 static std::map<UINT32, std::shared_ptr<DicomDictionaryItem>> dictionary_;
 
-shared_ptr<DicomDictionaryItem> RO::Dicom::DicomDictionary::Item(UINT32 tag)
+shared_ptr<DicomDictionaryItem> DicomDictionary::Item(UINT32 tag)
 {
-	Populate();
-
-	// Function map::at() throws exception if not found key, wich is not what we expect
-	auto it = dictionary_.find(tag);
-	if (it == dictionary_.end())
-		return shared_ptr<DicomDictionaryItem>();	// empty pointer
-	else
-		return it->second;
+   Populate(); // Function map::at() throws exception if not found key, wich is not what we expect
+   auto it = dictionary_.find(tag);
+   if (it == dictionary_.end())
+      return shared_ptr<DicomDictionaryItem>(); // empty pointer
+   return it->second;
 }
 
-shared_ptr<DicomDictionaryItem> RO::Dicom::DicomDictionary::Item(const std::string& keyword)
+shared_ptr<DicomDictionaryItem> DicomDictionary::Item(const std::string& keyword)
 {
-	Populate();
-	auto it = find_if(dictionary_.begin(), dictionary_.end(),
-		[keyword](std::pair<UINT32, shared_ptr<DicomDictionaryItem>> x) -> bool
-	{
-		return x.second->Keyword.compare(keyword) == 0;
-	});
-	if (it == dictionary_.end())
-		throw exception("unknown DICOM dictionary keyword");
-	return it->second;
+   Populate();
+   auto it = find_if(dictionary_.begin(), dictionary_.end(),
+                     [keyword](std::pair<UINT32, shared_ptr<DicomDictionaryItem>> x) -> bool
+                     {
+                        return x.second->Keyword.compare(keyword) == 0;
+                     });
+   if (it == dictionary_.end())
+      throw exception("unknown DICOM dictionary keyword");
+   return it->second;
 }
 
-shared_ptr<DicomDictionaryItem> RO::Dicom::DicomDictionary::ItemByKey(const char* keyword)
+shared_ptr<DicomDictionaryItem> DicomDictionary::ItemByKey(const char* keyword)
 {
-	Populate();
-	auto it = find_if(dictionary_.begin(), dictionary_.end(),
-		[keyword](std::pair<UINT32, shared_ptr<DicomDictionaryItem>> x) -> bool
-	{
-		return x.second->Keyword.compare(keyword) == 0;
-	});
-	if (it == dictionary_.end())
-		throw exception("unknown DICOM dictionary keyword");
-	return it->second;
+   Populate();
+   auto it = find_if(dictionary_.begin(), dictionary_.end(),
+                     [keyword](std::pair<UINT32, shared_ptr<DicomDictionaryItem>> x) -> bool
+                     {
+                        return x.second->Keyword.compare(keyword) == 0;
+                     });
+   if (it == dictionary_.end())
+      throw exception("unknown DICOM dictionary keyword");
+   return it->second;
 }
 
-Vr::VR RO::Dicom::DicomDictionary::StringToVr(const std::string& s)
+VR DicomDictionary::StringToVr(const std::string& s)
 {
-	if (s.find("AE") != string::npos) return Vr::VR::AE;
-	else if (s.find("AS") != string::npos) return Vr::VR::AS;
-	else if (s.find("AT") != string::npos) return Vr::VR::AT;
-	else if (s.find("CS") != string::npos) return Vr::VR::CS;
-	else if (s.find("DA") != string::npos) return Vr::VR::DA;
-	else if (s.find("DS") != string::npos) return Vr::VR::DS;
-	else if (s.find("DT") != string::npos) return Vr::VR::DT;
-	else if (s.find("FL") != string::npos) return Vr::VR::FL;
-	else if (s.find("FD") != string::npos) return Vr::VR::FD;
-	else if (s.find("IS") != string::npos) return Vr::VR::IS;
-	else if (s.find("LO") != string::npos) return Vr::VR::LO;
-	else if (s.find("LT") != string::npos) return Vr::VR::LT;
-	else if (s.find("OB") != string::npos) return Vr::VR::OB;
-	else if (s.find("OF") != string::npos) return Vr::VR::OF;
-	else if (s.find("OW") != string::npos) return Vr::VR::OW;
-	else if (s.find("PN") != string::npos) return Vr::VR::PN;
-	else if (s.find("SH") != string::npos) return Vr::VR::SH;
-	else if (s.find("SL") != string::npos) return Vr::VR::SL;
-	else if (s.find("SQ") != string::npos) return Vr::VR::SQ;
-	else if (s.find("SS") != string::npos) return Vr::VR::SS;
-	else if (s.find("ST") != string::npos) return Vr::VR::ST;
-	else if (s.find("TM") != string::npos) return Vr::VR::TM;
-	else if (s.find("UI") != string::npos) return Vr::VR::UI;
-	else if (s.find("UL") != string::npos) return Vr::VR::UL;
-	else if (s.find("UN") != string::npos) return Vr::VR::UN;
-	else if (s.find("US") != string::npos) return Vr::VR::US;
-	else if (s.find("UT") != string::npos) return Vr::VR::UT;
-	else return Vr::VR::AS;
+   if (s.find("AE") != string::npos)
+      return AE;
+   if (s.find("AS") != string::npos)
+      return AS;
+   if (s.find("AT") != string::npos)
+      return AT;
+   if (s.find("CS") != string::npos)
+      return CS;
+   if (s.find("DA") != string::npos)
+      return DA;
+   if (s.find("DS") != string::npos)
+      return DS;
+   if (s.find("DT") != string::npos)
+      return DT;
+   if (s.find("FL") != string::npos)
+      return FL;
+   if (s.find("FD") != string::npos)
+      return FD;
+   if (s.find("IS") != string::npos)
+      return IS;
+   if (s.find("LO") != string::npos)
+      return LO;
+   if (s.find("LT") != string::npos)
+      return LT;
+   if (s.find("OB") != string::npos)
+      return OB;
+   if (s.find("OF") != string::npos)
+      return OF;
+   if (s.find("OW") != string::npos)
+      return OW;
+   if (s.find("PN") != string::npos)
+      return PN;
+   if (s.find("SH") != string::npos)
+      return SH;
+   if (s.find("SL") != string::npos)
+      return SL;
+   if (s.find("SQ") != string::npos)
+      return SQ;
+   if (s.find("SS") != string::npos)
+      return SS;
+   if (s.find("ST") != string::npos)
+      return ST;
+   if (s.find("TM") != string::npos)
+      return TM;
+   if (s.find("UI") != string::npos)
+      return UI;
+   if (s.find("UL") != string::npos)
+      return UL;
+   if (s.find("UN") != string::npos)
+      return UN;
+   if (s.find("US") != string::npos)
+      return US;
+   if (s.find("UT") != string::npos)
+      return UT;
+   return AS;
 }
 
-std::string RO::Dicom::DicomDictionary::VrToString(Vr::VR vr)
+std::string DicomDictionary::VrToString(VR vr)
 {
-	if (vr == Vr::VR::AE) return "AE";
-	else if (vr == Vr::VR::AS) return "AS";
-	else if (vr == Vr::VR::AT) return "AT";
-	else if (vr == Vr::VR::CS) return "CS";
-	else if (vr == Vr::VR::DA) return "DA";
-	else if (vr == Vr::VR::DS) return "DS";
-	else if (vr == Vr::VR::DT) return "DT";
-	else if (vr == Vr::VR::FL) return "FL";
-	else if (vr == Vr::VR::FD) return "FD";
-	else if (vr == Vr::VR::IS) return "IS";
-	else if (vr == Vr::VR::LO) return "LO";
-	else if (vr == Vr::VR::LT) return "LT";
-	else if (vr == Vr::VR::OB) return "OB";
-	else if (vr == Vr::VR::OF) return "OF";
-	else if (vr == Vr::VR::OW) return "OW";
-	else if (vr == Vr::VR::PN) return "PN";
-	else if (vr == Vr::VR::SH) return "SH";
-	else if (vr == Vr::VR::SL) return "SL";
-	else if (vr == Vr::VR::SQ) return "SQ";
-	else if (vr == Vr::VR::SS) return "SS";
-	else if (vr == Vr::VR::ST) return "ST";
-	else if (vr == Vr::VR::TM) return "TM";
-	else if (vr == Vr::VR::UI) return "UI";
-	else if (vr == Vr::VR::UL) return "UL";
-	else if (vr == Vr::VR::UN) return "UN";
-	else if (vr == Vr::VR::US) return "US";
-	else if (vr == Vr::VR::UT) return "UT";
-	else return "AS";
+   if (vr == AE)
+      return "AE";
+   if (vr == AS)
+      return "AS";
+   if (vr == AT)
+      return "AT";
+   if (vr == CS)
+      return "CS";
+   if (vr == DA)
+      return "DA";
+   if (vr == DS)
+      return "DS";
+   if (vr == DT)
+      return "DT";
+   if (vr == FL)
+      return "FL";
+   if (vr == FD)
+      return "FD";
+   if (vr == IS)
+      return "IS";
+   if (vr == LO)
+      return "LO";
+   if (vr == LT)
+      return "LT";
+   if (vr == OB)
+      return "OB";
+   if (vr == OF)
+      return "OF";
+   if (vr == OW)
+      return "OW";
+   if (vr == PN)
+      return "PN";
+   if (vr == SH)
+      return "SH";
+   if (vr == SL)
+      return "SL";
+   if (vr == SQ)
+      return "SQ";
+   if (vr == SS)
+      return "SS";
+   if (vr == ST)
+      return "ST";
+   if (vr == TM)
+      return "TM";
+   if (vr == UI)
+      return "UI";
+   if (vr == UL)
+      return "UL";
+   if (vr == UN)
+      return "UN";
+   if (vr == US)
+      return "US";
+   if (vr == UT)
+      return "UT";
+   return "AS";
 }
 
-void RO::Dicom::DicomDictionary::Populate()
+void DicomDictionary::Populate()
 {
-	if (dictionary_.empty())
-	{
-		// Таблица словаря содержится в отдельном файле в формате CSV (поля разделены точкой с запятой)
-		std::ifstream is(L"RO_Dicom\\DicomDictionary.txt");
-		if (is.fail())
-			throw std::exception("Can't open file DicomDictionary.txt");
-		Populate(is);
-		is.close();
-	}
+   if (dictionary_.empty()) {
+      // Таблица словаря содержится в отдельном файле в формате CSV (поля разделены точкой с запятой)
+      std::ifstream is(L"RO_Dicom\\DicomDictionary.txt");
+      if (is.fail())
+         throw std::exception("Can't open file DicomDictionary.txt");
+      Populate(is);
+      is.close();
+   }
 }
 
-void RO::Dicom::DicomDictionary::Populate(const char* data, unsigned int len)
+void DicomDictionary::Populate(const char* data, unsigned int len)
 {
-	if (dictionary_.empty())
-	{
-		std::istrstream is(data, len);
-		if (is.fail())
-			throw std::exception("Can not create stream from memory buffer");
-		Populate(is);
-	}
+   if (dictionary_.empty()) {
+      std::istrstream is(data, len);
+      if (is.fail())
+         throw std::exception("Can not create stream from memory buffer");
+      Populate(is);
+   }
 }
 
-void RO::Dicom::DicomDictionary::Populate(std::istream& is)
+void DicomDictionary::Populate(std::istream& is)
 {
-	const char* delim = ";";
-
-	string line, l1, l2;
-	while (getline(is, line, '\n'))
-	{
-		if (!GetTwoStringsFromLine(line, l1, l2, delim)) break;
-		//UINT32 tag = (UINT32) atoi(l1.c_str());
-		UINT32 tag = std::stoul(l1, nullptr, 16);
-
-		if (!GetTwoStringsFromLine(l2, l1, line, delim)) break;
-		enum Vr::VR vr = StringToVr(l1);
-
-		if (!GetTwoStringsFromLine(line, l1, l2, delim)) break;
-		string vm = l1;
-
-		if (!GetTwoStringsFromLine(l2, l1, line, delim)) break;
-
-		dictionary_.insert(make_pair(tag, make_shared<DicomDictionaryItem>(tag, vr, vm, l1, line)));
-	}
-
-
-	/*
+   const char* delim = ";";
+   string line, l1, l2;
+   while (getline(is, line, '\n')) {
+      if (!GetTwoStringsFromLine(line, l1, l2, delim))
+         break; //UINT32 tag = (UINT32) atoi(l1.c_str());
+      UINT32 tag = std::stoul(l1, nullptr, 16);
+      if (!GetTwoStringsFromLine(l2, l1, line, delim))
+         break;
+      enum VR vr = StringToVr(l1);
+      if (!GetTwoStringsFromLine(line, l1, l2, delim))
+         break;
+      string vm = l1;
+      if (!GetTwoStringsFromLine(l2, l1, line, delim))
+         break;
+      dictionary_.insert(make_pair(tag, make_shared<DicomDictionaryItem>(tag, vr, vm, l1, line)));
+   } /*
 	dictionary_.insert(make_pair(0x00000000, make_shared<DicomDictionaryItem>(0x00000000, UL, "1")));
 	dictionary_.insert(make_pair(0x00000001, make_shared<DicomDictionaryItem>(0x00000001, UL, "1")));
 	dictionary_.insert(make_pair(0x00000002, make_shared<DicomDictionaryItem>(0x00000002, UI, "1")));
@@ -3708,10 +3748,7 @@ void RO::Dicom::DicomDictionary::Populate(std::istream& is)
 	dictionary_.insert(make_pair(0xFFFEE000, make_shared<DicomDictionaryItem>(0xFFFEE000, UN, "1")));
 	dictionary_.insert(make_pair(0xFFFEE00D, make_shared<DicomDictionaryItem>(0xFFFEE00D, UN, "1")));
 	dictionary_.insert(make_pair(0xFFFEE0DD, make_shared<DicomDictionaryItem>(0xFFFEE0DD, UN, "1")));
-	*/
-
-
-	/*
+	*/ /*
 	dictionary_.insert(make_pair(0x00000000, make_shared<DicomDictionaryItem>(0x00000000, UL, "1", "CommandGroupLength", "Command Group Length")));
 	dictionary_.insert(make_pair(0x00000001, make_shared<DicomDictionaryItem>(0x00000001, UL, "1", "CommandLengthToEnd", "Command Length to End")));
 	dictionary_.insert(make_pair(0x00000002, make_shared<DicomDictionaryItem>(0x00000002, UI, "1", "AffectedSOPClassUID", "Affected SOP Class UID")));

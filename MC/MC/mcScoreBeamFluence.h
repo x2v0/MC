@@ -9,24 +9,24 @@
 class mcScoreBeamFluence : public mcScore
 {
 public:
-	mcScoreBeamFluence(const char* module_name, int nThreads, int nr, double rmax);
-	virtual ~mcScoreBeamFluence();
+   mcScoreBeamFluence(const char* module_name, int nThreads, int nr, double rmax);
 
-	void ScoreFluence(const mcParticle& particle) override;
+   virtual ~mcScoreBeamFluence();
 
-	void dumpVRML(ostream&) const override;
-	void dumpStatistic(ostream&) const override;
+   void ScoreFluence(const mcParticle& particle) override;
 
-	friend ostream& operator << (ostream&, const mcScoreBeamFluence&);
+   void dumpVRML(ostream&) const override;
 
-	void addSubsource(mcScoreBeamFluenceSubsource*);
+   void dumpStatistic(ostream&) const override;
+
+   friend ostream& operator <<(ostream&, const mcScoreBeamFluence&);
+
+   void addSubsource(mcScoreBeamFluenceSubsource*);
 
 protected:
-	int nsub_;
-	mcScoreBeamFluenceSubsource* subsources_[10];
-
-	// Нужно для vrml
-	int     nr_;
-	double  rmax_;
-	double  rstep_;
+   int nsub_;
+   mcScoreBeamFluenceSubsource* subsources_[10]; // Нужно для vrml
+   int nr_;
+   double rmax_;
+   double rstep_;
 };

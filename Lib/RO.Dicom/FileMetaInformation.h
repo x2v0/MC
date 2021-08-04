@@ -9,24 +9,29 @@
 
 namespace RO
 {
-	namespace Dicom
-	{
-		class RODICOM_API FileMetaInformation
-		{
-		public:
-			FileMetaInformation();
+   namespace Dicom
+   {
+      class RODICOM_API FileMetaInformation
+      {
+      public:
+         FileMetaInformation();
 
-			DataSet& Elements() { return elements_; }
+         DataSet& Elements()
+         {
+            return elements_;
+         }
 
-			void ReadFromStream(std::istream& is);
-			void WriteToStream(std::ostream& os);
+         void ReadFromStream(std::istream& is);
 
-			static std::shared_ptr<FileMetaInformation> CreateDefault();
-			std::shared_ptr<TransferSyntaxItem> Ts();
+         void WriteToStream(std::ostream& os);
 
-		private:
-			DataSet elements_;
-			std::shared_ptr<TransferSyntaxItem> ts_;
-		};
-	}
+         static std::shared_ptr<FileMetaInformation> CreateDefault();
+
+         std::shared_ptr<TransferSyntaxItem> Ts();
+
+      private:
+         DataSet elements_;
+         std::shared_ptr<TransferSyntaxItem> ts_;
+      };
+   }
 }

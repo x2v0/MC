@@ -10,12 +10,12 @@
 
 namespace RO
 {
-	namespace Dicom
-	{
-		class RODICOM_API ElementFactory
-		{
-		public:
-		    static std::shared_ptr<Element> MakeElement(UINT32 tag, Vr::VR vr);
-		};
-	}
+   namespace Dicom
+   {
+      class RODICOM_API ElementFactory
+      {
+      public:
+         static std::shared_ptr<Element> MakeElement(UINT32 tag, Vr::VR vr);
+      };
+   }
 }

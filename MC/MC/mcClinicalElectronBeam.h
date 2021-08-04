@@ -1,48 +1,47 @@
-// Radiation Oncology Monte Carlo open source project
+п»ї// Radiation Oncology Monte Carlo open source project
 //
 // Author: [2005-2017] Gennady Gorlachev (ggorlachev@roiss.ru) 
 //---------------------------------------------------------------------------
 #pragma once
 #include "mcsource.h"
 
-// Источник, представляющий реалистичный пучок облучения электронами.
-// Указываемая позиция относится к изоцентру аппарата.
-// Виртуальный источник предполагается находящимся в положении -100 см от него.
-// Рамка поля находится в положении -5 см.
-// В параметрах конструктора указыаются угловой разброс (сигма гауссиана) в радианах и энергетический разброс в МэВ.
-
+// РСЃС‚РѕС‡РЅРёРє, РїСЂРµРґСЃС‚Р°РІР»СЏСЋС‰РёР№ СЂРµР°Р»РёСЃС‚РёС‡РЅС‹Р№ РїСѓС‡РѕРє РѕР±Р»СѓС‡РµРЅРёСЏ СЌР»РµРєС‚СЂРѕРЅР°РјРё.
+// РЈРєР°Р·С‹РІР°РµРјР°СЏ РїРѕР·РёС†РёСЏ РѕС‚РЅРѕСЃРёС‚СЃСЏ Рє РёР·РѕС†РµРЅС‚СЂСѓ Р°РїРїР°СЂР°С‚Р°.
+// Р’РёСЂС‚СѓР°Р»СЊРЅС‹Р№ РёСЃС‚РѕС‡РЅРёРє РїСЂРµРґРїРѕР»Р°РіР°РµС‚СЃСЏ РЅР°С…РѕРґСЏС‰РёРјСЃСЏ РІ РїРѕР»РѕР¶РµРЅРёРё -100 СЃРј РѕС‚ РЅРµРіРѕ.
+// Р Р°РјРєР° РїРѕР»СЏ РЅР°С…РѕРґРёС‚СЃСЏ РІ РїРѕР»РѕР¶РµРЅРёРё -5 СЃРј.
+// Р’ РїР°СЂР°РјРµС‚СЂР°С… РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂР° СѓРєР°Р·С‹Р°СЋС‚СЃСЏ СѓРіР»РѕРІРѕР№ СЂР°Р·Р±СЂРѕСЃ (СЃРёРіРјР° РіР°СѓСЃСЃРёР°РЅР°) РІ СЂР°РґРёР°РЅР°С… Рё СЌРЅРµСЂРіРµС‚РёС‡РµСЃРєРёР№ СЂР°Р·Р±СЂРѕСЃ РІ РњСЌР’.
 class mcClinicalElectronBeam : public mcSource
 {
 public:
-	mcClinicalElectronBeam(const char* name, int nThreads, double ke, double z0, 
-		double sigmaE, double sigmaA, double fsx, double fsy);
+   mcClinicalElectronBeam(const char* name, int nThreads, double ke, double z0, double sigmaE, double sigmaA,
+                          double fsx, double fsy);
 
-	void sample(mcParticle& p, mcThread* thread) override;
+   void sample(mcParticle& p, mcThread* thread) override;
 
-	void dumpVRML(ostream& os) const override;
+   void dumpVRML(ostream& os) const override;
 
-	friend ostream& operator << (ostream& os, const mcClinicalElectronBeam& s)
-	{
-		os << (const mcSource&)s;
-		os << "TYPE = \t" << s.type_ << endl;
-		os << "KE = \t" << s.ke_ << endl;
-		os << "POSITION = \t" << s.p_ << endl;
-		os << "DIRECTION = \t" << s.v_ << endl;
-		os << "SIGMA_E = \t" << s.sigmaE_ << "\tradian" << endl;
-		os << "SIGMA_A = \t" << s.sigmaA_ << "\tMeV" << endl;
-		os << "FSX = \t" << s.fsx_ << endl;
-		os << "FSY = \t" << s.fsy_ << endl;
-		return os;
-	}
+   friend ostream& operator <<(ostream& os, const mcClinicalElectronBeam& s)
+   {
+      os << static_cast<const mcSource&>(s);
+      os << "TYPE = \t" << s.type_ << endl;
+      os << "KE = \t" << s.ke_ << endl;
+      os << "POSITION = \t" << s.p_ << endl;
+      os << "DIRECTION = \t" << s.v_ << endl;
+      os << "SIGMA_E = \t" << s.sigmaE_ << "\tradian" << endl;
+      os << "SIGMA_A = \t" << s.sigmaA_ << "\tMeV" << endl;
+      os << "FSX = \t" << s.fsx_ << endl;
+      os << "FSY = \t" << s.fsy_ << endl;
+      return os;
+   }
 
 protected:
-	mc_particle_t type_;
-	double ke_;
-	geomVector3D p_;
-	geomVector3D v_;
-	int q_; // заряд
-	double sigmaE_;
-	double sigmaA_;
-	double fsx_;
-	double fsy_;
+   mc_particle_t type_;
+   double ke_;
+   geomVector3D p_;
+   geomVector3D v_;
+   int q_; // Р·Р°СЂСЏРґ
+   double sigmaE_;
+   double sigmaA_;
+   double fsx_;
+   double fsy_;
 };

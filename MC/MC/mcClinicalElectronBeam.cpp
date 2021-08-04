@@ -1,199 +1,171 @@
-#include "mcClinicalElectronBeam.h"
+ï»¿#include "mcClinicalElectronBeam.h"
 #include "mcThread.h"
 #include "mcDefs.h"
 #include "mcGeometry.h"
 #include "mcSamplers.h"
 #include "../geometry/vec3d.h"
 
-mcClinicalElectronBeam::mcClinicalElectronBeam(const char* name, int nThreads, double ke, double z0,
-	double sigmaE, double sigmaA, double fsx, double fsy)
-	: mcSource(name, nThreads)
-	, type_(MCP_NEGATRON), ke_(ke), q_(-1)
-	, sigmaE_(sigmaE), sigmaA_(sigmaA), fsx_(fsx), fsy_(fsy)
+mcClinicalElectronBeam::mcClinicalElectronBeam(const char* name, int nThreads, double ke, double z0, double sigmaE,
+                                               double sigmaA, double fsx, double fsy) : mcSource(name, nThreads),
+                                                                                        type_(MCP_NEGATRON), ke_(ke),
+                                                                                        q_(-1), sigmaE_(sigmaE),
+                                                                                        sigmaA_(sigmaA), fsx_(fsx),
+                                                                                        fsy_(fsy)
 {
-	p_.set(0, 0, z0);
-	v_.set(0, 0, 1);
+   p_.set(0, 0, z0);
+   v_.set(0, 0, 1);
 }
 
 void mcClinicalElectronBeam::sample(mcParticle& p, mcThread* thread)
 {
-	const double scd = 0.95;	// ìàñøòàá ïåðåõîäà îò èçîöåíòðà ê ðàìêå ýëåêòðîííîãî àïïëèêàòîðà
-	mcRng& rng = thread->rng();
-	double x = (rng.rnd() - 0.5) * fsx_ * scd;
-	double y = (rng.rnd() - 0.5) * fsy_ * scd;
-	p.p.set(x, y, p_.z() - 5.0);
-
-	geomVector3D v(x, y, scd * 100);
-	v.normalize();
-
-	double r = tan(sigmaA_ * mcSamplers::SampleGauss(rng.rnd()));
-	double phi = rng.rnd() * TWOPI;
-	double dx = r * cos(phi);
-	double dy = r * sin(phi);
-	v += geomVector3D(dx, dy, 0);
-	v.normalize();
-	p.u = v;
-
-	double f = mcSamplers::SampleGauss(rng.rnd());
-	if (fabs(f) > 2) f = 0;	// Òàêèõ ÷àñòèö ìàëî. Ïðîñòî ïîäìåíÿåì èõ ìîíîõðîìàòè÷íûìè, ÷òîáû íå óñëîæíÿòü êîä
-	p.ke = ke_ + 0.5 * sigmaE_ * f;
-
-	p.t = type_;
-	p.q = q_;
-	p.plast = p.p;
-	p.weight = 1;
-	p.thread_ = thread;
-	p.trackScore_ = trackScore_;
-	etotal_[thread->id()] += p.ke;
+   const double scd = 0.95; // Ð¼Ð°ÑÑˆÑ‚Ð°Ð± Ð¿ÐµÑ€ÐµÑ…Ð¾Ð´Ð° Ð¾Ñ‚ Ð¸Ð·Ð¾Ñ†ÐµÐ½Ñ‚Ñ€Ð° Ðº Ñ€Ð°Ð¼ÐºÐµ ÑÐ»ÐµÐºÑ‚Ñ€Ð¾Ð½Ð½Ð¾Ð³Ð¾ Ð°Ð¿Ð¿Ð»Ð¸ÐºÐ°Ñ‚Ð¾Ñ€Ð°
+   mcRng& rng = thread->rng();
+   double x = (rng.rnd() - 0.5) * fsx_ * scd;
+   double y = (rng.rnd() - 0.5) * fsy_ * scd;
+   p.p.set(x, y, p_.z() - 5.0);
+   geomVector3D v(x, y, scd * 100);
+   v.normalize();
+   double r = tan(sigmaA_ * mcSamplers::SampleGauss(rng.rnd()));
+   double phi = rng.rnd() * TWOPI;
+   double dx = r * cos(phi);
+   double dy = r * sin(phi);
+   v += geomVector3D(dx, dy, 0);
+   v.normalize();
+   p.u = v;
+   double f = mcSamplers::SampleGauss(rng.rnd());
+   if (fabs(f) > 2)
+      f = 0; // Ð¢Ð°ÐºÐ¸Ñ… Ñ‡Ð°ÑÑ‚Ð¸Ñ† Ð¼Ð°Ð»Ð¾. ÐŸÑ€Ð¾ÑÑ‚Ð¾ Ð¿Ð¾Ð´Ð¼ÐµÐ½ÑÐµÐ¼ Ð¸Ñ… Ð¼Ð¾Ð½Ð¾Ñ…Ñ€Ð¾Ð¼Ð°Ñ‚Ð¸Ñ‡Ð½Ñ‹Ð¼Ð¸, Ñ‡Ñ‚Ð¾Ð±Ñ‹ Ð½Ðµ ÑƒÑÐ»Ð¾Ð¶Ð½ÑÑ‚ÑŒ ÐºÐ¾Ð´
+   p.ke = ke_ + 0.5 * sigmaE_ * f;
+   p.t = type_;
+   p.q = q_;
+   p.plast = p.p;
+   p.weight = 1;
+   p.thread_ = thread;
+   p.trackScore_ = trackScore_;
+   etotal_[thread->id()] += p.ke;
 }
 
 void mcClinicalElectronBeam::dumpVRML(ostream& os) const
 {
-	mcSource::dumpVRML(os);
-
-	double r0 = 0.4, r = 0.2, rr = 0.4, hh = 1.0, L = 5.0;
-	double sad = 100, cad = 5;
-
-	os << "# Source: " << name_ << endl;
-
-	// Øàðèê ñ óïèðàþùåéñÿ ñòðåëêîé
-
-	os << "Transform {" << endl;
-	os << "  translation " << p_.x() << ' ' << p_.y() << ' ' << (p_.z() - sad) << endl;
-	os << "  children [" << endl;
-	os << "    Shape{" << endl;
-	os << "      appearance Appearance {" << endl;
-	os << "        material Material {" << endl;
-	os << "          diffuseColor " << red_ << ' ' << green_ << ' ' << blue_ << endl;
-	os << "          transparency " << transparancy_ << endl;
-	os << "        }" << endl;
-	os << "      }" << endl;
-	os << "      geometry Sphere { radius " << r0 << " }" << endl;
-	os << "    }" << endl;
-	os << "  ]" << endl;
-	os << "}" << endl;
-
-	geomVector3D p = p_ + (v_ * (L*0.5));
-
-	os << "Transform {" << endl;
-	os << "  translation " << p.x() << ' ' << p.y() << ' ' << (p_.z() - sad) << endl;
-	os << "  rotation 1 0 0 1.5708" << endl;
-	os << "  children [" << endl;
-	os << "    Shape{" << endl;
-	os << "      appearance Appearance {" << endl;
-	os << "        material Material {" << endl;
-	os << "          diffuseColor " << red_ << ' ' << green_ << ' ' << blue_ << endl;
-	os << "          transparency " << transparancy_ << endl;
-	os << "        }" << endl;
-	os << "      }" << endl;
-	os << "      geometry Cylinder { " << endl;
-	os << "                           radius " << r << endl;
-	os << "                           height " << L << endl;
-	os << "      }" << endl;
-	os << "    }" << endl;
-	os << "  ]" << endl;
-	os << "}" << endl;
-
-	p = p_ + (v_ * (L + hh * 0.5));
-
-	os << "Transform {" << endl;
-	os << "  translation " << p.x() << ' ' << p.y() << ' ' << (p_.z() - sad) << endl;
-	os << "  rotation 1 0 0 1.5708" << endl;
-	os << "  children [" << endl;
-	os << "    Shape{" << endl;
-	os << "      appearance Appearance {" << endl;
-	os << "        material Material {" << endl;
-	os << "          diffuseColor " << red_ << ' ' << green_ << ' ' << blue_ << endl;
-	os << "          transparency " << transparancy_ << endl;
-	os << "        }" << endl;
-	os << "      }" << endl;
-	os << "      geometry Cone { " << endl;
-	os << "                      bottomRadius  " << rr << endl;
-	os << "                      height " << hh << endl;
-	os << "      }" << endl;
-	os << "    }" << endl;
-	os << "  ]" << endl;
-	os << "}" << endl;
-
-	// Ðàìêà ýëåêòðîííîãî àïïëèêàòîðà
-
-	os << "# Rectangle ring: " << this->getName() << endl;
-	os << "Group {" << endl;
-	os << "  children [" << endl;
-
-	double d = 5, h = 1;
-	double x1 = -fsx_ / 2, x2 = -x1;
-	double y1 = -fsy_ / 2, y2 = -y1;
-
-	geomVector3D pp[16];
-	pp[0] = geomVector3D(x1 - d, y1 - d, -h-cad);
-	pp[1] = geomVector3D(x1 - d, y2 + d, -h-cad);
-	pp[2] = geomVector3D(x2 + d, y2 + d, -h-cad);
-	pp[3] = geomVector3D(x2 + d, y1 - d, -h-cad);
-	pp[4] = geomVector3D(x1, y1, -h-cad);
-	pp[5] = geomVector3D(x1, y2, -h-cad);
-	pp[6] = geomVector3D(x2, y2, -h-cad);
-	pp[7] = geomVector3D(x2, y1, -h-cad);
-	pp[8] = geomVector3D(x1 - d, y1 - d, - cad);
-	pp[9] = geomVector3D(x1 - d, y2 + d, - cad);
-	pp[10] = geomVector3D(x2 + d, y2 + d, - cad);
-	pp[11] = geomVector3D(x2 + d, y1 - d, - cad);
-	pp[12] = geomVector3D(x1, y1, -cad);
-	pp[13] = geomVector3D(x1, y2, -cad);
-	pp[14] = geomVector3D(x2, y2, -cad);
-	pp[15] = geomVector3D(x2, y1, -cad);
-
-	os << "    Transform {" << endl;
-	os << "      children Shape {" << endl;
-	os << "        appearance Appearance {" << endl;
-	os << "          material Material {" << endl;
-	os << "            diffuseColor " << red_ << ' ' << green_ << ' ' << blue_ << endl;
-	os << "            transparency " << transparancy_ << endl;
-	os << "          }" << endl;
-	os << "        }" << endl;
-	os << "        geometry IndexedFaceSet {" << endl;
-	os << "            coord Coordinate {" << endl;
-	os << "                point [" << endl;
-
-	for (int i = 0; i < 16; i++) {
-		os << "                    " << pp[i].x() << ' ' << pp[i].y() << ' ' << pp[i].z();
-		if (i < 15) os << ", ";
-		os << endl;
-	}
-
-	os << "                ]" << endl;
-	os << "            }" << endl;
-	os << "            coordIndex [" << endl;
-
-	// Âíåøíÿÿ áîêîâàÿ ïîâåðõíîñòü
-	os << "                0, 8, 9, 1, -1," << endl;
-	os << "                1, 9, 10, 2, -1," << endl;
-	os << "                2, 10, 11, 3, -1," << endl;
-	os << "                3, 11, 8, 0, -1," << endl;
-
-	// Âíóòðåííÿÿ áîêîâàÿ ïîâåðõíîñòü
-	os << "                4, 5, 13, 12, -1," << endl;
-	os << "                5, 6, 14, 13, -1," << endl;
-	os << "                6, 7, 15, 14, -1," << endl;
-	os << "                7, 4, 12, 15, -1," << endl;
-
-	// Íèæíèé òîðåö
-	os << "                0, 1, 5, 4, -1," << endl;
-	os << "                1, 2, 6, 5, -1," << endl;
-	os << "                2, 3, 7, 6, -1," << endl;
-	os << "                3, 0, 4, 7, -1," << endl;
-
-	// Âåðõíèé òîðåö
-	os << "                8, 12, 13, 9, -1," << endl;
-	os << "                9, 13, 14, 10, -1," << endl;
-	os << "                10, 14, 15, 11, -1," << endl;
-	os << "                11, 15, 12, 8, -1" << endl;
-
-	os << "            ]" << endl;
-	os << "        }" << endl;
-	os << "      }" << endl;
-	os << "    }" << endl;
-
-	os << "  ]" << endl;
-	os << "}" << endl;
+   mcSource::dumpVRML(os);
+   double r0 = 0.4, r = 0.2, rr = 0.4, hh = 1.0, L = 5.0;
+   double sad = 100, cad = 5;
+   os << "# Source: " << name_ << endl; // Ð¨Ð°Ñ€Ð¸Ðº Ñ ÑƒÐ¿Ð¸Ñ€Ð°ÑŽÑ‰ÐµÐ¹ÑÑ ÑÑ‚Ñ€ÐµÐ»ÐºÐ¾Ð¹
+   os << "Transform {" << endl;
+   os << "  translation " << p_.x() << ' ' << p_.y() << ' ' << (p_.z() - sad) << endl;
+   os << "  children [" << endl;
+   os << "    Shape{" << endl;
+   os << "      appearance Appearance {" << endl;
+   os << "        material Material {" << endl;
+   os << "          diffuseColor " << red_ << ' ' << green_ << ' ' << blue_ << endl;
+   os << "          transparency " << transparancy_ << endl;
+   os << "        }" << endl;
+   os << "      }" << endl;
+   os << "      geometry Sphere { radius " << r0 << " }" << endl;
+   os << "    }" << endl;
+   os << "  ]" << endl;
+   os << "}" << endl;
+   geomVector3D p = p_ + (v_ * (L * 0.5));
+   os << "Transform {" << endl;
+   os << "  translation " << p.x() << ' ' << p.y() << ' ' << (p_.z() - sad) << endl;
+   os << "  rotation 1 0 0 1.5708" << endl;
+   os << "  children [" << endl;
+   os << "    Shape{" << endl;
+   os << "      appearance Appearance {" << endl;
+   os << "        material Material {" << endl;
+   os << "          diffuseColor " << red_ << ' ' << green_ << ' ' << blue_ << endl;
+   os << "          transparency " << transparancy_ << endl;
+   os << "        }" << endl;
+   os << "      }" << endl;
+   os << "      geometry Cylinder { " << endl;
+   os << "                           radius " << r << endl;
+   os << "                           height " << L << endl;
+   os << "      }" << endl;
+   os << "    }" << endl;
+   os << "  ]" << endl;
+   os << "}" << endl;
+   p = p_ + (v_ * (L + hh * 0.5));
+   os << "Transform {" << endl;
+   os << "  translation " << p.x() << ' ' << p.y() << ' ' << (p_.z() - sad) << endl;
+   os << "  rotation 1 0 0 1.5708" << endl;
+   os << "  children [" << endl;
+   os << "    Shape{" << endl;
+   os << "      appearance Appearance {" << endl;
+   os << "        material Material {" << endl;
+   os << "          diffuseColor " << red_ << ' ' << green_ << ' ' << blue_ << endl;
+   os << "          transparency " << transparancy_ << endl;
+   os << "        }" << endl;
+   os << "      }" << endl;
+   os << "      geometry Cone { " << endl;
+   os << "                      bottomRadius  " << rr << endl;
+   os << "                      height " << hh << endl;
+   os << "      }" << endl;
+   os << "    }" << endl;
+   os << "  ]" << endl;
+   os << "}" << endl; // Ð Ð°Ð¼ÐºÐ° ÑÐ»ÐµÐºÑ‚Ñ€Ð¾Ð½Ð½Ð¾Ð³Ð¾ Ð°Ð¿Ð¿Ð»Ð¸ÐºÐ°Ñ‚Ð¾Ñ€Ð°
+   os << "# Rectangle ring: " << this->getName() << endl;
+   os << "Group {" << endl;
+   os << "  children [" << endl;
+   double d = 5, h = 1;
+   double x1 = -fsx_ / 2, x2 = -x1;
+   double y1 = -fsy_ / 2, y2 = -y1;
+   geomVector3D pp[16];
+   pp[0] = geomVector3D(x1 - d, y1 - d, -h - cad);
+   pp[1] = geomVector3D(x1 - d, y2 + d, -h - cad);
+   pp[2] = geomVector3D(x2 + d, y2 + d, -h - cad);
+   pp[3] = geomVector3D(x2 + d, y1 - d, -h - cad);
+   pp[4] = geomVector3D(x1, y1, -h - cad);
+   pp[5] = geomVector3D(x1, y2, -h - cad);
+   pp[6] = geomVector3D(x2, y2, -h - cad);
+   pp[7] = geomVector3D(x2, y1, -h - cad);
+   pp[8] = geomVector3D(x1 - d, y1 - d, - cad);
+   pp[9] = geomVector3D(x1 - d, y2 + d, - cad);
+   pp[10] = geomVector3D(x2 + d, y2 + d, - cad);
+   pp[11] = geomVector3D(x2 + d, y1 - d, - cad);
+   pp[12] = geomVector3D(x1, y1, -cad);
+   pp[13] = geomVector3D(x1, y2, -cad);
+   pp[14] = geomVector3D(x2, y2, -cad);
+   pp[15] = geomVector3D(x2, y1, -cad);
+   os << "    Transform {" << endl;
+   os << "      children Shape {" << endl;
+   os << "        appearance Appearance {" << endl;
+   os << "          material Material {" << endl;
+   os << "            diffuseColor " << red_ << ' ' << green_ << ' ' << blue_ << endl;
+   os << "            transparency " << transparancy_ << endl;
+   os << "          }" << endl;
+   os << "        }" << endl;
+   os << "        geometry IndexedFaceSet {" << endl;
+   os << "            coord Coordinate {" << endl;
+   os << "                point [" << endl;
+   for (int i = 0; i < 16; i++) {
+      os << "                    " << pp[i].x() << ' ' << pp[i].y() << ' ' << pp[i].z();
+      if (i < 15)
+         os << ", ";
+      os << endl;
+   }
+   os << "                ]" << endl;
+   os << "            }" << endl;
+   os << "            coordIndex [" << endl; // Ð’Ð½ÐµÑˆÐ½ÑÑ Ð±Ð¾ÐºÐ¾Ð²Ð°Ñ Ð¿Ð¾Ð²ÐµÑ€Ñ…Ð½Ð¾ÑÑ‚ÑŒ
+   os << "                0, 8, 9, 1, -1," << endl;
+   os << "                1, 9, 10, 2, -1," << endl;
+   os << "                2, 10, 11, 3, -1," << endl;
+   os << "                3, 11, 8, 0, -1," << endl; // Ð’Ð½ÑƒÑ‚Ñ€ÐµÐ½Ð½ÑÑ Ð±Ð¾ÐºÐ¾Ð²Ð°Ñ Ð¿Ð¾Ð²ÐµÑ€Ñ…Ð½Ð¾ÑÑ‚ÑŒ
+   os << "                4, 5, 13, 12, -1," << endl;
+   os << "                5, 6, 14, 13, -1," << endl;
+   os << "                6, 7, 15, 14, -1," << endl;
+   os << "                7, 4, 12, 15, -1," << endl; // ÐÐ¸Ð¶Ð½Ð¸Ð¹ Ñ‚Ð¾Ñ€ÐµÑ†
+   os << "                0, 1, 5, 4, -1," << endl;
+   os << "                1, 2, 6, 5, -1," << endl;
+   os << "                2, 3, 7, 6, -1," << endl;
+   os << "                3, 0, 4, 7, -1," << endl; // Ð’ÐµÑ€Ñ…Ð½Ð¸Ð¹ Ñ‚Ð¾Ñ€ÐµÑ†
+   os << "                8, 12, 13, 9, -1," << endl;
+   os << "                9, 13, 14, 10, -1," << endl;
+   os << "                10, 14, 15, 11, -1," << endl;
+   os << "                11, 15, 12, 8, -1" << endl;
+   os << "            ]" << endl;
+   os << "        }" << endl;
+   os << "      }" << endl;
+   os << "    }" << endl;
+   os << "  ]" << endl;
+   os << "}" << endl;
 }

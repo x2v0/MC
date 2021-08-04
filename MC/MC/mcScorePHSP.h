@@ -4,21 +4,20 @@
 //---------------------------------------------------------------------------
 #pragma once
 #include "mcscore.h"
-
-class mcPhaseSpaceIO;
-
-// Класс регистрации частиц в файле фазового пространства
+class mcPhaseSpaceIO; // Класс регистрации частиц в файле фазового пространства
 class mcScorePHSP : public mcScore
 {
 public:
-	mcScorePHSP(const char* module_name, const char* fname);
-	virtual ~mcScorePHSP(void);
+   mcScorePHSP(const char* module_name, const char* fname);
 
-	void ScoreFluence(const mcParticle& particle) override;
+   virtual ~mcScorePHSP(void);
 
-	void dumpVRML(ostream&) const override;
-	void dumpStatistic(ostream&) const override;
+   void ScoreFluence(const mcParticle& particle) override;
+
+   void dumpVRML(ostream&) const override;
+
+   void dumpStatistic(ostream&) const override;
 
 protected:
-	mcPhaseSpaceIO* phsp_;
+   mcPhaseSpaceIO* phsp_;
 };

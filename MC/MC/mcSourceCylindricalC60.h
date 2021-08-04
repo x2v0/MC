@@ -16,28 +16,29 @@
 class mcSourceCylindricalC60 : public mcSource
 {
 public:
-	mcSourceCylindricalC60(const char* name, int nThreads,
-		const geomVector3D& p, const geomVector3D& v, double r, double h);
-	virtual ~mcSourceCylindricalC60(void);
+   mcSourceCylindricalC60(const char* name, int nThreads, const geomVector3D& p, const geomVector3D& v, double r,
+                          double h);
 
-	void sample(mcParticle& p, mcThread* thread) override;
+   virtual ~mcSourceCylindricalC60(void);
 
-	void dumpVRML(ostream& os) const override;
+   void sample(mcParticle& p, mcThread* thread) override;
 
-	friend ostream& operator << (ostream& os, const mcSourceCylindricalC60& s)
-	{
-		os << (const mcSource&)s;
-		os << "TYPE = \tC60" << endl;
-		os << "NAME = \t" << s.getName() << endl;
-		os << "DIAMETER = \t" << 2 * s.r_ << endl;
-		os << "HEIGHT = \t" << s.h_ << endl;
-		os << "POSITION = \t" << s.p_ << endl;
-		return os;
-	}
+   void dumpVRML(ostream& os) const override;
+
+   friend ostream& operator <<(ostream& os, const mcSourceCylindricalC60& s)
+   {
+      os << static_cast<const mcSource&>(s);
+      os << "TYPE = \tC60" << endl;
+      os << "NAME = \t" << s.getName() << endl;
+      os << "DIAMETER = \t" << 2 * s.r_ << endl;
+      os << "HEIGHT = \t" << s.h_ << endl;
+      os << "POSITION = \t" << s.p_ << endl;
+      return os;
+   }
 
 protected:
-	geomVector3D p_;
-	geomVector3D v_;
-	double r_;
-	double h_;
+   geomVector3D p_;
+   geomVector3D v_;
+   double r_;
+   double h_;
 };

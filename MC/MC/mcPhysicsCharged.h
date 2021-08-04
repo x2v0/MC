@@ -4,24 +4,18 @@
 //---------------------------------------------------------------------------
 #pragma once
 #include "mcphysics.h"
-
 class mcRng;
 
 class mcPhysicsCharged : public mcPhysics
 {
 public:
-	mcPhysicsCharged(void);
-	virtual ~mcPhysicsCharged(void);
+   mcPhysicsCharged(void);
 
-protected:
-	// Physics utilities
-	static void MoliereScatter(mcRng& rng
-		, double scaledLittleB
-		, double chi_cc
-		, geomVector3D& u
-		, double eTotal
-		, double betaSquared
-		, double effPathLength);
+   virtual ~mcPhysicsCharged(void);
 
-	static double ReducedPathLength(double stepNext, double tscat);
+protected: // Physics utilities
+   static void MoliereScatter(mcRng& rng, double scaledLittleB, double chi_cc, geomVector3D& u, double eTotal,
+                              double betaSquared, double effPathLength);
+
+   static double ReducedPathLength(double stepNext, double tscat);
 };

@@ -11,20 +11,22 @@
 class mcScoreEnergyFluence : public mcScore
 {
 public:
-	mcScoreEnergyFluence(const char* module_name, int nThreads, mc_particle_t pt, int nr, double rmax);
-	virtual ~mcScoreEnergyFluence();
+   mcScoreEnergyFluence(const char* module_name, int nThreads, mc_particle_t pt, int nr, double rmax);
 
-	void ScoreFluence(const mcParticle& particle) override;
+   virtual ~mcScoreEnergyFluence();
 
-	void dumpVRML(ostream&) const override;
-	void dumpStatistic(ostream&) const override;
+   void ScoreFluence(const mcParticle& particle) override;
 
-	friend ostream& operator << (ostream&, const mcScoreEnergyFluence&);
+   void dumpVRML(ostream&) const override;
+
+   void dumpStatistic(ostream&) const override;
+
+   friend ostream& operator <<(ostream&, const mcScoreEnergyFluence&);
 
 protected:
-	mc_particle_t pt_;
-	int nr_;
-	double rstep_;
-	double rmax_;
-	std::vector<std::vector<double>> fluence_;
+   mc_particle_t pt_;
+   int nr_;
+   double rstep_;
+   double rmax_;
+   std::vector<std::vector<double>> fluence_;
 };

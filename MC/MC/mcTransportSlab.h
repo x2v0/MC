@@ -9,21 +9,33 @@
 class mcTransportSlab : public mcTransport
 {
 public:
-	mcTransportSlab();
-	mcTransportSlab(const geomVector3D& orgn, const geomVector3D& z, const geomVector3D& x, double h);
-	virtual ~mcTransportSlab(void);
+   mcTransportSlab();
 
-	void setGeometry(double h) { h_ = h; }
-	double getHeight() const { return h_; }
+   mcTransportSlab(const geomVector3D& orgn, const geomVector3D& z, const geomVector3D& x, double h);
 
-	void dump(ostream& os) const override;
-	void dumpVRML(ostream& os)const override;
+   virtual ~mcTransportSlab(void);
+
+   void setGeometry(double h)
+   {
+      h_ = h;
+   }
+
+   double getHeight() const
+   {
+      return h_;
+   }
+
+   void dump(ostream& os) const override;
+
+   void dumpVRML(ostream& os) const override;
 
 protected:
-	double getDistanceInside(mcParticle& p) const override;
-	double getDistanceOutside(mcParticle& p) const override;
-	double getDNearInside(const geomVector3D& p) const override;
+   double getDistanceInside(mcParticle& p) const override;
+
+   double getDistanceOutside(mcParticle& p) const override;
+
+   double getDNearInside(const geomVector3D& p) const override;
 
 protected:
-	double h_;
+   double h_;
 };

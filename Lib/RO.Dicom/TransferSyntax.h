@@ -10,31 +10,35 @@
 
 namespace RO
 {
-	namespace Dicom
-	{
-		class RODICOM_API TransferSyntaxItem
-		{
-		public:
-			TransferSyntaxItem(const char* name, const char* uid, bool bLittleEndian, bool bEncapsulated, bool bExplicitVr, bool bDeflate, bool bLossy, bool bLossless) :
-				LittleEndian(bLittleEndian), Encapsulated(bEncapsulated), ExplicitVr(bExplicitVr), Deflate(bDeflate), Lossy(bLossy),
-				Lossless(bLossless), Name(name), Uid(uid) {}
+   namespace Dicom
+   {
+      class RODICOM_API TransferSyntaxItem
+      {
+      public:
+         TransferSyntaxItem(const char* name, const char* uid, bool bLittleEndian, bool bEncapsulated, bool bExplicitVr,
+                            bool bDeflate, bool bLossy, bool bLossless) : LittleEndian(bLittleEndian),
+                                                                          Encapsulated(bEncapsulated),
+                                                                          ExplicitVr(bExplicitVr), Deflate(bDeflate),
+                                                                          Lossy(bLossy), Lossless(bLossless),
+                                                                          Name(name), Uid(uid) {}
 
-			const bool LittleEndian;
-			const bool Encapsulated;
-			const bool ExplicitVr;
-			const bool Deflate;
-			const bool Lossy;
-			const bool Lossless;
-			const std::string Name;
-			const std::string Uid;
-		};
+         const bool LittleEndian;
+         const bool Encapsulated;
+         const bool ExplicitVr;
+         const bool Deflate;
+         const bool Lossy;
+         const bool Lossless;
+         const std::string Name;
+         const std::string Uid;
+      };
 
-		namespace TransferSyntax
-		{
-			RODICOM_API std::shared_ptr<TransferSyntaxItem> Item(const char* uid);
-			RODICOM_API void Populate();
-		}
+      namespace TransferSyntax
+      {
+         RODICOM_API std::shared_ptr<TransferSyntaxItem> Item(const char* uid);
 
-		typedef std::shared_ptr<TransferSyntaxItem> TransferSyntaxType;
-	}
+         RODICOM_API void Populate();
+      }
+
+      typedef std::shared_ptr<TransferSyntaxItem> TransferSyntaxType;
+   }
 }

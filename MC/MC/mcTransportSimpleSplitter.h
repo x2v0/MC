@@ -12,20 +12,22 @@
 class mcTransportSimpleSplitter : public mcTransport
 {
 public:
-	mcTransportSimpleSplitter(const geomVector3D& orgn, const geomVector3D& z, const geomVector3D& x, mc_particle_t ptype, int nsplit);
-	~mcTransportSimpleSplitter(void);
+   mcTransportSimpleSplitter(const geomVector3D& orgn, const geomVector3D& z, const geomVector3D& x,
+                             mc_particle_t ptype, int nsplit);
 
-	// Начало транспорта переписано, так как не нужно запускать симуляцию частиц.
-	// Их просто нужно зарегистрировать и пропустить дальше.
-	void beginTransport(mcParticle& p) override;
-	void beginTransportInside(mcParticle& p) override;
+   ~mcTransportSimpleSplitter(void); // Начало транспорта переписано, так как не нужно запускать симуляцию частиц.
+   // Их просто нужно зарегистрировать и пропустить дальше.
+   void beginTransport(mcParticle& p) override;
 
-	void dumpVRML(ostream& os)const override;
+   void beginTransportInside(mcParticle& p) override;
+
+   void dumpVRML(ostream& os) const override;
 
 protected:
-	double getDistanceInside(mcParticle& p) const override;
-	double getDistanceOutside(mcParticle& p) const override;
+   double getDistanceInside(mcParticle& p) const override;
 
-	enum mc_particle_t ptype_;
-	int nsplit_;
+   double getDistanceOutside(mcParticle& p) const override;
+
+   enum mc_particle_t ptype_;
+   int nsplit_;
 };

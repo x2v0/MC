@@ -12,31 +12,31 @@
 class mcSourceAccelerator : public mcSource
 {
 public:
-	mcSourceAccelerator(const char* name, int nThreads, mc_particle_t type, double ke, double z, double r, double theta);
+   mcSourceAccelerator(const char* name, int nThreads, mc_particle_t type, double ke, double z, double r, double theta);
 
-	void sample(mcParticle& p, mcThread* thread) override;
-	void dumpVRML(ostream& os) const override;
+   void sample(mcParticle& p, mcThread* thread) override;
 
-	friend ostream& operator << (ostream& os, const mcSourceAccelerator& s)
-	{
-		os << (const mcSource&)s;
-		os << "TYPE = \t" << s.type_ << endl;
-		os << "KE = \t" << s.ke_ << endl;
-		os << "POSITION = \t" << s.z_ << endl;
-		os << "ROTATION ANGLE = \t" << s.theta_ << endl;
-		return os;
-	}
+   void dumpVRML(ostream& os) const override;
+
+   friend ostream& operator <<(ostream& os, const mcSourceAccelerator& s)
+   {
+      os << static_cast<const mcSource&>(s);
+      os << "TYPE = \t" << s.type_ << endl;
+      os << "KE = \t" << s.ke_ << endl;
+      os << "POSITION = \t" << s.z_ << endl;
+      os << "ROTATION ANGLE = \t" << s.theta_ << endl;
+      return os;
+   }
 
 protected:
-	mc_particle_t type_;
-	int q_;			// зар€д
-	double ke_;		// энерги€
-	double z_;		// положение плоскости задани€ чатиц
-	double r_;		// радиус пучка
-	double theta_;	// угол падени€ электронов на мишень (в градусах), обусловленный вращением
-
-	// ¬спомогательные переменные
-	double tr_;		// угол падени€ в радианах
-	double uz_;		// проекци€ вектора скорости на ось z
-	double sinu_;	// синус угла наклона вектора электронов
+   mc_particle_t type_;
+   int q_;        // зар€д
+   double ke_;    // энерги€
+   double z_;     // положение плоскости задани€ чатиц
+   double r_;     // радиус пучка
+   double theta_; // угол падени€ электронов на мишень (в градусах), обусловленный вращением
+   // ¬спомогательные переменные
+   double tr_;   // угол падени€ в радианах
+   double uz_;   // проекци€ вектора скорости на ось z
+   double sinu_; // синус угла наклона вектора электронов
 };

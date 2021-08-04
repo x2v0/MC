@@ -11,8 +11,7 @@
 /// Scoring дозового распределения в плоскости XY
 class mcScoreMatrixXY : public mcScore
 {
-public:
-	/// <summary>
+public: /// <summary>
 	/// Единственный конструктор.
 	/// </summary>
 	/// <param name="module_name">имя модуля транспорта, к которому привязывается scoring.</param>
@@ -23,48 +22,42 @@ public:
 	/// <param name="psy">Размер voxel Y.</param>
 	/// <param name="psz">Размер voxel Z.</param>
 	/// <param name="z0">Глубина размещения передней поверхности матрицы.</param>
-	mcScoreMatrixXY(const char* module_name, int nThreads, int nx, int ny, double psx, double psy, double psz, double z0);
-	virtual ~mcScoreMatrixXY(void);
+   mcScoreMatrixXY(const char* module_name, int nThreads, int nx, int ny, double psx, double psy, double psz,
+                   double z0);
 
-	void ScoreFluence(const mcParticle& particle) override {}
+   virtual ~mcScoreMatrixXY(void);
 
-	void ScorePoint(double edep
-		, int iThread
-		, const mcRegionReference& region
-		, mc_particle_t pt
-		, const geomVector3D& p0) override;
+   void ScoreFluence(const mcParticle& particle) override {}
 
-	void ScoreLine(double edep
-		, int iThread
-		, const mcRegionReference& region
-		, mc_particle_t pt
-		, const geomVector3D& p0
-		, const geomVector3D& p1) override;
+   void ScorePoint(double edep, int iThread, const mcRegionReference& region, mc_particle_t pt,
+                   const geomVector3D& p0) override;
 
-	void dumpVRML(ostream&) const override;
-	void dumpStatistic(ostream&) const override;
+   void ScoreLine(double edep, int iThread, const mcRegionReference& region, mc_particle_t pt, const geomVector3D& p0,
+                  const geomVector3D& p1) override;
+
+   void dumpVRML(ostream&) const override;
+
+   void dumpStatistic(ostream&) const override;
 
 public:
-	double	Dose(int iThread, int ix, int iy) const;
-	double	Dose(int ix, int iy) const;
+   double Dose(int iThread, int ix, int iy) const;
 
-	void SetImageFile(const char* fname);
-	void SetCalibrationFile(const char* fname);
+   double Dose(int ix, int iy) const;
+
+   void SetImageFile(const char* fname);
+
+   void SetCalibrationFile(const char* fname);
 
 protected:
-	int    nx_, ny_;
-	double z0_;
-	double psx_;
-	double psy_;
-	double psz_;
-	double* MAll_;
-	double** M_;
-
-	// Служебные переменные
-	double z1_;
-	double minx_, miny_;
-
-	// Имя калибровочного файла и файла экспортированного изображения
-	string calibration_file_;
-	string image_file_;
+   int nx_, ny_;
+   double z0_;
+   double psx_;
+   double psy_;
+   double psz_;
+   double* MAll_;
+   double** M_; // Служебные переменные
+   double z1_;
+   double minx_, miny_; // Имя калибровочного файла и файла экспортированного изображения
+   string calibration_file_;
+   string image_file_;
 };

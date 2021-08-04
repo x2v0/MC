@@ -13,30 +13,44 @@
 class mcTransportWedge : public mcTransport
 {
 public:
-	mcTransportWedge(void);
-	mcTransportWedge(const geomVector3D& orgn, const geomVector3D& vz, const geomVector3D& vx,
-		double ax, double ay, double az);
-	virtual ~mcTransportWedge(void);
+   mcTransportWedge(void);
 
-	void setGeometry(double ax, double ay, double az);
-	// Половины размеров клина в плоскости Z=const, и высота клина
-	double ax() const { return ax_; }
-	double ay() const { return ay_; }
-	double az() const { return az_; }
+   mcTransportWedge(const geomVector3D& orgn, const geomVector3D& vz, const geomVector3D& vx, double ax, double ay,
+                    double az);
 
-	void dump(ostream& os) const override;
-	void dumpVRML(ostream& os)const override;
+   virtual ~mcTransportWedge(void);
+
+   void setGeometry(double ax, double ay, double az); // Половины размеров клина в плоскости Z=const, и высота клина
+   double ax() const
+   {
+      return ax_;
+   }
+
+   double ay() const
+   {
+      return ay_;
+   }
+
+   double az() const
+   {
+      return az_;
+   }
+
+   void dump(ostream& os) const override;
+
+   void dumpVRML(ostream& os) const override;
 
 protected:
-	double getDistanceInside(mcParticle& p) const override;
-	double getDistanceOutside(mcParticle& p) const override;
-	double getDNearInside(const geomVector3D& p) const override;
+   double getDistanceInside(mcParticle& p) const override;
+
+   double getDistanceOutside(mcParticle& p) const override;
+
+   double getDNearInside(const geomVector3D& p) const override;
 
 protected:
-	double ax_;
-	double ay_;
-	double az_;
-
-	geomVector3D n_;	// нормаль к наклонной плоскости клина, направленная наружу
-	geomVector3D cy_;	// положение середины ребра острого угла клина
+   double ax_;
+   double ay_;
+   double az_;
+   geomVector3D n_;  // нормаль к наклонной плоскости клина, направленная наружу
+   geomVector3D cy_; // положение середины ребра острого угла клина
 };

@@ -12,12 +12,13 @@
 class mcTransportTrap : public mcTransport
 {
 public:
-	mcTransportTrap(void);
-	mcTransportTrap(const geomVector3D& orgn, const geomVector3D& z, const geomVector3D& x);
-	virtual ~mcTransportTrap(void);
+   mcTransportTrap(void);
 
-	virtual void beginTransport(mcParticle& p);
+   mcTransportTrap(const geomVector3D& orgn, const geomVector3D& z, const geomVector3D& x);
 
-	virtual void dumpVRML(ostream& os)const;
+   virtual ~mcTransportTrap(void);
 
+   void beginTransport(mcParticle& p) override;
+
+   void dumpVRML(ostream& os) const override;
 };

@@ -3,15 +3,13 @@
 // Author: [2005-2017] Gennady Gorlachev (ggorlachev@roiss.ru) 
 //---------------------------------------------------------------------------
 #pragma once
-
 #include <vector>
 #include <memory>
 
 //  ласс анализа дозовых профилей.
 class ProfileProcessor
 {
-public:
-	/// <summary>
+public: /// <summary>
 	/// ќпределение параметров поперечного профил€.
 	/// </summary>
 	/// <param name="x">координаты точек профил€</param>
@@ -19,10 +17,8 @@ public:
 	/// <param name="width">расчитанна€ ширина профил€ по полувысоте</param>
 	/// <param name="penumbra">расчитанный размер полутении</param>
 	/// <param name="penumbra">дозиметрический индекс, соответствующий интегралу провил€ от 80% плюс 3 см</param>
-	static void ProfileParameters(const std::vector<double>& x, const std::vector<double>& d,
-		std::vector<double>& dd, double& width, double& penumbra, double& dinde);
-
-	/// <summary>
+   static void ProfileParameters(const std::vector<double>& x, const std::vector<double>& d, std::vector<double>& dd,
+                                 double& width, double& penumbra, double& dinde); /// <summary>
 	/// —глаживание дозовых распределений круглых полей в FanLine RZ геометрии.
 	/// »де€ сглаживани€ в по радиусу в окрестности центральной оси апроксимацией параболой.
 	/// ”читываютс€ точки на рассто€нии не более половины размера пол€ и не ближе к его границе чем 1.5 см.
@@ -34,13 +30,13 @@ public:
 	/// <param name="nr">размер матрицы по радиусу</param>
 	/// <param name="nz">размер матрицы по глубине</param>
 	/// <param name="rstep">шаг по радиусу в см (дл€ определени€ пределов сглаживани€ по радиусу)</param>
-	static std::shared_ptr<std::vector<std::vector<double>>>
-		SmoothFanRZ(const std::vector<std::vector<double>>& srcMatrix, unsigned nr, unsigned nz, double rstep);
+   static std::shared_ptr<std::vector<std::vector<double>>> SmoothFanRZ(
+      const std::vector<std::vector<double>>& srcMatrix, unsigned nr, unsigned nz, double rstep);
 
-	// —глаживание начального участка радиально симметричного профил€ параболой
-	// nr - количествао точек от начала, подверженных сглаживанию.
-	static void SmoothRZProfile(std::vector<double>&, unsigned nr);
+   // —глаживание начального участка радиально симметричного профил€ параболой
+   // nr - количествао точек от начала, подверженных сглаживанию.
+   static void SmoothRZProfile(std::vector<double>&, unsigned nr);
 
-	// ќдномерное сглаживание SavitzkyЦGolay с различными степен€ми.
-	static void SmoothSG1D(std::vector<double>& p, unsigned m, unsigned nl, unsigned nr);
+   // ќдномерное сглаживание SavitzkyЦGolay с различными степен€ми.
+   static void SmoothSG1D(std::vector<double>& p, unsigned m, unsigned nl, unsigned nr);
 };

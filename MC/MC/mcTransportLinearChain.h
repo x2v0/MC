@@ -13,27 +13,26 @@
 class mcTransportLinearChain : public mcTransport
 {
 public:
-	mcTransportLinearChain(const geomVector3D& orgn, const geomVector3D& z, const geomVector3D& x);
-	virtual ~mcTransportLinearChain(void);
+   mcTransportLinearChain(const geomVector3D& orgn, const geomVector3D& z, const geomVector3D& x);
 
-	void beginTransport(mcParticle& p) override;
-	void beginTransportInside(mcParticle& p) override;
+   virtual ~mcTransportLinearChain(void);
 
-	double getDistanceOutside(mcParticle& p) const override;
+   void beginTransport(mcParticle& p) override;
 
-	mcTransport* getInternalTransportByName(const char* name) override;
+   void beginTransportInside(mcParticle& p) override;
 
-	// ƒобавление объекта транспорта цепочки.
-	// –егистраци€ участников транспорта необходима дл€ определени€ 
-	// в какой транспорт попадет частица, когда она проникнет в цепочку снаружи.
-	void addTransport(mcTransport* t);
+   double getDistanceOutside(mcParticle& p) const override;
 
-	// ¬ызываетс€ по окончании парсинга дл€ заверешени€ установки всех св€зей
-	void completeInit();
+   mcTransport* getInternalTransportByName(const char* name) override; // ƒобавление объекта транспорта цепочки.
+   // –егистраци€ участников транспорта необходима дл€ определени€ 
+   // в какой транспорт попадет частица, когда она проникнет в цепочку снаружи.
+   void addTransport(mcTransport* t); // ¬ызываетс€ по окончании парсинга дл€ заверешени€ установки всех св€зей
+   void completeInit();
 
-	void dump(ostream& os) const override;
-	void dumpVRML(ostream& os)const override;
+   void dump(ostream& os) const override;
+
+   void dumpVRML(ostream& os) const override;
 
 protected:
-	std::vector<mcTransport*> chainTransports_;
+   std::vector<mcTransport*> chainTransports_;
 };

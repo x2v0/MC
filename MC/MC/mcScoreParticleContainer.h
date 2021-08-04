@@ -11,34 +11,41 @@
 class mcScoreParticleContainer : public mcScore
 {
 public:
-	mcScoreParticleContainer(const char* module_name, int nThreads);
-	virtual ~mcScoreParticleContainer(void);
+   mcScoreParticleContainer(const char* module_name, int nThreads);
 
-	void ScoreFluence(const mcParticle& particle) override;
+   virtual ~mcScoreParticleContainer(void);
 
-	void setParticleTypeFilter(mc_particle_t t) { ptypeFilter_ = t; }
-	double etotal_other() const;
+   void ScoreFluence(const mcParticle& particle) override;
 
-	void dumpVRML(ostream&) const override;
-	void dumpStatistic(ostream&) const override;
+   void setParticleTypeFilter(mc_particle_t t)
+   {
+      ptypeFilter_ = t;
+   }
 
-	friend ostream& operator << (ostream&, const mcScoreParticleContainer&);
+   double etotal_other() const;
+
+   void dumpVRML(ostream&) const override;
+
+   void dumpStatistic(ostream&) const override;
+
+   friend ostream& operator <<(ostream&, const mcScoreParticleContainer&);
 
 protected:
-	mc_particle_t ptypeFilter_;
-	double* etotal_other_;
-	struct PlaneParticleRecord
-	{
-		float x;
-		float y;
-		float z;
-		float ux;
-		float uy;
-		float uz;
-		float e;
-		float r;
-		float a;
-	};
+   mc_particle_t ptypeFilter_;
+   double* etotal_other_;
 
-	std::vector<std::vector<PlaneParticleRecord>> particles_;
+   struct PlaneParticleRecord
+   {
+      float x;
+      float y;
+      float z;
+      float ux;
+      float uy;
+      float uz;
+      float e;
+      float r;
+      float a;
+   };
+
+   std::vector<std::vector<PlaneParticleRecord>> particles_;
 };

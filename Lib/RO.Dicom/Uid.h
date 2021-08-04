@@ -8,14 +8,13 @@
 
 namespace RO
 {
-	namespace Dicom
-	{
-		namespace Uid
-		{
-			//-------------------------------------------------------------
-			// Type: SOP Class
-			//-------------------------------------------------------------
-
+   namespace Dicom
+   {
+      namespace Uid
+      {
+         //-------------------------------------------------------------
+         // Type: SOP Class
+         //-------------------------------------------------------------
 #define Verification                                                                               "1.2.840.10008.1.1"
 #define MediaStorageDirectoryStorage                                                               "1.2.840.10008.1.3.10"
 #define StorageCommitmentPushModelSOPClass                                                         "1.2.840.10008.1.20.1"
@@ -182,11 +181,9 @@ namespace RO
 #define ImplantTemplateGroupInformationModelFIND                                                   "1.2.840.10008.5.1.4.45.2"
 #define ImplantTemplateGroupInformationModelMOVE                                                   "1.2.840.10008.5.1.4.45.3"
 #define ImplantTemplateGroupInformationModelGET                                                    "1.2.840.10008.5.1.4.45.4"
-
-			//-------------------------------------------------------------
-			// Type: Transfer Syntax
-			//-------------------------------------------------------------
-
+         //-------------------------------------------------------------
+         // Type: Transfer Syntax
+         //-------------------------------------------------------------
 #define ImplicitVRLittleEndian                                                                     "1.2.840.10008.1.2"
 #define ExplicitVRLittleEndian                                                                     "1.2.840.10008.1.2.1"
 #define DeflatedExplicitVRLittleEndian                                                             "1.2.840.10008.1.2.1.99"
@@ -210,11 +207,9 @@ namespace RO
 #define RLELossless                                                                                "1.2.840.10008.1.2.5"
 #define RFC2557MIMEEncapsulation                                                                   "1.2.840.10008.1.2.6.1"
 #define XMLEncoding                                                                                "1.2.840.10008.1.2.6.2"
-
-			//-------------------------------------------------------------
-			// Type: Well-known frame of reference
-			//-------------------------------------------------------------
-
+         //-------------------------------------------------------------
+         // Type: Well-known frame of reference
+         //-------------------------------------------------------------
 #define TalairachBrainAtlasFrameOfReference                                                        "1.2.840.10008.1.4.1.1"
 #define SPM2T1FrameOfReference                                                                     "1.2.840.10008.1.4.1.2"
 #define SPM2T2FrameOfReference                                                                     "1.2.840.10008.1.4.1.3"
@@ -235,11 +230,9 @@ namespace RO
 #define SPM2SINGLESUBJT1FrameOfReference                                                           "1.2.840.10008.1.4.1.18"
 #define ICBM452T1FrameOfReference                                                                  "1.2.840.10008.1.4.2.1"
 #define ICBMSingleSubjectMRIFrameOfReference                                                       "1.2.840.10008.1.4.2.2"
-
-			//-------------------------------------------------------------
-			// Type: Well-known SOP Instance
-			//-------------------------------------------------------------
-
+         //-------------------------------------------------------------
+         // Type: Well-known SOP Instance
+         //-------------------------------------------------------------
 #define HotIronColorPaletteSOPInstance                                                             "1.2.840.10008.1.5.1"
 #define PETColorPaletteSOPInstance                                                                 "1.2.840.10008.1.5.2"
 #define HotMetalBlueColorPaletteSOPInstance                                                        "1.2.840.10008.1.5.3"
@@ -248,78 +241,56 @@ namespace RO
 #define ProceduralEventLoggingSOPInstance                                                          "1.2.840.10008.1.40.1"
 #define SubstanceAdministrationLoggingSOPInstance                                                  "1.2.840.10008.1.42.1"
 #define UnifiedWorklistAndProcedureStepSOPInstance                                                 "1.2.840.10008.5.1.4.34.5"
-
-			//-------------------------------------------------------------
-			// Type: DICOM UIDs as a Coding Scheme
-			//-------------------------------------------------------------
-
+         //-------------------------------------------------------------
+         // Type: DICOM UIDs as a Coding Scheme
+         //-------------------------------------------------------------
 #define DICOMUIDRegistry                                                                           "1.2.840.10008.2.6.1"
-
-			//-------------------------------------------------------------
-			// Type: Coding Scheme
-			//-------------------------------------------------------------
-
+         //-------------------------------------------------------------
+         // Type: Coding Scheme
+         //-------------------------------------------------------------
 #define DICOMControlledTerminology                                                                 "1.2.840.10008.2.16.4"
-
-			//-------------------------------------------------------------
-			// Type: Application Context Name
-			//-------------------------------------------------------------
-
+         //-------------------------------------------------------------
+         // Type: Application Context Name
+         //-------------------------------------------------------------
 #define DICOMApplicationContextName                                                                "1.2.840.10008.3.1.1.1"
-
-			//-------------------------------------------------------------
-			// Type: Service Class
-			//-------------------------------------------------------------
-
+         //-------------------------------------------------------------
+         // Type: Service Class
+         //-------------------------------------------------------------
 #define StorageServiceClass                                                                        "1.2.840.10008.4.2"
 #define UnifiedWorklistAndProcedureStepServiceClass                                                "1.2.840.10008.5.1.4.34.6"
-
-			//-------------------------------------------------------------
-			// Type: Meta SOP Class
-			//-------------------------------------------------------------
-
+         //-------------------------------------------------------------
+         // Type: Meta SOP Class
+         //-------------------------------------------------------------
 #define BasicGrayscalePrintManagementMetaSOPClass                                                  "1.2.840.10008.5.1.1.9"
 #define BasicColorPrintManagementMetaSOPClass                                                      "1.2.840.10008.5.1.1.18"
 #define GeneralPurposeWorklistManagementMetaSOPClass                                               "1.2.840.10008.5.1.4.32"
-
-			//-------------------------------------------------------------
-			// Type: Well-known Printer SOP Instance
-			//-------------------------------------------------------------
-
+         //-------------------------------------------------------------
+         // Type: Well-known Printer SOP Instance
+         //-------------------------------------------------------------
 #define PrinterSOPInstance                                                                         "1.2.840.10008.5.1.1.17"
 #define PrinterConfigurationRetrievalSOPInstance                                                   "1.2.840.10008.5.1.1.17.376"
-
-			//-------------------------------------------------------------
-			// Type: 
-			//-------------------------------------------------------------
-
+         //-------------------------------------------------------------
+         // Type: 
+         //-------------------------------------------------------------
 #define VLImageStorageTrial                                                                        "1.2.840.10008.5.1.4.1.1.77.1"
-
-			//-------------------------------------------------------------
-			// Type: Transfer
-			//-------------------------------------------------------------
-
+         //-------------------------------------------------------------
+         // Type: Transfer
+         //-------------------------------------------------------------
 #define ColorPaletteStorage                                                                        "1.2.840.10008.5.1.4.39.1"
-
-			//-------------------------------------------------------------
-			// Type: Query/Retrieve
-			//-------------------------------------------------------------
-
+         //-------------------------------------------------------------
+         // Type: Query/Retrieve
+         //-------------------------------------------------------------
 #define ColorPaletteInformationModelFIND                                                           "1.2.840.10008.5.1.4.39.2"
 #define ColorPaletteInformationModelMOVE                                                           "1.2.840.10008.5.1.4.39.3"
 #define ColorPaletteInformationModelGET                                                            "1.2.840.10008.5.1.4.39.4"
-
-			//-------------------------------------------------------------
-			// Type: Application Hosting Model
-			//-------------------------------------------------------------
-
+         //-------------------------------------------------------------
+         // Type: Application Hosting Model
+         //-------------------------------------------------------------
 #define NativeDICOMModel                                                                           "1.2.840.10008.7.1.1"
 #define AbstractMultiDimensionalImageModel                                                         "1.2.840.10008.7.1.2"
-
-			//-------------------------------------------------------------
-			// Type: LDAP OID
-			//-------------------------------------------------------------
-
+         //-------------------------------------------------------------
+         // Type: LDAP OID
+         //-------------------------------------------------------------
 #define dicomDeviceName                                                                            "1.2.840.10008.15.0.3.1"
 #define dicomDescription                                                                           "1.2.840.10008.15.0.3.2"
 #define dicomManufacturer                                                                          "1.2.840.10008.15.0.3.3"
@@ -359,17 +330,13 @@ namespace RO
 #define dicomNetworkConnection                                                                     "1.2.840.10008.15.0.4.6"
 #define dicomUniqueAETitle                                                                         "1.2.840.10008.15.0.4.7"
 #define dicomTransferCapability                                                                    "1.2.840.10008.15.0.4.8"
-
-			//-------------------------------------------------------------
-			// Type: Synchronization Frame of Reference
-			//-------------------------------------------------------------
-
+         //-------------------------------------------------------------
+         // Type: Synchronization Frame of Reference
+         //-------------------------------------------------------------
 #define UniversalCoordinatedTime                                                                   "1.2.840.10008.15.1.1"
-
-			//-------------------------------------------------------------
-			// Type: Context Group Name
-			//-------------------------------------------------------------
-
+         //-------------------------------------------------------------
+         // Type: Context Group Name
+         //-------------------------------------------------------------
 #define AnatomicModifier2                                                                          "1.2.840.10008.6.1.1"
 #define AnatomicRegion4                                                                            "1.2.840.10008.6.1.2"
 #define TransducerApproach5                                                                        "1.2.840.10008.6.1.3"
@@ -1203,6 +1170,6 @@ namespace RO
 #define RadiotherapyAcquisitionWorkitemDefinition9242                                              "1.2.840.10008.6.1.932"
 #define RadiotherapyRegistrationWorkitemDefinition9243                                             "1.2.840.10008.6.1.933"
 #define IntravascularOCTFlushAgent3850                                                             "1.2.840.10008.6.1.934"
-		}
-	}
+      }
+   }
 }

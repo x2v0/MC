@@ -1,7 +1,6 @@
 //{{NO_DEPENDENCIES}}
 // Microsoft Visual C++ generated include file.
 // Used by RO.Dicom.rc
-
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED

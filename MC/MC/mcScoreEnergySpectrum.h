@@ -11,21 +11,23 @@
 class mcScoreEnergySpectrum : public mcScore
 {
 public:
-	mcScoreEnergySpectrum(const char* module_name, int nThreads, mc_particle_t pt, int ne, double emax, double rmax);
-	virtual ~mcScoreEnergySpectrum();
+   mcScoreEnergySpectrum(const char* module_name, int nThreads, mc_particle_t pt, int ne, double emax, double rmax);
 
-	void ScoreFluence(const mcParticle& particle) override;
+   virtual ~mcScoreEnergySpectrum();
 
-	void dumpVRML(ostream&) const override;
-	void dumpStatistic(ostream&) const override;
+   void ScoreFluence(const mcParticle& particle) override;
 
-	friend ostream& operator << (ostream&, const mcScoreEnergySpectrum&);
+   void dumpVRML(ostream&) const override;
+
+   void dumpStatistic(ostream&) const override;
+
+   friend ostream& operator <<(ostream&, const mcScoreEnergySpectrum&);
 
 protected:
-	mc_particle_t pt_;
-	int ne_;
-	double emax_;
-	double estep_;
-	double rmax_;
-	std::vector<std::vector<double>> espec_;
+   mc_particle_t pt_;
+   int ne_;
+   double emax_;
+   double estep_;
+   double rmax_;
+   std::vector<std::vector<double>> espec_;
 };

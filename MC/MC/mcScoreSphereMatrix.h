@@ -16,49 +16,43 @@
 class mcScoreSphereMatrix : public mcScore
 {
 public:
-	mcScoreSphereMatrix(const char* module_name, int nThreads, int np, int nm, double rmin, double rmax);
-	virtual ~mcScoreSphereMatrix();
+   mcScoreSphereMatrix(const char* module_name, int nThreads, int np, int nm, double rmin, double rmax);
 
-	void ScoreFluence(const mcParticle& particle) override;
-	void ScorePoint(double edep
-		, int iThread
-		, const mcRegionReference& region
-		, mc_particle_t pt
-		, const geomVector3D& p0) override;
+   virtual ~mcScoreSphereMatrix();
 
-	void ScoreLine(double edep
-		, int iThread
-		, const mcRegionReference& region
-		, mc_particle_t pt
-		, const geomVector3D& p0
-		, const geomVector3D& p1) override;
+   void ScoreFluence(const mcParticle& particle) override;
 
-	virtual void scoreEnergyInVoxel(int iThread, int ip, int im, double edep);
+   void ScorePoint(double edep, int iThread, const mcRegionReference& region, mc_particle_t pt,
+                   const geomVector3D& p0) override;
 
-	void CE2D() override;
+   void ScoreLine(double edep, int iThread, const mcRegionReference& region, mc_particle_t pt, const geomVector3D& p0,
+                  const geomVector3D& p1) override;
 
-	double	Dose(int ip, int im) const;
+   virtual void scoreEnergyInVoxel(int iThread, int ip, int im, double edep);
 
-	void dumpVRML(ostream&) const override;
-	void dumpStatistic(ostream&) const override;
+   void CE2D() override;
 
-	friend ostream& operator << (ostream&, const mcScoreSphereMatrix&);
+   double Dose(int ip, int im) const;
 
-protected:
-	// Расстояние из точки p0 в направлении v до конуса, соответствующего широте angle
-	double distanceToParallel(const geomVector3D& p0, const geomVector3D& v, int ip, bool isPOutside);
+   void dumpVRML(ostream&) const override;
 
-	// Расстояние из точки p0 в направлении v до плоскости, соответствующей долготе angle
-	double distanceToMeridian(const geomVector3D& p0, const geomVector3D& v, int im, bool isMPositive);
+   void dumpStatistic(ostream&) const override;
+
+   friend ostream& operator <<(ostream&, const mcScoreSphereMatrix&);
+
+protected: // Расстояние из точки p0 в направлении v до конуса, соответствующего широте angle
+   double distanceToParallel(const geomVector3D& p0, const geomVector3D& v, int ip, bool isPOutside);
+
+   // Расстояние из точки p0 в направлении v до плоскости, соответствующей долготе angle
+   double distanceToMeridian(const geomVector3D& p0, const geomVector3D& v, int im, bool isMPositive);
 
 protected:
-	int np_;				// количество параллелей
-	int nm_;				// количество меридианов
-	double rmin_, rmax_;	// радиусы сфер, между которыми слой детектора
-	double* MAll_;
-	double** M_;
-
-	double r2min_, r2max_;
-	double pstep_;
-	double mstep_;
+   int np_;             // количество параллелей
+   int nm_;             // количество меридианов
+   double rmin_, rmax_; // радиусы сфер, между которыми слой детектора
+   double* MAll_;
+   double** M_;
+   double r2min_, r2max_;
+   double pstep_;
+   double mstep_;
 };

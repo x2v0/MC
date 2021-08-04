@@ -10,20 +10,19 @@
 class mcTransportRectangleTrap : public mcTransport
 {
 public:
-	mcTransportRectangleTrap(const geomVector3D& orgn, const geomVector3D& z, const geomVector3D& x);
-	~mcTransportRectangleTrap(void);
+   mcTransportRectangleTrap(const geomVector3D& orgn, const geomVector3D& z, const geomVector3D& x);
 
-	// Начало транспорта переписано, так как не нужно запускать симуляцию частиц.
-	// Их просто нужно отфильтровать.
-	void beginTransport(mcParticle& p) override;
+   ~mcTransportRectangleTrap(void); // Начало транспорта переписано, так как не нужно запускать симуляцию частиц.
+   // Их просто нужно отфильтровать.
+   void beginTransport(mcParticle& p) override;
 
-	void dumpVRML(ostream& os)const override;
+   void dumpVRML(ostream& os) const override;
 
-	void SetFieldSize(double x1, double x2, double y1, double y2);
+   void SetFieldSize(double x1, double x2, double y1, double y2);
 
 protected:
-	double fsx1_;
-	double fsx2_;
-	double fsy1_;
-	double fsy2_;
+   double fsx1_;
+   double fsx2_;
+   double fsy1_;
+   double fsy2_;
 };

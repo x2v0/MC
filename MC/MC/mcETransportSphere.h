@@ -1,27 +1,37 @@
-// Radiation Oncology Monte Carlo open source project
+п»ї// Radiation Oncology Monte Carlo open source project
 //
 // Author: [2005-2017] Gennady Gorlachev (ggorlachev@roiss.ru) 
 //---------------------------------------------------------------------------
 #pragma once
 #include "mcTransport.h"
 
-// Класс транспорта в шаре с учетом возможности вложения объектов
+// РљР»Р°СЃСЃ С‚СЂР°РЅСЃРїРѕСЂС‚Р° РІ С€Р°СЂРµ СЃ СѓС‡РµС‚РѕРј РІРѕР·РјРѕР¶РЅРѕСЃС‚Рё РІР»РѕР¶РµРЅРёСЏ РѕР±СЉРµРєС‚РѕРІ
 class mcETransportSphere : public mcTransport
 {
 public:
-	mcETransportSphere();
-	mcETransportSphere(const geomVector3D& orgn, const geomVector3D& z, const geomVector3D& x, double r);
+   mcETransportSphere();
 
-	void setRadius(double r) { r_ = r; }
-	double getRadius() const { return r_; }
+   mcETransportSphere(const geomVector3D& orgn, const geomVector3D& z, const geomVector3D& x, double r);
 
-	void dump(ostream& os) const override;
-	void dumpVRML(ostream& os)const override;
+   void setRadius(double r)
+   {
+      r_ = r;
+   }
+
+   double getRadius() const
+   {
+      return r_;
+   }
+
+   void dump(ostream& os) const override;
+
+   void dumpVRML(ostream& os) const override;
 
 protected:
-	double getDistanceInside(mcParticle& p) const override;
-	double getDistanceOutside(mcParticle& p) const override;
+   double getDistanceInside(mcParticle& p) const override;
+
+   double getDistanceOutside(mcParticle& p) const override;
 
 protected:
-	double r_;
+   double r_;
 };

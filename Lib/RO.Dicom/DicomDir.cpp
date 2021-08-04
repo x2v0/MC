@@ -16,8 +16,7 @@
 //// ddr.cpp:  Вспомогательные функции для инкапсуляции обращений к библиотеке CTN
 //// Проект:	 AMPhora
 //// Автор:		 Горлачев Г.Е. (ggorl@dol.ru)
-///////////////////////////////////////////////////////////////////////////////
-//
+/////////////////////////////////////////////////////////////////////////////// //
 //#include "ddr.h"
 //#include "dcmImage.h"
 //#include "dcmelement.h"
@@ -177,8 +176,7 @@
 //
 ////
 //// добавление в каталог новой записи об изображении
-////
-//ddr_seriesleaf_record& 
+//// //ddr_seriesleaf_record& 
 //dcmuDICOMDIR::addRecordFromImage(vector<ddr_patient_record>& catalog, dcmImage& img)
 //{
 //  unsigned j;
@@ -268,8 +266,7 @@
 //
 ////
 //// сканирование списка изображений и генерация каталога
-////
-//void dcmuDICOMDIR::createCatalogFromDcmFileTree(const string& rootdir
+//// //void dcmuDICOMDIR::createCatalogFromDcmFileTree(const string& rootdir
 //                                                ,const vector<string>& flist
 //                                                ,const char* modality
 //                                                ,vector<ddr_patient_record>& catalog
@@ -297,8 +294,7 @@
 //
 ////
 //// сканирование списка изображений и генерация каталога
-////
-//void dcmuDICOMDIR::createCatalogFromDcmObjList(const vector<dcmImage*>& olist
+//// //void dcmuDICOMDIR::createCatalogFromDcmObjList(const vector<dcmImage*>& olist
 //                                               ,const char* modality
 //                                               ,vector<ddr_patient_record>& catalog)
 //{

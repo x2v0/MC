@@ -11,32 +11,35 @@
 class mcScoreSphereFluence : public mcScore
 {
 public:
-	mcScoreSphereFluence(const char* module_name, int nThreads);
-	virtual ~mcScoreSphereFluence();
+   mcScoreSphereFluence(const char* module_name, int nThreads);
 
-	void ScoreFluence(const mcParticle& particle) override;
-	
-	double etotal_other() const;
+   virtual ~mcScoreSphereFluence();
 
-	void dumpVRML(ostream&) const override;
-	void dumpStatistic(ostream&) const override;
+   void ScoreFluence(const mcParticle& particle) override;
 
-	friend ostream& operator << (ostream&, const mcScoreSphereFluence&);
+   double etotal_other() const;
+
+   void dumpVRML(ostream&) const override;
+
+   void dumpStatistic(ostream&) const override;
+
+   friend ostream& operator <<(ostream&, const mcScoreSphereFluence&);
 
 protected:
-	double* etotal_other_;
-	struct SFParticleRecord
-	{
-		float x;
-		float y;
-		float z;
-		float ux;
-		float uy;
-		float uz;
-		float e;
-		float r;
-		float a;
-	};
-	
-	std::vector<std::vector<SFParticleRecord>> particles_;
+   double* etotal_other_;
+
+   struct SFParticleRecord
+   {
+      float x;
+      float y;
+      float z;
+      float ux;
+      float uy;
+      float uz;
+      float e;
+      float r;
+      float a;
+   };
+
+   std::vector<std::vector<SFParticleRecord>> particles_;
 };

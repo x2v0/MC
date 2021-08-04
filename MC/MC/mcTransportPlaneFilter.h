@@ -13,13 +13,13 @@
 class mcTransportPlaneFilter : public mcTransport
 {
 public:
-	mcTransportPlaneFilter(void);
-	mcTransportPlaneFilter(const geomVector3D& orgn, const geomVector3D& z, const geomVector3D& x);
-	virtual ~mcTransportPlaneFilter(void);
+   mcTransportPlaneFilter(void);
 
-	// Начало транспорта переписано, так как не нужно запускать симуляцию частиц.
-	// Их просто нужно зарегистрировать и пропустить дальше.
-	void beginTransport(mcParticle& p) override;
+   mcTransportPlaneFilter(const geomVector3D& orgn, const geomVector3D& z, const geomVector3D& x);
 
-	void dumpVRML(ostream& os)const override;
+   virtual ~mcTransportPlaneFilter(void); // Начало транспорта переписано, так как не нужно запускать симуляцию частиц.
+   // Их просто нужно зарегистрировать и пропустить дальше.
+   void beginTransport(mcParticle& p) override;
+
+   void dumpVRML(ostream& os) const override;
 };

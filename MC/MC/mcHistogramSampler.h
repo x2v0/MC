@@ -1,4 +1,4 @@
-// Radiation Oncology Monte Carlo open source project
+п»ї// Radiation Oncology Monte Carlo open source project
 //
 // Author: [2005-2017] Gennady Gorlachev (ggorlachev@roiss.ru) 
 //---------------------------------------------------------------------------
@@ -7,53 +7,63 @@
 #include <ostream>
 
 /// <summary>
-/// Класс для поддержки самплинга параметров из комулятивной гистограммы в интервале аргументов от 0 до 1.
+/// РљР»Р°СЃСЃ РґР»СЏ РїРѕРґРґРµСЂР¶РєРё СЃР°РјРїР»РёРЅРіР° РїР°СЂР°РјРµС‚СЂРѕРІ РёР· РєРѕРјСѓР»СЏС‚РёРІРЅРѕР№ РіРёСЃС‚РѕРіСЂР°РјРјС‹ РІ РёРЅС‚РµСЂРІР°Р»Рµ Р°СЂРіСѓРјРµРЅС‚РѕРІ РѕС‚ 0 РґРѕ 1.
 /// </summary>
 class mcHistogramSampler
 {
 public:
-	mcHistogramSampler();
-	~mcHistogramSampler();
+   mcHistogramSampler();
 
-	/// <summary>
-	/// Иницилизация данных из произвольного распределения, представленного бинами постоянного шага.
+   ~mcHistogramSampler(); /// <summary>
+	/// РРЅРёС†РёР»РёР·Р°С†РёСЏ РґР°РЅРЅС‹С… РёР· РїСЂРѕРёР·РІРѕР»СЊРЅРѕРіРѕ СЂР°СЃРїСЂРµРґРµР»РµРЅРёСЏ, РїСЂРµРґСЃС‚Р°РІР»РµРЅРЅРѕРіРѕ Р±РёРЅР°РјРё РїРѕСЃС‚РѕСЏРЅРЅРѕРіРѕ С€Р°РіР°.
 	/// </summary>
-	/// <param name="np">количество точек в создаваемом самплере</param>
-	/// <param name="nbins">количество бинов в исходном распределении</param>
-	/// <param name="bin_size">начальная координата нулевого бина</param>
-	/// <param name="bin_size">толщина (шаг) бина</param>
-	/// <param name="data">массив распределения - количество самплов бинах</param>
-	void setFromDistribution(int np, int nbins, double par_min, double bin_size, const double* data);
-	void setFromDistribution(int np, double par_min, double bin_size, const std::vector<double>& data);
+	/// <param name="np">РєРѕР»РёС‡РµСЃС‚РІРѕ С‚РѕС‡РµРє РІ СЃРѕР·РґР°РІР°РµРјРѕРј СЃР°РјРїР»РµСЂРµ</param>
+	/// <param name="nbins">РєРѕР»РёС‡РµСЃС‚РІРѕ Р±РёРЅРѕРІ РІ РёСЃС…РѕРґРЅРѕРј СЂР°СЃРїСЂРµРґРµР»РµРЅРёРё</param>
+	/// <param name="bin_size">РЅР°С‡Р°Р»СЊРЅР°СЏ РєРѕРѕСЂРґРёРЅР°С‚Р° РЅСѓР»РµРІРѕРіРѕ Р±РёРЅР°</param>
+	/// <param name="bin_size">С‚РѕР»С‰РёРЅР° (С€Р°Рі) Р±РёРЅР°</param>
+	/// <param name="data">РјР°СЃСЃРёРІ СЂР°СЃРїСЂРµРґРµР»РµРЅРёСЏ - РєРѕР»РёС‡РµСЃС‚РІРѕ СЃР°РјРїР»РѕРІ Р±РёРЅР°С…</param>
+   void setFromDistribution(int np, int nbins, double par_min, double bin_size, const double* data);
 
-	// Creating sampler from energy bins (by number of particles) with variable width.
-	// Source distribution contains number of particles between meddles with neighboring energies.
-	void setFromDistribution(int np, int nbins, const double* ebins, const double* data);
-	
-	/// <summary>
-	/// Восстановление данных из буфера памяти.
+   void setFromDistribution(int np, double par_min, double bin_size, const std::vector<double>& data);
+
+   // Creating sampler from energy bins (by number of particles) with variable width.
+   // Source distribution contains number of particles between meddles with neighboring energies.
+   void setFromDistribution(int np, int nbins, const double* ebins, const double* data); /// <summary>
+	/// Р’РѕСЃСЃС‚Р°РЅРѕРІР»РµРЅРёРµ РґР°РЅРЅС‹С… РёР· Р±СѓС„РµСЂР° РїР°РјСЏС‚Рё.
 	/// </summary>
-	/// <param name="np">количество точек в самплере</param>
-	/// <param name="data">массив данных готовой к употреблению гистограммы</param>
-	void restore(int np, const double* data);
-	void restore(int np, const std::vector<double>& data);
+	/// <param name="np">РєРѕР»РёС‡РµСЃС‚РІРѕ С‚РѕС‡РµРє РІ СЃР°РјРїР»РµСЂРµ</param>
+	/// <param name="data">РјР°СЃСЃРёРІ РґР°РЅРЅС‹С… РіРѕС‚РѕРІРѕР№ Рє СѓРїРѕС‚СЂРµР±Р»РµРЅРёСЋ РіРёСЃС‚РѕРіСЂР°РјРјС‹</param>
+   void restore(int np, const double* data);
 
-	unsigned npnt() const { return np_; }
-	const double* data() const { return data_; }
+   void restore(int np, const std::vector<double>& data);
 
-	double sample(double f) const;
+   unsigned npnt() const
+   {
+      return np_;
+   }
 
-	friend std::ostream& operator << (std::ostream&, const mcHistogramSampler&);
-	friend std::ostream& operator << (std::ostream&, const std::vector<mcHistogramSampler>&);
+   const double* data() const
+   {
+      return data_;
+   }
+
+   double sample(double f) const;
+
+   friend std::ostream& operator <<(std::ostream&, const mcHistogramSampler&);
+
+   friend std::ostream& operator <<(std::ostream&, const std::vector<mcHistogramSampler>&);
 
 protected:
-	void init(int np);
-	void make_comulative(std::vector<double>& c, int nbins, const double* data);
-	void make_comulative(std::vector<double>& c, const std::vector<double>& data);
-	void set_from_comulative(int np, double par_min, double bin_size, const std::vector<double>& data);
+   void init(int np);
+
+   void make_comulative(std::vector<double>& c, int nbins, const double* data);
+
+   void make_comulative(std::vector<double>& c, const std::vector<double>& data);
+
+   void set_from_comulative(int np, double par_min, double bin_size, const std::vector<double>& data);
 
 protected:
-	int np_;
-	double step_;
-	double* data_;
+   int np_;
+   double step_;
+   double* data_;
 };

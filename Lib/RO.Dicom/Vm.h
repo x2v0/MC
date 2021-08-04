@@ -8,10 +8,8 @@
 
 namespace RO
 {
-	namespace Dicom
-	{
-		class RODICOM_API Vm
-		{
-		};
-	}
+   namespace Dicom
+   {
+      class RODICOM_API Vm { };
+   }
 }

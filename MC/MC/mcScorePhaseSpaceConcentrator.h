@@ -3,7 +3,6 @@
 // Author: [2005-2017] Gennady Gorlachev (ggorlachev@roiss.ru) 
 //---------------------------------------------------------------------------
 #pragma once
-
 #include "mcscore.h"
 
 /// <summary>
@@ -11,8 +10,7 @@
 /// </summary>
 class mcScorePhaseSpaceConcentrator : public mcScore
 {
-public:
-	/// <summary>
+public: /// <summary>
 	///  онструктор класса сбора статистикти по распределению частиц по энергии положению и углам
 	/// в радиальносимметричной системе.
 	/// </summary>
@@ -29,52 +27,45 @@ public:
 	/// <param name="rmax">максимальный радиус в см</param>
 	/// <param name="thetmax">максимальный угол в градусах</param>
 	/// <param name="stat_file">им€ файла вывода результатов</param>
-	mcScorePhaseSpaceConcentrator(
-		const char* module_name, int nThreads, 
-		enum mc_particle_t ptype, bool isXray, double focus,
-		int ne, int nr, int nthet, int naxial, 
-		double emax, double rmax, double thetmax, 
-		const char* stat_file);
-	virtual ~mcScorePhaseSpaceConcentrator();
+   mcScorePhaseSpaceConcentrator(const char* module_name, int nThreads, enum mc_particle_t ptype, bool isXray,
+                                 double focus, int ne, int nr, int nthet, int naxial, double emax, double rmax,
+                                 double thetmax, const char* stat_file);
 
-	void ScoreFluence(const mcParticle& particle) override;
+   virtual ~mcScorePhaseSpaceConcentrator();
 
-	void dumpVRML(ostream&) const override;
-	void dumpStatistic(ostream&) const override;
+   void ScoreFluence(const mcParticle& particle) override;
 
-	friend ostream& operator << (ostream&, const mcScorePhaseSpaceConcentrator&);
+   void dumpVRML(ostream&) const override;
 
-protected:
-	// ¬ычисление индекса 4D массива статистики, куда должна быть зарегистрирована частица.
-	int particleIdx(const mcParticle& particle) const;
+   void dumpStatistic(ostream&) const override;
 
-	// ¬ывод статистики по двум распределени€м sude by side
-	// (предназначенный в первую очередь дл€ сравнени€ симулированных, и сгенерированных моделью)
-	void dumpDistributions(ostream& os, double* dsim, double* dmodel) const;
+   friend ostream& operator <<(ostream&, const mcScorePhaseSpaceConcentrator&);
 
 protected:
-	enum mc_particle_t ptype_;
-	int isxray_;
-	int ne_;
-	int nr_;
-	int nthet_;
-	int naxial_;
+   // ¬ычисление индекса 4D массива статистики, куда должна быть зарегистрирована частица.
+   int particleIdx(const mcParticle& particle) const; // ¬ывод статистики по двум распределени€м sude by side
+   // (предназначенный в первую очередь дл€ сравнени€ симулированных, и сгенерированных моделью)
+   void dumpDistributions(ostream& os, double* dsim, double* dmodel) const;
 
-	double focus_;
-	double emax_;
-	double rmax_;
-	double thetmax_;		// (1 - cos(thetmax_abs_ * Pi / 180))
-	double thetmax_abs_;	// максимальный угол в градусах
-
-	std::string model_file_;
-
-	// —лужебные переменные
-	int nne_;
-	int nnr_;
-	int nnt_;
-	double de_;
-	double dr_;
-	double dthet_;
-	double daxial_;
-	double* data_;	// 4-х мерный массив данных дифференциальной гистограммы
+protected:
+   enum mc_particle_t ptype_;
+   int isxray_;
+   int ne_;
+   int nr_;
+   int nthet_;
+   int naxial_;
+   double focus_;
+   double emax_;
+   double rmax_;
+   double thetmax_;         // (1 - cos(thetmax_abs_ * Pi / 180))
+   double thetmax_abs_;     // максимальный угол в градусах
+   std::string model_file_; // —лужебные переменные
+   int nne_;
+   int nnr_;
+   int nnt_;
+   double de_;
+   double dr_;
+   double dthet_;
+   double daxial_;
+   double* data_; // 4-х мерный массив данных дифференциальной гистограммы
 };
