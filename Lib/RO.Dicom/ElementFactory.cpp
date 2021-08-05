@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "ElementFactory.h"
 using namespace RO::Dicom;
 using namespace Vr;
@@ -44,3 +44,4 @@ std::shared_ptr<Element> ElementFactory::MakeElement(UINT32 tag, VR vr)
       throw std::exception("unknown representatrion");
    return v;
 }
+

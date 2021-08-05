@@ -1,4 +1,4 @@
-#include "pch.h"
+п»ї#include "pch.h"
 #include "SimpleImage.h"
 #include "DicomObject.h"
 #include "DataSet.h"
@@ -63,7 +63,7 @@ void SimpleImage::SetPixelData(unsigned short* data, double rs, double ri)
 
 void FillFromDcm(SimpleImage* obj, DicomObject& dcm)
 {
-   // Наполнение объекта изображения
+   // РќР°РїРѕР»РЅРµРЅРёРµ РѕР±СЉРµРєС‚Р° РёР·РѕР±СЂР°Р¶РµРЅРёСЏ
    auto dset = dcm.Dset;
    obj->SetModality(dset->GetElementString(Modality).c_str());
    obj->SetResolution(dset->GetElement(Columns)->GetInt()[0], dset->GetElement(Rows)->GetInt()[0]);
@@ -78,7 +78,7 @@ void FillFromDcm(SimpleImage* obj, DicomObject& dcm)
       auto f = el_pos->GetDouble();
       if (f.size() == 2)
          obj->SetImageCorner(f[0] - obj->Psx() * 0.5, f[1] - obj->Psy() * 0.5);
-   } //// Положение среза по оси Z
+   } //// РџРѕР»РѕР¶РµРЅРёРµ СЃСЂРµР·Р° РїРѕ РѕСЃРё Z
    //void SetPosition(double z) { z0_ = z; }
    std::string modality = dcm.Dset->GetElement(Modality)->GetString();
    auto ri_elem = dcm.Dset->GetElement(RescaleIntercept);
@@ -108,7 +108,7 @@ void SimpleImage::ReadFromFile(const char* fname)
 
 void SimpleImage::WtiteToStream(std::ostream& os) const
 {
-   // Наполнение объекта DICOM из объекта изображения.
+   // РќР°РїРѕР»РЅРµРЅРёРµ РѕР±СЉРµРєС‚Р° DICOM РёР· РѕР±СЉРµРєС‚Р° РёР·РѕР±СЂР°Р¶РµРЅРёСЏ.
    DicomObject dcm;
    auto dset = std::make_shared<DataSet>(); // (M) Patient
    dset->AddElementString(PatientName, "RR Portal Image");
@@ -161,7 +161,7 @@ void SimpleImage::WtiteToStream(std::ostream& os) const
    dset->AddElementString(SOPInstanceUID, CreateUid(30).c_str());
    dset->AddElementDate(InstanceCreationDate, t.wYear, t.wMonth, t.wDay);
    dset->AddElementTime(InstanceCreationTime, t.wHour, t.wMinute, t.wSecond, t.wMilliseconds);
-   dset->AddElementString(SpecificCharacterSet, "ISO_IR 100"); // Запись объекта DICOM
+   dset->AddElementString(SpecificCharacterSet, "ISO_IR 100"); // Р—Р°РїРёСЃСЊ РѕР±СЉРµРєС‚Р° DICOM
    dcm.MetaInfo = FileMetaInformation::CreateDefault();
    dcm.Dset = dset;
    dcm.WtiteToStream(os);
@@ -175,3 +175,4 @@ void SimpleImage::WtiteToFile(const char* fname) const
    this->WtiteToStream(os);
    os.close();
 }
+

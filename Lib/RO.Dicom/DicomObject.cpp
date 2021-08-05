@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "DicomObject.h"
 #include "DataSet.h"
 #include "Element.h"
@@ -88,3 +88,4 @@ long DicomObject::PixelDataLength()
       return 0;
    return pe->GetLength();
 }
+

@@ -1,4 +1,4 @@
-#include "pch.h"
+п»ї#include "pch.h"
 #include "DicomDir.h"
 //
 //
@@ -13,9 +13,9 @@
 //
 //
 //
-//// ddr.cpp:  Вспомогательные функции для инкапсуляции обращений к библиотеке CTN
-//// Проект:	 AMPhora
-//// Автор:		 Горлачев Г.Е. (ggorl@dol.ru)
+//// ddr.cpp:  Р’СЃРїРѕРјРѕРіР°С‚РµР»СЊРЅС‹Рµ С„СѓРЅРєС†РёРё РґР»СЏ РёРЅРєР°РїСЃСѓР»СЏС†РёРё РѕР±СЂР°С‰РµРЅРёР№ Рє Р±РёР±Р»РёРѕС‚РµРєРµ CTN
+//// РџСЂРѕРµРєС‚:	 AMPhora
+//// РђРІС‚РѕСЂ:		 Р“РѕСЂР»Р°С‡РµРІ Р“.Р•. (ggorl@dol.ru)
 /////////////////////////////////////////////////////////////////////////////// //
 //#include "ddr.h"
 //#include "dcmImage.h"
@@ -175,7 +175,7 @@
 //}
 //
 ////
-//// добавление в каталог новой записи об изображении
+//// РґРѕР±Р°РІР»РµРЅРёРµ РІ РєР°С‚Р°Р»РѕРі РЅРѕРІРѕР№ Р·Р°РїРёСЃРё РѕР± РёР·РѕР±СЂР°Р¶РµРЅРёРё
 //// //ddr_seriesleaf_record& 
 //dcmuDICOMDIR::addRecordFromImage(vector<ddr_patient_record>& catalog, dcmImage& img)
 //{
@@ -185,7 +185,7 @@
 //  precord.name_=img.elementString(DCM_PATNAME);
 //  precord.birthDate_=img.elementString(DCM_PATBIRTHDATE);
 //  precord.sex_=img.elementString(DCM_PATSEX);
-//  // поиск
+//  // РїРѕРёСЃРє
 //  ddr_patient_record* patient=0;
 //  for(j=0;j<catalog.size();j++){
 //    ddr_patient_record& p=catalog[j];
@@ -199,7 +199,7 @@
 //    patient=&catalog.back();
 //  }
 //
-//  // исследование
+//  // РёСЃСЃР»РµРґРѕРІР°РЅРёРµ
 //  ddr_study_record srecord;
 //  srecord.uid_=img.elementString(DCM_RELSTUDYINSTANCEUID);
 //  srecord.id_=img.elementString(DCM_RELSTUDYID);
@@ -217,7 +217,7 @@
 //
 //  srecord.number_=img.elementString(DCM_IDACCESSIONNUMBER);
 //  srecord.descr_=img.elementString(DCM_IDSTUDYDESCRIPTION);
-//  // поиск
+//  // РїРѕРёСЃРє
 //  ddr_study_record* study=0;
 //  for(j=0;j<patient->studies_.size();j++){
 //    ddr_study_record& s=patient->studies_[j];
@@ -232,7 +232,7 @@
 //    study->patient_ = patient;
 //  }
 //
-//  // серия
+//  // СЃРµСЂРёСЏ
 //  ddr_series_record serrecord;
 //  serrecord.uid_=img.elementString(DCM_RELSERIESINSTANCEUID);
 //  serrecord.number_=img.elementString(DCM_RELSERIESNUMBER);
@@ -243,7 +243,7 @@
 //  serrecord.datetime_=dt.getDateTimeString();
 //
 //  serrecord.descr_=img.elementString(DCM_IDSERIESDESCR);
-//  // поиск
+//  // РїРѕРёСЃРє
 //  ddr_series_record* series=0;
 //  for(j=0;j<study->series_.size();j++){
 //    ddr_series_record& s=study->series_[j];
@@ -257,7 +257,7 @@
 //    series=&study->series_.back();
 //  }
 //
-//  // файл
+//  // С„Р°Р№Р»
 //  ddr_seriesleaf_record leaf;
 //  series->leafs_.push_back(leaf);
 //
@@ -265,7 +265,7 @@
 //}
 //
 ////
-//// сканирование списка изображений и генерация каталога
+//// СЃРєР°РЅРёСЂРѕРІР°РЅРёРµ СЃРїРёСЃРєР° РёР·РѕР±СЂР°Р¶РµРЅРёР№ Рё РіРµРЅРµСЂР°С†РёСЏ РєР°С‚Р°Р»РѕРіР°
 //// //void dcmuDICOMDIR::createCatalogFromDcmFileTree(const string& rootdir
 //                                                ,const vector<string>& flist
 //                                                ,const char* modality
@@ -293,7 +293,7 @@
 //}
 //
 ////
-//// сканирование списка изображений и генерация каталога
+//// СЃРєР°РЅРёСЂРѕРІР°РЅРёРµ СЃРїРёСЃРєР° РёР·РѕР±СЂР°Р¶РµРЅРёР№ Рё РіРµРЅРµСЂР°С†РёСЏ РєР°С‚Р°Р»РѕРіР°
 //// //void dcmuDICOMDIR::createCatalogFromDcmObjList(const vector<dcmImage*>& olist
 //                                               ,const char* modality
 //                                               ,vector<ddr_patient_record>& catalog)
@@ -304,12 +304,12 @@
 //      continue;
 //    ddr_seriesleaf_record& leaf = addRecordFromImage(catalog, img);
 //    leaf.uid_=img.elementString(DCM_IDSOPINSTANCEUID);
-//    // файл
+//    // С„Р°Р№Р»
 //    leaf.ctx_=(void*)&img;
 //  }
 //}
 //
-//// создание каталога только с теми данными, которые относятся к указанной модальности
+//// СЃРѕР·РґР°РЅРёРµ РєР°С‚Р°Р»РѕРіР° С‚РѕР»СЊРєРѕ СЃ С‚РµРјРё РґР°РЅРЅС‹РјРё, РєРѕС‚РѕСЂС‹Рµ РѕС‚РЅРѕСЃСЏС‚СЃСЏ Рє СѓРєР°Р·Р°РЅРЅРѕР№ РјРѕРґР°Р»СЊРЅРѕСЃС‚Рё
 //void dcmuDICOMDIR::copyCatalogWithModalityFilter(vector<ddr_patient_record>& toCatalog
 //                                                 ,const vector<ddr_patient_record>& fromCatalog
 //                                                 ,const char* modality)
@@ -325,7 +325,7 @@
 //  {
 //    const ddr_patient_record& patient = fromCatalog[i];
 //
-//    // Проверка наличия нужных серий у пациента
+//    // РџСЂРѕРІРµСЂРєР° РЅР°Р»РёС‡РёСЏ РЅСѓР¶РЅС‹С… СЃРµСЂРёР№ Сѓ РїР°С†РёРµРЅС‚Р°
 //    bool isPatientValid = false;
 //    for(j=0; j < patient.studies_.size(); j++)
 //    {
@@ -342,7 +342,7 @@
 //    if(!isPatientValid)
 //      continue;
 //
-//    // Добавляем запись о пациенте
+//    // Р”РѕР±Р°РІР»СЏРµРј Р·Р°РїРёСЃСЊ Рѕ РїР°С†РёРµРЅС‚Рµ
 //    toCatalog.push_back(ddr_patient_record());
 //    ddr_patient_record& patientNew = toCatalog.back();
 //    patientNew.id_ = patient.id_;
@@ -350,7 +350,7 @@
 //    patientNew.birthDate_ = patient.birthDate_;
 //    patientNew.sex_ = patient.sex_;
 //
-//    // Проверка наличия нужных серий в исследовании
+//    // РџСЂРѕРІРµСЂРєР° РЅР°Р»РёС‡РёСЏ РЅСѓР¶РЅС‹С… СЃРµСЂРёР№ РІ РёСЃСЃР»РµРґРѕРІР°РЅРёРё
 //    bool isStudyValid = false;
 //    for(j=0; j < patient.studies_.size(); j++)
 //    {
@@ -366,7 +366,7 @@
 //      if(!isStudyValid)
 //        continue;
 //
-//      // Добавляем запись об исследовании
+//      // Р”РѕР±Р°РІР»СЏРµРј Р·Р°РїРёСЃСЊ РѕР± РёСЃСЃР»РµРґРѕРІР°РЅРёРё
 //      patientNew.studies_.push_back(ddr_study_record());
 //      ddr_study_record& studyNew = patientNew.studies_.back();
 //      studyNew.uid_ = study.uid_;
@@ -377,7 +377,7 @@
 //      studyNew.descr_ = study.descr_;
 //      studyNew.patient_ = &patientNew;
 //
-//      // Добавляем серии
+//      // Р”РѕР±Р°РІР»СЏРµРј СЃРµСЂРёРё
 //      for(k=0; k < study.series_.size();k++)
 //      {
 //        const ddr_series_record& series = study.series_[k];
@@ -387,3 +387,4 @@
 //    }
 //  }
 //}
+

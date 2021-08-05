@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "TransferSyntax.h"
 #include "Uid.h"
 #include <map>
@@ -93,3 +93,4 @@ void TransferSyntax::Populate()
          std::make_shared<TransferSyntaxItem>("XML Encoding", XMLEncoding, true, false, true, false, false, false)));
    }
 }
+

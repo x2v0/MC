@@ -1,4 +1,4 @@
-// THIS CODE BELONGS TO Radiation Oncology Intellectual Systems and Services LLC
+п»ї// THIS CODE BELONGS TO Radiation Oncology Intellectual Systems and Services LLC
 // Copyright (c) 2013, ROISS LLC. All rights reserved
 //
 // Author: Gennady Gorlachev (ggorlachev@roiss.ru)
@@ -29,7 +29,7 @@ namespace RO
 
          void ReadFromFile(std::string fname, bool skipPixels = false);
 
-         void ReadFromBuffer(const char* data, unsigned int len); // Запись данных включая мета-данные
+         void ReadFromBuffer(const char* data, unsigned int len); // Р—Р°РїРёСЃСЊ РґР°РЅРЅС‹С… РІРєР»СЋС‡Р°СЏ РјРµС‚Р°-РґР°РЅРЅС‹Рµ
          void WtiteToStream(std::ostream& os);
 
          void WtiteToFile(std::string fname);
@@ -40,3 +40,4 @@ namespace RO
       };
    }
 }
+

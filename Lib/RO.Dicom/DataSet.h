@@ -1,4 +1,4 @@
-// THIS CODE BELONGS TO Radiation Oncology Intellectual Systems and Services LLC
+п»ї// THIS CODE BELONGS TO Radiation Oncology Intellectual Systems and Services LLC
 // Copyright (c) 2013, ROISS LLC. All rights reserved
 //
 // Author: Gennady Gorlachev (ggorlachev@roiss.ru)
@@ -78,8 +78,8 @@ namespace RO
 
          // Complete dataset (sequence is a dataset).
          // Sequences are readed reqursively
-         // Если maxlen = 0, то длина неизвестна и нужно отслеживать метки окончания элементов.
-         // Проблема в том, что если длина указана, то меток ограничений нет.
+         // Р•СЃР»Рё maxlen = 0, С‚Рѕ РґР»РёРЅР° РЅРµРёР·РІРµСЃС‚РЅР° Рё РЅСѓР¶РЅРѕ РѕС‚СЃР»РµР¶РёРІР°С‚СЊ РјРµС‚РєРё РѕРєРѕРЅС‡Р°РЅРёСЏ СЌР»РµРјРµРЅС‚РѕРІ.
+         // РџСЂРѕР±Р»РµРјР° РІ С‚РѕРј, С‡С‚Рѕ РµСЃР»Рё РґР»РёРЅР° СѓРєР°Р·Р°РЅР°, С‚Рѕ РјРµС‚РѕРє РѕРіСЂР°РЅРёС‡РµРЅРёР№ РЅРµС‚.
          void Read(std::istream& is, unsigned int maxlen = 0xFFFFFFFF);
 
          void Write(std::ostream& os, TransferSyntaxType ts);
@@ -102,3 +102,4 @@ namespace RO
       };
    }
 }
+

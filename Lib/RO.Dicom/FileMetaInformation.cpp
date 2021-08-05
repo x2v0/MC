@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "FileMetaInformation.h"
 #include "Element.h"
 #include "ElementFactory.h"
@@ -94,3 +94,4 @@ std::shared_ptr<FileMetaInformation> FileMetaInformation::CreateDefault()
    //metaelements.AddElementString(MakeTag(0x0002, 0x0102), "");
    return metaset;
 }
+

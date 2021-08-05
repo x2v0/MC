@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "Uid.h"
 #include <cctype>
 #include <strstream>
@@ -65,3 +65,4 @@ Uid makeUID(const std::string &Prefix)
 	return Uid(s);
 }
 */
+

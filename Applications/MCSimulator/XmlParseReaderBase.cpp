@@ -168,3 +168,7 @@ wstring XmlParseReaderBase::readElementNodeText(const XPRNode& n, const wchar_t*
    }
    return text;
 }
+
+
+
+

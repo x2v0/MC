@@ -1,4 +1,4 @@
-#include "pch.h"
+п»ї#include "pch.h"
 #include "Element.h"
 #include "Tag.h"
 #include <algorithm>
@@ -10,7 +10,7 @@ using namespace std;
 const char* unsupported_msg_ = "Dicom::Element: unsuported data type";
 const char* wrong_len_msg_ = "element data length do not correspond to element type";
 const char* stream_err_msg_ = "error while reading stream";
-// Копия старого кода, чтобы развязаться с зависимостью от старого проекта.
+// РљРѕРїРёСЏ СЃС‚Р°СЂРѕРіРѕ РєРѕРґР°, С‡С‚РѕР±С‹ СЂР°Р·РІСЏР·Р°С‚СЊСЃСЏ СЃ Р·Р°РІРёСЃРёРјРѕСЃС‚СЊСЋ РѕС‚ СЃС‚Р°СЂРѕРіРѕ РїСЂРѕРµРєС‚Р°.
 short GetTwoStringsFromLine(const string& line, string& s1, string& s2, const char* mask)
 {
    s1.erase();
@@ -443,13 +443,13 @@ void ElementOtherString::Read(std::istream& is, UINT32 len, TransferSyntaxType t
          throw std::exception(wrong_data);
       xx = ReadDelimeter(is);
       if (xx != 0)
-         throw std::exception(wrong_data); // HACK !!! Догадка. Возможно это уже данные
+         throw std::exception(wrong_data); // HACK !!! Р”РѕРіР°РґРєР°. Р’РѕР·РјРѕР¶РЅРѕ СЌС‚Рѕ СѓР¶Рµ РґР°РЅРЅС‹Рµ
       xx = ReadDelimeter(is);
       if (xx != Item)
          throw std::exception(wrong_data); // Begin compressed data.
       // The end, probably, defined by
       // This is possible place to put decompressor.
-      // Размер здесь будет расширяться динамически
+      // Р Р°Р·РјРµСЂ Р·РґРµСЃСЊ Р±СѓРґРµС‚ СЂР°СЃС€РёСЂСЏС‚СЊСЃСЏ РґРёРЅР°РјРёС‡РµСЃРєРё
       len_ = 0;
       int maxlen = 512 * 512 * 4;
       if (data_ != nullptr)
@@ -541,7 +541,7 @@ void ElementAE::SetString(const std::string& s)
    // A string of characters that identifies an Application Entity with leading and trailing
    // spaces (20H) being non-significant. A value consisting solely of spaces shall not be used.
    //
-   // Default Character Repertoire excluding character code 5CH (the BACKSLASH “\” in ISO-IR 6),
+   // Default Character Repertoire excluding character code 5CH (the BACKSLASH вЂњ\вЂќ in ISO-IR 6),
    // and control characters LF, FF, CR and ESC.
    // 16 bytes maximum
    const std::string mask("\\\r\n\f");
@@ -997,3 +997,4 @@ void ElementSQ::SetDataSet(std::shared_ptr<DataSet> ds)
 {
    data_ = ds;
 }
+

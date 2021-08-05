@@ -1,4 +1,4 @@
-// THIS CODE BELONGS TO Radiation Oncology Intellectual Systems and Services LLC
+ï»¿// THIS CODE BELONGS TO Radiation Oncology Intellectual Systems and Services LLC
 // Copyright (c) 2013, ROISS LLC. All rights reserved
 //
 // Author: Gennady Gorlachev (ggorlachev@roiss.ru)
@@ -21,9 +21,9 @@ namespace RO
 #define StorageCommitmentPullModelSOPClass                                                         "1.2.840.10008.1.20.2"
 #define ProceduralEventLoggingSOPClass                                                             "1.2.840.10008.1.40"
 #define SubstanceAdministrationLoggingSOPClass                                                     "1.2.840.10008.1.42"
-#define ModalityPerformedProcedureStepSOPClass                                                     "1.­2.840.10008.3.1.2.3.3"
-#define ModalityPerformedProcedureStepRetrieveSOPClass                                             "1.­2.840.10008.3.1.2.3.4"
-#define ModalityPerformedProcedureStepNotificationSOPClass                                         "1.­2.840.10008.3.1.2.3.5"
+#define ModalityPerformedProcedureStepSOPClass                                                     "1.Â­2.840.10008.3.1.2.3.3"
+#define ModalityPerformedProcedureStepRetrieveSOPClass                                             "1.Â­2.840.10008.3.1.2.3.4"
+#define ModalityPerformedProcedureStepNotificationSOPClass                                         "1.Â­2.840.10008.3.1.2.3.5"
 #define BasicFilmSessionSOPClass                                                                   "1.2.840.10008.5.1.1.1"
 #define BasicFilmBoxSOPClass                                                                       "1.2.840.10008.5.1.1.2"
 #define BasicGrayscaleImageBoxSOPClass                                                             "1.2.840.10008.5.1.1.4"
@@ -1173,3 +1173,4 @@ namespace RO
       }
    }
 }
+

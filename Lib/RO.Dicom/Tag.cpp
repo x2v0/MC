@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "Tag.h"
 using namespace RO::Dicom;
 
@@ -16,3 +16,4 @@ UINT16 RO::Dicom::TagElement(UINT32 tag)
 {
    return UINT16(tag);
 };
+

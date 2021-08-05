@@ -38,3 +38,6 @@ public:
 
    static std::wstring readElementNodeText(const XPRNode& n, const wchar_t* name);
 };
+
+
+

@@ -1,4 +1,4 @@
-// THIS CODE BELONGS TO Radiation Oncology Intellectual Systems and Services LLC
+п»ї// THIS CODE BELONGS TO Radiation Oncology Intellectual Systems and Services LLC
 // Copyright (c) 2013, ROISS LLC. All rights reserved
 //
 // Author: Gennady Gorlachev (ggorlachev@roiss.ru)
@@ -53,7 +53,7 @@ namespace RO
          std::string birthDate_;
          std::string sex_;
          std::shared_ptr<std::vector<ddr_study_record>> studies_;
-      }; /// Класс обслуживания каталога исследований включая списки изображений
+      }; /// РљР»Р°СЃСЃ РѕР±СЃР»СѓР¶РёРІР°РЅРёСЏ РєР°С‚Р°Р»РѕРіР° РёСЃСЃР»РµРґРѕРІР°РЅРёР№ РІРєР»СЋС‡Р°СЏ СЃРїРёСЃРєРё РёР·РѕР±СЂР°Р¶РµРЅРёР№
       class RODICOM_API DicomDir
       {
       public:
@@ -73,22 +73,22 @@ namespace RO
 
          void CreateCatalog(std::shared_ptr<std::vector<ddr_patient_record>>, const std::string& modality);
 
-         /// Сканирование файлов в дереве директорий и генерация каталога
+         /// РЎРєР°РЅРёСЂРѕРІР°РЅРёРµ С„Р°Р№Р»РѕРІ РІ РґРµСЂРµРІРµ РґРёСЂРµРєС‚РѕСЂРёР№ Рё РіРµРЅРµСЂР°С†РёСЏ РєР°С‚Р°Р»РѕРіР°
          static void CreateCatalogFromDcmFileTree(const std::string& rootdir,
                                                   std::shared_ptr<std::vector<std::string>> flist,
                                                   const std::string& modality, std::vector<ddr_patient_record>& catalog,
                                                   const std::string& studyUid, const std::string& seriesUid);
 
-         /// Сканирование списка изображений и генерация каталога
+         /// РЎРєР°РЅРёСЂРѕРІР°РЅРёРµ СЃРїРёСЃРєР° РёР·РѕР±СЂР°Р¶РµРЅРёР№ Рё РіРµРЅРµСЂР°С†РёСЏ РєР°С‚Р°Р»РѕРіР°
          static void createCatalogFromDcmObjList(std::shared_ptr<std::vector<std::shared_ptr<DicomObject>>> olist,
                                                  const std::string& modality,
                                                  std::shared_ptr<std::vector<ddr_patient_record>> catalog);
 
-      protected: /// Добавление в каталог новой записи об изображении
+      protected: /// Р”РѕР±Р°РІР»РµРЅРёРµ РІ РєР°С‚Р°Р»РѕРі РЅРѕРІРѕР№ Р·Р°РїРёСЃРё РѕР± РёР·РѕР±СЂР°Р¶РµРЅРёРё
          static std::shared_ptr<ddr_seriesleaf_record> addRecordFromImage(
             std::shared_ptr<std::vector<ddr_patient_record>> catalog, std::shared_ptr<DicomObject> img);
 
-         /// Создание каталога только с теми данными, которые относятся к указанной модальности
+         /// РЎРѕР·РґР°РЅРёРµ РєР°С‚Р°Р»РѕРіР° С‚РѕР»СЊРєРѕ СЃ С‚РµРјРё РґР°РЅРЅС‹РјРё, РєРѕС‚РѕСЂС‹Рµ РѕС‚РЅРѕСЃСЏС‚СЃСЏ Рє СѓРєР°Р·Р°РЅРЅРѕР№ РјРѕРґР°Р»СЊРЅРѕСЃС‚Рё
          static void copyCatalogWithModalityFilter(std::shared_ptr<std::vector<ddr_patient_record>> toCatalog,
                                                    std::shared_ptr<std::vector<ddr_patient_record>> fromCatalog,
                                                    const std::string& modality);
@@ -99,3 +99,4 @@ namespace RO
       };
    }
 }
+

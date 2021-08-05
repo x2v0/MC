@@ -11,3 +11,4 @@
 #endif
 #include <Windows.h>
 #pragma warning(disable:4251)  // Disable warning about needs to have dll-interface to be used by clients
+
