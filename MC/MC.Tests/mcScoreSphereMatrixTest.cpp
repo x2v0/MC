@@ -1,4 +1,4 @@
-// Radiation Oncology Monte Carlo open source project
+п»ї// Radiation Oncology Monte Carlo open source project
 //
 // Author: [2015-2017] Gennady Gorlachev (ggorlachev@roiss.ru) 
 //---------------------------------------------------------------------------
@@ -29,21 +29,21 @@ namespace MCTests
       TEST_METHOD(ScoreLine)
       {
          int i, j;
-         auto score = createTestScore(); // 1 - строго по радиусу внутри детектора
+         auto score = createTestScore(); // 1 - СЃС‚СЂРѕРіРѕ РїРѕ СЂР°РґРёСѓСЃСѓ РІРЅСѓС‚СЂРё РґРµС‚РµРєС‚РѕСЂР°
          score->ScoreLine(1.0, 0, *static_cast<mcRegionReference*>(nullptr), MCP_NEGATRON,
                           geomVector3D(0.0001, 1, 99.5), geomVector3D(0.0001, 1, 100.5));
          Assert::AreEqual(1.0, score->Dose(0, 8), DBL_EPSILON * 10, L"ScoreLine failed", LINE_INFO());
          score->ScoreLine(1.0, 0, *static_cast<mcRegionReference*>(nullptr), MCP_NEGATRON,
                           geomVector3D(0.0001, 1, 100.5), geomVector3D(0.0001, 1, 99.5));
          Assert::AreEqual(2.0, score->Dose(0, 8), DBL_EPSILON * 10, L"ScoreLine failed", LINE_INFO());
-         // 2 - аналогичный трек строго по радиусу но длиннее с высживанием только половины
+         // 2 - Р°РЅР°Р»РѕРіРёС‡РЅС‹Р№ С‚СЂРµРє СЃС‚СЂРѕРіРѕ РїРѕ СЂР°РґРёСѓСЃСѓ РЅРѕ РґР»РёРЅРЅРµРµ СЃ РІС‹СЃР¶РёРІР°РЅРёРµРј С‚РѕР»СЊРєРѕ РїРѕР»РѕРІРёРЅС‹
          geomVector3D v(0.0001, 1, 99.5);
          v.normalize();
          score->ScoreLine(2.0, 0, *static_cast<mcRegionReference*>(nullptr), MCP_NEGATRON, v * 98.0, v * 102.0);
          Assert::AreEqual(3.0, score->Dose(0, 8), DBL_EPSILON * 20, L"ScoreLine failed", LINE_INFO());
          score->ScoreLine(2.0, 0, *static_cast<mcRegionReference*>(nullptr), MCP_NEGATRON, v * 102.0, v * 98.0);
          Assert::AreEqual(4.0, score->Dose(0, 8), DBL_EPSILON * 40, L"ScoreLine failed", LINE_INFO());
-         // 3 - длинный трек со множеством пересечений из пересечений осей X и Z с внешней сферой
+         // 3 - РґР»РёРЅРЅС‹Р№ С‚СЂРµРє СЃРѕ РјРЅРѕР¶РµСЃС‚РІРѕРј РїРµСЂРµСЃРµС‡РµРЅРёР№ РёР· РїРµСЂРµСЃРµС‡РµРЅРёР№ РѕСЃРµР№ X Рё Z СЃ РІРЅРµС€РЅРµР№ СЃС„РµСЂРѕР№
          geomVector3D v1(1, 0.0001, 100);
          geomVector3D v2(100, 0.0001, 1);
          v1.normalize();
@@ -55,7 +55,7 @@ namespace MCTests
          score->ScoreLine(100.0, 0, *static_cast<mcRegionReference*>(nullptr), MCP_NEGATRON, v2 * 102, v1 * 102);
          Assert::AreEqual(2 * d00, score->Dose(0, 0), DBL_EPSILON * 40, L"ScoreLine failed", LINE_INFO());
          Assert::AreEqual(2 * d00, score->Dose(8, 0), DBL_EPSILON * 40, L"ScoreLine failed", LINE_INFO());
-         // 4 - длинный трек со множеством пересечений из пересечений осей X и Y с внешней сферой
+         // 4 - РґР»РёРЅРЅС‹Р№ С‚СЂРµРє СЃРѕ РјРЅРѕР¶РµСЃС‚РІРѕРј РїРµСЂРµСЃРµС‡РµРЅРёР№ РёР· РїРµСЂРµСЃРµС‡РµРЅРёР№ РѕСЃРµР№ X Рё Y СЃ РІРЅРµС€РЅРµР№ СЃС„РµСЂРѕР№
          v1 = geomVector3D(1, 100, -0.0001);
          v2 = geomVector3D(100, 1, -0.0001);
          v1.normalize();
@@ -68,7 +68,7 @@ namespace MCTests
          score->ScoreLine(100.0, 0, *static_cast<mcRegionReference*>(nullptr), MCP_NEGATRON, v2 * 102, v1 * 102);
          Assert::AreEqual(2 * d00, score->Dose(9, 0), DBL_EPSILON * 40, L"ScoreLine failed", LINE_INFO());
          Assert::AreEqual(2 * d00, score->Dose(9, 8), DBL_EPSILON * 40, L"ScoreLine failed", LINE_INFO());
-         // 5 - Пересечение вокселей паралелей 
+         // 5 - РџРµСЂРµСЃРµС‡РµРЅРёРµ РІРѕРєСЃРµР»РµР№ РїР°СЂР°Р»РµР»РµР№ 
          v1 = geomVector3D(100, -0.0001, -5);
          v2 = geomVector3D(100, -0.0001, 5);
          v1.normalize();
@@ -79,7 +79,7 @@ namespace MCTests
          score->ScoreLine(1.0, 0, *static_cast<mcRegionReference*>(nullptr), MCP_NEGATRON, v2 * 101, v1 * 101);
          Assert::AreEqual(1.0, score->Dose(8, 35), DBL_EPSILON * 40, L"ScoreLine failed", LINE_INFO());
          Assert::AreEqual(1.0, score->Dose(9, 35), DBL_EPSILON * 40, L"ScoreLine failed", LINE_INFO());
-         // 6 - Пересечение вокселей меридианов 
+         // 6 - РџРµСЂРµСЃРµС‡РµРЅРёРµ РІРѕРєСЃРµР»РµР№ РјРµСЂРёРґРёР°РЅРѕРІ 
          v1 = geomVector3D(-100, -5, -0.0001);
          v2 = geomVector3D(-100, 5, -0.0001);
          v1.normalize();
@@ -99,3 +99,4 @@ namespace MCTests
       }
    };
 }
+

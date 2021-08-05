@@ -1,4 +1,4 @@
-// Radiation Oncology Monte Carlo open source project
+п»ї// Radiation Oncology Monte Carlo open source project
 //
 // Author: [2005-2017] Gennady Gorlachev (ggorlachev@roiss.ru) 
 //---------------------------------------------------------------------------
@@ -77,7 +77,7 @@ public:
       double f = p_[0];
       p_[0] = p_[1];
       p_[1] = -f;
-   } // Поворот вектора по часовой стрелке на угол в радианах
+   } // РџРѕРІРѕСЂРѕС‚ РІРµРєС‚РѕСЂР° РїРѕ С‡Р°СЃРѕРІРѕР№ СЃС‚СЂРµР»РєРµ РЅР° СѓРіРѕР» РІ СЂР°РґРёР°РЅР°С…
    void turn(double a)
    {
       double x = p_[0], y = p_[1], sa = sin(a), ca = cos(a);
@@ -146,3 +146,6 @@ protected:
 
 geomVector2D crossTwo2DLines(const geomVector2D& p1, const geomVector2D& p2, const geomVector2D& p3,
                              const geomVector2D& p4);
+
+
+

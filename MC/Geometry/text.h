@@ -1,4 +1,4 @@
-// Radiation Oncology Monte Carlo open source project
+﻿// Radiation Oncology Monte Carlo open source project
 //
 // Author: [2005-2017] Gennady Gorlachev (ggorlachev@roiss.ru) 
 //---------------------------------------------------------------------------
@@ -15,3 +15,6 @@ int GetFloatArray(const std::string&, std::vector<double>& a);
 int GetIntArray(const std::string&, int*, int n = 0);
 
 int GetIntArray(const std::string& line, std::vector<int>& a);
+
+
+

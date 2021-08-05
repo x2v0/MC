@@ -1,4 +1,4 @@
-// Radiation Oncology Monte Carlo open source project
+п»ї// Radiation Oncology Monte Carlo open source project
 //
 // Author: [2015-2017] Gennady Gorlachev (ggorlachev@roiss.ru) 
 //---------------------------------------------------------------------------
@@ -41,7 +41,7 @@ namespace MCTests
             // Correct exception.
          } catch (const std::exception& ex) {
             Logger::WriteMessage((std::string("Exception in method fitAsimutDistribution: ") + ex.what()).c_str());
-            Assert::Fail(L"Тест fitAsimutDistribution ", LINE_INFO());
+            Assert::Fail(L"РўРµСЃС‚ fitAsimutDistribution ", LINE_INFO());
          }
       }
 
@@ -53,11 +53,11 @@ namespace MCTests
          char msg[256];
          mcSourceModelRadialPhsp::fitAsimutDistribution(np_, sample, a, b);
          sprintf_s(msg, 256, "a = %f \tb = %f", a, b);
-         Logger::WriteMessage(msg); // Vector сбора статистики симуляции апроксимированного распредедления
+         Logger::WriteMessage(msg); // Vector СЃР±РѕСЂР° СЃС‚Р°С‚РёСЃС‚РёРєРё СЃРёРјСѓР»СЏС†РёРё Р°РїСЂРѕРєСЃРёРјРёСЂРѕРІР°РЅРЅРѕРіРѕ СЂР°СЃРїСЂРµРґРµРґР»РµРЅРёСЏ
          vector<double> simd(20, 0);
          vector<double> pars(2);
          pars[0] = a;
-         pars[1] = b; // Симуляция распределения
+         pars[1] = b; // РЎРёРјСѓР»СЏС†РёСЏ СЂР°СЃРїСЂРµРґРµР»РµРЅРёСЏ
          for (i = 0; i < 100000; i++) {
             double f = mcSourceModelRadialPhsp::sampleAzimut(pars, rng_.rnd());
             int idx = static_cast<int>(np_ * f / PI);
@@ -85,7 +85,7 @@ namespace MCTests
             sprintf_s(msg, 256, "Dipersion = %0.2f percents", dispersion);
             Logger::WriteMessage(msg);
             if (dispersion > 5)
-               Assert::Fail(L"Тест fitAsimutDistribution (dispersion exceed the limit)", LINE_INFO());
+               Assert::Fail(L"РўРµСЃС‚ fitAsimutDistribution (dispersion exceed the limit)", LINE_INFO());
          }
       }
 
@@ -97,7 +97,7 @@ namespace MCTests
             sum += data[i];
          sum /= np;
          if (sum == 0)
-            sum = 1; // вероятно нулевой вектор и будет представлен нулями
+            sum = 1; // РІРµСЂРѕСЏС‚РЅРѕ РЅСѓР»РµРІРѕР№ РІРµРєС‚РѕСЂ Рё Р±СѓРґРµС‚ РїСЂРµРґСЃС‚Р°РІР»РµРЅ РЅСѓР»СЏРјРё
          std::strstream os;
          for (i = 0; i < np; i++)
             os << "\t" << data[i] / sum;
@@ -106,3 +106,4 @@ namespace MCTests
       }
    };
 }
+

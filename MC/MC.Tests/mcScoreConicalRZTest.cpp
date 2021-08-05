@@ -1,4 +1,4 @@
-// Radiation Oncology Monte Carlo open source project
+ï»¿// Radiation Oncology Monte Carlo open source project
 //
 // Author: [2015-2017] Gennady Gorlachev (ggorlachev@roiss.ru) 
 //---------------------------------------------------------------------------
@@ -27,14 +27,14 @@ namespace MCTests
       TEST_METHOD(ScoreLine)
       {
          int i, j;
-         auto score = createTestScore(); // 1 - âäîëü öåíòðàëüíîé îñè íà äëèíó ñêîðèíãà
+         auto score = createTestScore(); // 1 - Ð²Ð´Ð¾Ð»ÑŒ Ñ†ÐµÐ½Ñ‚Ñ€Ð°Ð»ÑŒÐ½Ð¾Ð¹ Ð¾ÑÐ¸ Ð½Ð° Ð´Ð»Ð¸Ð½Ñƒ ÑÐºÐ¾Ñ€Ð¸Ð½Ð³Ð°
          score->ScoreLine(1.0, 0, *static_cast<mcRegionReference*>(nullptr), MCP_PHOTON, geomVector3D(0.05, 0, 0),
                           geomVector3D(0.05, 0, 35.0));
          score->ScoreLine(1.0, 0, *static_cast<mcRegionReference*>(nullptr), MCP_PHOTON, geomVector3D(0.05, 0, 35.0),
                           geomVector3D(0.05, 0, 0));
          for (i = 0; i < 175; i++)
             Assert::AreEqual(2.0 / 175, score->Dose(0, i), DBL_EPSILON * 10, L"ScoreLine failed", LINE_INFO());
-         // 2 - âäîëü ðàäèóñà ìåæäó ãðàíèöåé è öåíòðîì â äâóõ íàïðàëåíèÿõ
+         // 2 - Ð²Ð´Ð¾Ð»ÑŒ Ñ€Ð°Ð´Ð¸ÑƒÑÐ° Ð¼ÐµÐ¶Ð´Ñƒ Ð³Ñ€Ð°Ð½Ð¸Ñ†ÐµÐ¹ Ð¸ Ñ†ÐµÐ½Ñ‚Ñ€Ð¾Ð¼ Ð² Ð´Ð²ÑƒÑ… Ð½Ð°Ð¿Ñ€Ð°Ð»ÐµÐ½Ð¸ÑÑ…
          score->ScoreLine(1.0, 0, *static_cast<mcRegionReference*>(nullptr), MCP_PHOTON, geomVector3D(0, 0, 20.1),
                           geomVector3D(0, 5.0 * 90.1 / 80.0, 20.1));
          score->ScoreLine(1.0, 0, *static_cast<mcRegionReference*>(nullptr), MCP_PHOTON,
@@ -43,7 +43,7 @@ namespace MCTests
                           LINE_INFO());
          for (i = 1; i < 50; i++)
             Assert::AreEqual(2.0 / 50, score->Dose(i, 100), DBL_EPSILON * 100, L"ScoreLine failed", LINE_INFO());
-         // 3 - ïî àññèìåòðè÷íîé äèàãîíàëè â äâóõ íàïðàâëåíèÿõ
+         // 3 - Ð¿Ð¾ Ð°ÑÑÐ¸Ð¼ÐµÑ‚Ñ€Ð¸Ñ‡Ð½Ð¾Ð¹ Ð´Ð¸Ð°Ð³Ð¾Ð½Ð°Ð»Ð¸ Ð² Ð´Ð²ÑƒÑ… Ð½Ð°Ð¿Ñ€Ð°Ð²Ð»ÐµÐ½Ð¸ÑÑ…
          score->ScoreLine(2.0, 0, *static_cast<mcRegionReference*>(nullptr), MCP_PHOTON,
                           geomVector3D(5.0 * 70.0 / 80.0, 0, 0), geomVector3D(0, 5.0 * 105.0 / 80.0, 35.0));
          score->ScoreLine(2.0, 0, *static_cast<mcRegionReference*>(nullptr), MCP_PHOTON,
@@ -64,3 +64,4 @@ namespace MCTests
       }
    };
 }
+

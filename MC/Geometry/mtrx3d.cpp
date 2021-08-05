@@ -1,4 +1,4 @@
-#include "mtrx3d.h"
+﻿#include "mtrx3d.h"
 #include "vec3d.h"
 #include "text.h"
 
@@ -150,3 +150,6 @@ ostream& operator <<(ostream& os, const geomMatrix3D& m)
       }
    return os;
 }
+
+
+

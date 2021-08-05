@@ -1,4 +1,4 @@
-// Radiation Oncology Monte Carlo open source project
+п»ї// Radiation Oncology Monte Carlo open source project
 //
 // Author: [2017] Gennady Gorlachev (ggorlachev@roiss.ru) 
 //---------------------------------------------------------------------------
@@ -83,7 +83,7 @@ namespace MCTests
          p.u.normalize();
          d = transport->getDistanceOutside(p);
          Assert::AreEqual(sqrt(37.0), d, 0.05, err.c_str(), LINE_INFO()); //
-         // Версия с ассиметричным полем
+         // Р’РµСЂСЃРёСЏ СЃ Р°СЃСЃРёРјРµС‚СЂРёС‡РЅС‹Рј РїРѕР»РµРј
          //
          auto transportAssym = createTestTransportAssym(); // 12 (3)
          p.p = geomVector3D(-40, -11, 5);
@@ -210,3 +210,4 @@ namespace MCTests
       }
    };
 }
+

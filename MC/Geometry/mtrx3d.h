@@ -1,4 +1,4 @@
-// Radiation Oncology Monte Carlo open source project
+п»ї// Radiation Oncology Monte Carlo open source project
 //
 // Author: [2005-2017] Gennady Gorlachev (ggorlachev@roiss.ru) 
 //---------------------------------------------------------------------------
@@ -26,12 +26,12 @@ public:
 
    void makeInverse();
 
-   void makeUnit(); // Матрицы для получения преобразований координат:
-   // 1) Параллельный перенос.
+   void makeUnit(); // РњР°С‚СЂРёС†С‹ РґР»СЏ РїРѕР»СѓС‡РµРЅРёСЏ РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёР№ РєРѕРѕСЂРґРёРЅР°С‚:
+   // 1) РџР°СЂР°Р»Р»РµР»СЊРЅС‹Р№ РїРµСЂРµРЅРѕСЃ.
    static geomMatrix3D ParallelShift(double Ax, double Ay, double Az)
    {
       return geomMatrix3D(1., 0., 0., 0., 0., 1., 0., 0., 0., 0., 1., 0., Ax, Ay, Az, 1.);
-   } // 2) Масштабирование.
+   } // 2) РњР°СЃС€С‚Р°Р±РёСЂРѕРІР°РЅРёРµ.
    static geomMatrix3D Scaling(double S)
    {
       return geomMatrix3D(S, 0., 0., 0., 0., S, 0., 0., 0., 0., S, 0., 0., 0., 0., 1.);
@@ -40,45 +40,45 @@ public:
    static geomMatrix3D Scaling(double Sx, double Sy, double Sz)
    {
       return geomMatrix3D(Sx, 0., 0., 0., 0., Sy, 0., 0., 0., 0., Sz, 0., 0., 0., 0., 1.);
-   } // 3) Вращение вокруг оси Ох на угол fi1:
+   } // 3) Р’СЂР°С‰РµРЅРёРµ РІРѕРєСЂСѓРі РѕСЃРё РћС… РЅР° СѓРіРѕР» fi1:
    static geomMatrix3D RotationAroundOx(double fi1)
    {
-      // fi1 в радианах
+      // fi1 РІ СЂР°РґРёР°РЅР°С…
       return geomMatrix3D(1., 0., 0., 0., 0., cos(fi1), sin(fi1), 0., 0., -sin(fi1), cos(fi1), 0., 0., 0., 0., 1.);
    }
 
    static geomMatrix3D RotationAroundOx(int fi1)
    {
-      // fi1 в градусах
+      // fi1 РІ РіСЂР°РґСѓСЃР°С…
       double f1 = fi1 * PI / 180.;
       return geomMatrix3D(1., 0., 0., 0., 0., cos(f1), sin(f1), 0., 0., -sin(f1), cos(f1), 0., 0., 0., 0., 1.);
-   } // 4) Вращение вокруг оси Оy на угол fi2:
+   } // 4) Р’СЂР°С‰РµРЅРёРµ РІРѕРєСЂСѓРі РѕСЃРё Рћy РЅР° СѓРіРѕР» fi2:
    static geomMatrix3D RotationAroundOy(double fi2)
    {
-      // fi2 в радианах
+      // fi2 РІ СЂР°РґРёР°РЅР°С…
       return geomMatrix3D(cos(fi2), 0., -sin(fi2), 0., 0., 1., 0., 0., sin(fi2), 0., cos(fi2), 0., 0., 0., 0., 1.);
    }
 
    static geomMatrix3D RotationAroundOy(int fi2)
    {
-      // fi2 в градусах
+      // fi2 РІ РіСЂР°РґСѓСЃР°С…
       double f2 = fi2 * PI / 180.;
       return geomMatrix3D(cos(f2), 0., -sin(f2), 0., 0., 1., 0., 0., sin(f2), 0., cos(f2), 0., 0., 0., 0., 1.);
-   } // 5) Вращение вокруг оси Оz на угол fi3:
+   } // 5) Р’СЂР°С‰РµРЅРёРµ РІРѕРєСЂСѓРі РѕСЃРё Рћz РЅР° СѓРіРѕР» fi3:
    static geomMatrix3D RotationAroundOz(double fi3)
    {
-      // fi3 в радианах
+      // fi3 РІ СЂР°РґРёР°РЅР°С…
       return geomMatrix3D(cos(fi3), sin(fi3), 0., 0., -sin(fi3), cos(fi3), 0., 0., 0., 0., 1., 0., 0., 0., 0., 1.);
    }
 
    static geomMatrix3D RotationAroundOz(int fi3)
    {
-      // fi3 в градусах
+      // fi3 РІ РіСЂР°РґСѓСЃР°С…
       double f3 = fi3 * PI / 180.;
       return geomMatrix3D(cos(f3), sin(f3), 0., 0., -sin(f3), cos(f3), 0., 0., 0., 0., 1., 0., 0., 0., 0., 1.);
-   } // 6) Матрица вращения из однрй системы координат в другую.
-   //    Аргументами являются единичные векторы осей новой 
-   //    системы в старой системе координат
+   } // 6) РњР°С‚СЂРёС†Р° РІСЂР°С‰РµРЅРёСЏ РёР· РѕРґРЅСЂР№ СЃРёСЃС‚РµРјС‹ РєРѕРѕСЂРґРёРЅР°С‚ РІ РґСЂСѓРіСѓСЋ.
+   //    РђСЂРіСѓРјРµРЅС‚Р°РјРё СЏРІР»СЏСЋС‚СЃСЏ РµРґРёРЅРёС‡РЅС‹Рµ РІРµРєС‚РѕСЂС‹ РѕСЃРµР№ РЅРѕРІРѕР№ 
+   //    СЃРёСЃС‚РµРјС‹ РІ СЃС‚Р°СЂРѕР№ СЃРёСЃС‚РµРјРµ РєРѕРѕСЂРґРёРЅР°С‚
    static geomMatrix3D BuildFromAxis(const geomVector3D& ax, const geomVector3D& ay, const geomVector3D& az);
 
    double& operator()(int m, int n)
@@ -111,3 +111,6 @@ public:
 
    double m_[4][4];
 };
+
+
+

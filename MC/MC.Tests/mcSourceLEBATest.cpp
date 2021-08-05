@@ -1,4 +1,4 @@
-// Radiation Oncology Monte Carlo open source project
+п»ї// Radiation Oncology Monte Carlo open source project
 //
 // Author: [2015-2017] Gennady Gorlachev (ggorlachev@roiss.ru) 
 //---------------------------------------------------------------------------
@@ -48,12 +48,13 @@ namespace MCTests
             ecount += p.ke;
             e2count += (p.ke - emean_) * (p.ke - emean_);
             r2count += p.p.sqLengthXY();
-         } // Средняя энергия при всех распределениях должна быть равна средней заданной в описании спектра.
+         } // РЎСЂРµРґРЅСЏСЏ СЌРЅРµСЂРіРёСЏ РїСЂРё РІСЃРµС… СЂР°СЃРїСЂРµРґРµР»РµРЅРёСЏС… РґРѕР»Р¶РЅР° Р±С‹С‚СЊ СЂР°РІРЅР° СЃСЂРµРґРЅРµР№ Р·Р°РґР°РЅРЅРѕР№ РІ РѕРїРёСЃР°РЅРёРё СЃРїРµРєС‚СЂР°.
          Assert::AreEqual(ecount / n, emean_, 5.0 / sqrt(double(n)), name, LINE_INFO());
          Assert::AreEqual(sqrt(e2count / n), se_expected, se_expected * 5.0 / sqrt(double(n)), name, LINE_INFO());
-         // Проверка самплинга положения
+         // РџСЂРѕРІРµСЂРєР° СЃР°РјРїР»РёРЅРіР° РїРѕР»РѕР¶РµРЅРёСЏ
          Assert::AreEqual(sqrt(r2count / n), sigmar_expected, sigmar_expected * 5.0 / sqrt(double(n)), name,
                           LINE_INFO());
       }
    };
 }
+

@@ -1,4 +1,4 @@
-#include "plane3d.h"
+п»ї#include "plane3d.h"
 geomPlane3D::geomPlane3D() {}
 
 geomPlane3D::geomPlane3D(const geomPlane3D& p) : p_(p.getPoint()), n_(p.getNormal()), xv_(p.getXAxis()),
@@ -8,9 +8,9 @@ void geomPlane3D::set(const geomVector3D& p, const geomVector3D& n, const geomVe
 {
    /*
    // HACK !!!
-   // Из-за ошибок округления возникают проблемы сопоставления дозовых матриц со срезами.
-   // Здесь точка плоскости окргляется до 3-го знака (эквивалентно 0.01 мм).
-   // В других приложениях тип микромира :) или очень больших чисел (> INT_MAX/1000) могут быть проблемы.
+   // РР·-Р·Р° РѕС€РёР±РѕРє РѕРєСЂСѓРіР»РµРЅРёСЏ РІРѕР·РЅРёРєР°СЋС‚ РїСЂРѕР±Р»РµРјС‹ СЃРѕРїРѕСЃС‚Р°РІР»РµРЅРёСЏ РґРѕР·РѕРІС‹С… РјР°С‚СЂРёС† СЃРѕ СЃСЂРµР·Р°РјРё.
+   // Р—РґРµСЃСЊ С‚РѕС‡РєР° РїР»РѕСЃРєРѕСЃС‚Рё РѕРєСЂРіР»СЏРµС‚СЃСЏ РґРѕ 3-РіРѕ Р·РЅР°РєР° (СЌРєРІРёРІР°Р»РµРЅС‚РЅРѕ 0.01 РјРј).
+   // Р’ РґСЂСѓРіРёС… РїСЂРёР»РѕР¶РµРЅРёСЏС… С‚РёРї РјРёРєСЂРѕРјРёСЂР° :) РёР»Рё РѕС‡РµРЅСЊ Р±РѕР»СЊС€РёС… С‡РёСЃРµР» (> INT_MAX/1000) РјРѕРіСѓС‚ Р±С‹С‚СЊ РїСЂРѕР±Р»РµРјС‹.
    p_.set(0.001*ROUND(p.x()*1000.)
    ,0.001*ROUND(p.y()*1000.)
    ,0.001*ROUND(p.z()*1000.));
@@ -53,7 +53,7 @@ geomVector3D geomPlane3D::crossByLine(const geomVector3D& p0, const geomVector3D
 {
    double h0 = (p0 - p_) * n_, h1 = (p1 - p_) * n_;
    if (h0 == h1)
-      throw std::exception("geomPlane3D:: линия параллельна плоскости");
+      throw std::exception("geomPlane3D:: Р»РёРЅРёСЏ РїР°СЂР°Р»Р»РµР»СЊРЅР° РїР»РѕСЃРєРѕСЃС‚Рё");
    return p0 + (p1 - p0) * (h0 / (h0 - h1));
 }
 
@@ -96,3 +96,6 @@ ostream& operator <<(ostream& os, const geomPlane3D& plane)
    os << plane.xv_;
    return os;
 }
+
+
+

@@ -1,4 +1,4 @@
-#include "text.h"
+﻿#include "text.h"
 using namespace std;
 
 short GetTwoStringsFromLine(const string& line, string& s1, string& s2, const char* mask)
@@ -114,3 +114,6 @@ int GetIntArray(const string& line, vector<int>& a)
    }
    return static_cast<int>(a.size());
 }
+
+
+

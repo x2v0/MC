@@ -1,4 +1,4 @@
-// Radiation Oncology Monte Carlo open source project
+п»ї// Radiation Oncology Monte Carlo open source project
 //
 // Author: [2015-2017] Gennady Gorlachev (ggorlachev@roiss.ru) 
 //---------------------------------------------------------------------------
@@ -18,7 +18,7 @@ namespace MCTests
          auto errmsg = L"getDistanceOutside failed";
          double d;
          mcPTLasVegas transport(geomVector3D(0, 0, 0), geomVector3D(0, 0, 1), geomVector3D(1, 0, 0));
-         // Координаты первого и вторго узлов сетки и параметры первого цилиндра.
+         // РљРѕРѕСЂРґРёРЅР°С‚С‹ РїРµСЂРІРѕРіРѕ Рё РІС‚РѕСЂРіРѕ СѓР·Р»РѕРІ СЃРµС‚РєРё Рё РїР°СЂР°РјРµС‚СЂС‹ РїРµСЂРІРѕРіРѕ С†РёР»РёРЅРґСЂР°.
          double x0 = transport.Xs()[0], x1 = transport.Xs()[1], y0 = transport.Ys()[0], y1 = transport.Ys()[1];
          double d0 = transport.Ds()[0], h0 = transport.Hs()[0];
          mcParticle p; // 1
@@ -65,7 +65,7 @@ namespace MCTests
          auto errmsg = L"getDistanceInside failed";
          double d;
          mcPTLasVegas transport(geomVector3D(0, 0, 0), geomVector3D(0, 0, 1), geomVector3D(1, 0, 0));
-         // Координаты первого и вторго узлов сетки и параметры первого цилиндра.
+         // РљРѕРѕСЂРґРёРЅР°С‚С‹ РїРµСЂРІРѕРіРѕ Рё РІС‚РѕСЂРіРѕ СѓР·Р»РѕРІ СЃРµС‚РєРё Рё РїР°СЂР°РјРµС‚СЂС‹ РїРµСЂРІРѕРіРѕ С†РёР»РёРЅРґСЂР°.
          double x0 = transport.Xs()[0], x1 = transport.Xs()[1], y0 = transport.Ys()[0], y1 = transport.Ys()[1];
          double d0 = transport.Ds()[0], h0 = transport.Hs()[0];
          mcParticle p; // 1
@@ -92,3 +92,4 @@ namespace MCTests
       }
    };
 }
+

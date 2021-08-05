@@ -1,4 +1,4 @@
-#include "vec3d.h"
+﻿#include "vec3d.h"
 #include "text.h"
 
 bool geomVector3D::isInsideBBox(const geomVector3D& b1, const geomVector3D& b2) const
@@ -20,3 +20,6 @@ ostream& operator <<(ostream& os, const geomVector3D& v)
    os << v.p_[0] << '\t' << v.p_[1] << '\t' << v.p_[2] << '\t' << v.p_[3] << endl;
    return os;
 }
+
+
+

@@ -1,4 +1,4 @@
-#include "frect.h"
+﻿#include "frect.h"
 #include <string>
 
 istream& operator >>(istream& is, geomFRect& r)
@@ -23,3 +23,6 @@ ostream& operator <<(ostream& os, const geomFRect& r)
    os << r.t_ << endl;
    return os;
 }
+
+
+

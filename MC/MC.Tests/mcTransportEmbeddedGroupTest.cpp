@@ -1,4 +1,4 @@
-// Radiation Oncology Monte Carlo open source project
+п»ї// Radiation Oncology Monte Carlo open source project
 //
 // Author: [2017] Gennady Gorlachev (ggorlachev@roiss.ru) 
 //---------------------------------------------------------------------------
@@ -28,9 +28,9 @@ namespace MCTests
          mcThread thread;
          thread.setId(0);
          mcParticle p;
-         std::wstring err(L"mcTransportEmbeddedGroupTest::beginTransportInside failed"); // Сцена
+         std::wstring err(L"mcTransportEmbeddedGroupTest::beginTransportInside failed"); // РЎС†РµРЅР°
          mcSourceSimpleMono source("MonoSource", 1, MCP_PHOTON, 1.0, geomVector3D(0, 0, -30.), geomVector3D(0, 0, 1.0));
-         auto score = new mcScoreSphereFluence("Trap", 1); // скоринг удаляется транспортом
+         auto score = new mcScoreSphereFluence("Trap", 1); // СЃРєРѕСЂРёРЅРі СѓРґР°Р»СЏРµС‚СЃСЏ С‚СЂР°РЅСЃРїРѕСЂС‚РѕРј
          mcTransportEmbeddedGroup t_group(geomVector3D(0, 0, 0), geomVector3D(0, 0, 1), geomVector3D(1, 0, 0));
          t_group.setName("Group");
          mcTransportCylinder t_cg(geomVector3D(0, 0, -50.0), geomVector3D(0, 0, 1), geomVector3D(1, 0, 0), 5.0, 100);
@@ -49,12 +49,12 @@ namespace MCTests
          t_c2->setMediumMono("AIR700ICRU");
          mcETransportTrap t_trap(geomVector3D(0, 0, 50), geomVector3D(0, 0, 1), geomVector3D(1, 0, 0));
          t_trap.setName("Trap");
-         t_trap.setScore(score); // Иерархия объектов
+         t_trap.setScore(score); // РРµСЂР°СЂС…РёСЏ РѕР±СЉРµРєС‚РѕРІ
          t_group.setExternalTransport(&t_cg);
          t_group.addTransport(t_c1);
          t_group.addTransport(t_c2);
          t_group.setExternalTransport(&t_cg);
-         t_cg.setExternalTransport(&t_trap); // Симуляции
+         t_cg.setExternalTransport(&t_trap); // РЎРёРјСѓР»СЏС†РёРё
          int i;
          source.sample(p, &thread);
          for (i = 0; i < 10; i++)
@@ -65,8 +65,9 @@ namespace MCTests
          p.p.set(0, 0, -15);
          for (i = 0; i < 10; i++)
             t_c1->beginTransportInside(p);
-         // Поскольку транспорт реальный частицы могут достичь детектора с потерей энергии
+         // РџРѕСЃРєРѕР»СЊРєСѓ С‚СЂР°РЅСЃРїРѕСЂС‚ СЂРµР°Р»СЊРЅС‹Р№ С‡Р°СЃС‚РёС†С‹ РјРѕРіСѓС‚ РґРѕСЃС‚РёС‡СЊ РґРµС‚РµРєС‚РѕСЂР° СЃ РїРѕС‚РµСЂРµР№ СЌРЅРµСЂРіРёРё
          Assert::AreEqual(30., score->etotal(), 1.0, err.c_str(), LINE_INFO());
       }
    };
 }
+

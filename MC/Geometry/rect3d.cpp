@@ -1,4 +1,4 @@
-#include "rect3d.h"
+﻿#include "rect3d.h"
 geomRect3D::geomRect3D() {}
 
 geomRect3D::geomRect3D(const geomRect3D& r)
@@ -35,3 +35,6 @@ ostream& operator <<(ostream& os, const geomRect3D& r)
    os << (geomFRect&)r;
    return os;
 }
+
+
+
