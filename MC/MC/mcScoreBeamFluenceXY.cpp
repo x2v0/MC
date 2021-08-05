@@ -1,4 +1,4 @@
-#include "mcScoreBeamFluenceXY.h"
+п»ї#include "mcScoreBeamFluenceXY.h"
 #include "mcParticle.h"
 #include "mcThread.h"
 #include "mcTransport.h"
@@ -47,8 +47,8 @@ void mcScoreBeamFluenceXY::ScoreFluence(const mcParticle& particle)
    int iThread = particle.thread_->id();
    double edep = particle.ke * particle.weight;
    etotal_[iThread] += edep;
-   // !!! Scoring вызывается до перемещения частицы на поверхность объекта к которому привязана частица.
-   // Нужно ее перенести здесь на поверхность.
+   // !!! Scoring РІС‹Р·С‹РІР°РµС‚СЃСЏ РґРѕ РїРµСЂРµРјРµС‰РµРЅРёСЏ С‡Р°СЃС‚РёС†С‹ РЅР° РїРѕРІРµСЂС…РЅРѕСЃС‚СЊ РѕР±СЉРµРєС‚Р° Рє РєРѕС‚РѕСЂРѕРјСѓ РїСЂРёРІСЏР·Р°РЅР° С‡Р°СЃС‚РёС†Р°.
+   // РќСѓР¶РЅРѕ РµРµ РїРµСЂРµРЅРµСЃС‚Рё Р·РґРµСЃСЊ РЅР° РїРѕРІРµСЂС…РЅРѕСЃС‚СЊ.
    geomVector3D p = particle.p + (particle.u * (-particle.p.z() / particle.u.z()));
    double dx = p.x() - minx_;
    double dy = p.y() - miny_;
@@ -58,7 +58,7 @@ void mcScoreBeamFluenceXY::ScoreFluence(const mcParticle& particle)
    int iy = int(dy / psy_);
    if (ix >= nx_ || iy >= ny_)
       return;
-   intencity_[iThread][iy * nx_ + ix] += edep; // Спектр
+   intencity_[iThread][iy * nx_ + ix] += edep; // РЎРїРµРєС‚СЂ
    int idx = static_cast<int>(particle.ke / estep_);
    if (idx < nebins_)
       spectrum_[iThread][idx] += edep;
@@ -117,7 +117,7 @@ void mcScoreBeamFluenceXY::dumpVRML(ostream& os) const
    //os << "  geometry IndexedLineSet {" << endl;
    //os << "    coord Coordinate {" << endl;
    //os << "      point [" << endl;
-   //// Концентрические круги
+   //// РљРѕРЅС†РµРЅС‚СЂРёС‡РµСЃРєРёРµ РєСЂСѓРіРё
    //for(ir=1; ir<=m_nr; ir++) {
    //	double r = m_rstep * ir;
    //	for(it=0; it<360; it+=da) {
@@ -164,3 +164,6 @@ void mcScoreBeamFluenceXY::dumpStatistic(ostream& os) const
    os << endl;
    os << endl;
 }
+
+
+

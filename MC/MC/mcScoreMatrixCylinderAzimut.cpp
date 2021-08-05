@@ -1,4 +1,4 @@
-#include "mcScoreMatrixCylinderAzimut.h"
+п»ї#include "mcScoreMatrixCylinderAzimut.h"
 #include "mcGeometry.h"
 #include "mcTransport.h"
 #include <float.h>
@@ -49,58 +49,58 @@ void mcScoreMatrixCylinderAzimut::ScorePoint(double edep, int iThread, const mcR
 void mcScoreMatrixCylinderAzimut::ScoreLine(double edep, int iThread, const mcRegionReference& region, mc_particle_t pt,
                                             const geomVector3D& p0, const geomVector3D& p1)
 {
-   double eddens = edep / (p1 - p0).length(); // Сортируем точки так, чтобы первой была точка с меньшим Z.
+   double eddens = edep / (p1 - p0).length(); // РЎРѕСЂС‚РёСЂСѓРµРј С‚РѕС‡РєРё С‚Р°Рє, С‡С‚РѕР±С‹ РїРµСЂРІРѕР№ Р±С‹Р»Р° С‚РѕС‡РєР° СЃ РјРµРЅСЊС€РёРј Z.
    bool doChange = p0.z() > p1.z();
    geomVector3D vz1(doChange ? p1 : p0);
    geomVector3D vz2(doChange ? p0 : p1);
    geomVector3D v = vz2 - vz1;
-   v.normalize(); // Трек за пределами торцевых плоскостей скоринга целиком
+   v.normalize(); // РўСЂРµРє Р·Р° РїСЂРµРґРµР»Р°РјРё С‚РѕСЂС†РµРІС‹С… РїР»РѕСЃРєРѕСЃС‚РµР№ СЃРєРѕСЂРёРЅРіР° С†РµР»РёРєРѕРј
    if (vz2.z() <= m_zmin || vz1.z() >= m_zmax)
-      return; // Обрезаем трек плоскостями торцов цилиндра.
+      return; // РћР±СЂРµР·Р°РµРј С‚СЂРµРє РїР»РѕСЃРєРѕСЃС‚СЏРјРё С‚РѕСЂС†РѕРІ С†РёР»РёРЅРґСЂР°.
    if (vz1.z() < m_zmin)
       vz1 += v * ((m_zmin - vz1.z()) / v.z());
    if (vz2.z() > m_zmax)
-      vz2 += v * ((m_zmax - vz2.z()) / v.z()); // С этого момента задача становится плоской.
-   // Нужно определить длины треков в каждой ячейке, определяемой кругами и радиусами.
-   // Поворачиваем направление движения против часовой стрелке (увеличение угла).
+      vz2 += v * ((m_zmax - vz2.z()) / v.z()); // РЎ СЌС‚РѕРіРѕ РјРѕРјРµРЅС‚Р° Р·Р°РґР°С‡Р° СЃС‚Р°РЅРѕРІРёС‚СЃСЏ РїР»РѕСЃРєРѕР№.
+   // РќСѓР¶РЅРѕ РѕРїСЂРµРґРµР»РёС‚СЊ РґР»РёРЅС‹ С‚СЂРµРєРѕРІ РІ РєР°Р¶РґРѕР№ СЏС‡РµР№РєРµ, РѕРїСЂРµРґРµР»СЏРµРјРѕР№ РєСЂСѓРіР°РјРё Рё СЂР°РґРёСѓСЃР°РјРё.
+   // РџРѕРІРѕСЂР°С‡РёРІР°РµРј РЅР°РїСЂР°РІР»РµРЅРёРµ РґРІРёР¶РµРЅРёСЏ РїСЂРѕС‚РёРІ С‡Р°СЃРѕРІРѕР№ СЃС‚СЂРµР»РєРµ (СѓРІРµР»РёС‡РµРЅРёРµ СѓРіР»Р°).
    doChange = (vz2 ^ vz1).z() > 0;
    if (doChange) {
       geomVector3D vtmp(vz1);
       vz1 = vz2;
       vz2 = vtmp;
       v *= -1;
-   } // Рассчитываем длины треков в ячейках просто двигаясь вдоль траетории
-   // и определяя точки пересечения с границами ячеек.
+   } // Р Р°СЃСЃС‡РёС‚С‹РІР°РµРј РґР»РёРЅС‹ С‚СЂРµРєРѕРІ РІ СЏС‡РµР№РєР°С… РїСЂРѕСЃС‚Рѕ РґРІРёРіР°СЏСЃСЊ РІРґРѕР»СЊ С‚СЂР°РµС‚РѕСЂРёРё
+   // Рё РѕРїСЂРµРґРµР»СЏСЏ С‚РѕС‡РєРё РїРµСЂРµСЃРµС‡РµРЅРёСЏ СЃ РіСЂР°РЅРёС†Р°РјРё СЏС‡РµРµРє.
    while (true) {
       int ir, ia;
       getVoxelAtPoint(vz1, ir, ia);
       bool isMoveInside = (vz1.x() * v.x() + vz1.y() * v.y()) < 0;
       if (ir < 0 && !isMoveInside)
-         break; // Если снаружи, то сначала определяем точку входа в скоринг.
+         break; // Р•СЃР»Рё СЃРЅР°СЂСѓР¶Рё, С‚Рѕ СЃРЅР°С‡Р°Р»Р° РѕРїСЂРµРґРµР»СЏРµРј С‚РѕС‡РєСѓ РІС…РѕРґР° РІ СЃРєРѕСЂРёРЅРі.
       if (ir < 0) {
          double d = mcGeometry::getDistanceToInfiniteCylinderOutside(vz1, v, m_rmax);
          if (d == DBL_MAX)
-            break;         // вообще пролетели мимо скоринга
-         d += FLT_EPSILON; // гарантируем пересечение границы
+            break;         // РІРѕРѕР±С‰Рµ РїСЂРѕР»РµС‚РµР»Рё РјРёРјРѕ СЃРєРѕСЂРёРЅРіР°
+         d += FLT_EPSILON; // РіР°СЂР°РЅС‚РёСЂСѓРµРј РїРµСЂРµСЃРµС‡РµРЅРёРµ РіСЂР°РЅРёС†С‹
          if (d >= (vz2 - vz1).length())
             break;
          vz1 += v * d;
-         continue; // обрезали внешнюю часть трека и повторяем движение уже реально по вокселам 
-      }            // Теперь вопрос что пересечем раньше, окружность или радиус.
+         continue; // РѕР±СЂРµР·Р°Р»Рё РІРЅРµС€РЅСЋСЋ С‡Р°СЃС‚СЊ С‚СЂРµРєР° Рё РїРѕРІС‚РѕСЂСЏРµРј РґРІРёР¶РµРЅРёРµ СѓР¶Рµ СЂРµР°Р»СЊРЅРѕ РїРѕ РІРѕРєСЃРµР»Р°Рј 
+      }            // РўРµРїРµСЂСЊ РІРѕРїСЂРѕСЃ С‡С‚Рѕ РїРµСЂРµСЃРµС‡РµРј СЂР°РЅСЊС€Рµ, РѕРєСЂСѓР¶РЅРѕСЃС‚СЊ РёР»Рё СЂР°РґРёСѓСЃ.
       double dr = isMoveInside
                      ? mcGeometry::getDistanceToInfiniteCylinderOutside(vz1, v, sqrt(ir * m_r2step))
                      : mcGeometry::getDistanceToInfiniteCylinderInside(vz1, v, sqrt((ir + 1) * m_r2step));
-      // Нормаль к радиальной плоскости
+      // РќРѕСЂРјР°Р»СЊ Рє СЂР°РґРёР°Р»СЊРЅРѕР№ РїР»РѕСЃРєРѕСЃС‚Рё
       double a = (ia + 1) * m_astep;
       geomVector3D n(-sin(a), cos(a), 0);
       double h = -(vz1 * n);
-      double f = v * n; // косинус между нормалью и направление трека
+      double f = v * n; // РєРѕСЃРёРЅСѓСЃ РјРµР¶РґСѓ РЅРѕСЂРјР°Р»СЊСЋ Рё РЅР°РїСЂР°РІР»РµРЅРёРµ С‚СЂРµРєР°
       double da = f < FLT_EPSILON ? DBL_MAX : h / f;
-      // отрицательное f означает вылетание из конуса без пересечения его границ
+      // РѕС‚СЂРёС†Р°С‚РµР»СЊРЅРѕРµ f РѕР·РЅР°С‡Р°РµС‚ РІС‹Р»РµС‚Р°РЅРёРµ РёР· РєРѕРЅСѓСЃР° Р±РµР· РїРµСЂРµСЃРµС‡РµРЅРёСЏ РµРіРѕ РіСЂР°РЅРёС†
       double d = MIN(da, dr) + FLT_EPSILON;
       double dmax = (vz2 - vz1).length();
       if (d >= dmax) {
-         // Трек заканчивается в данном вокселе
+         // РўСЂРµРє Р·Р°РєР°РЅС‡РёРІР°РµС‚СЃСЏ РІ РґР°РЅРЅРѕРј РІРѕРєСЃРµР»Рµ
          scoreEnergyInVoxel(iThread, ir, ia, dmax * eddens);
          break;
       }
@@ -196,7 +196,7 @@ void mcScoreMatrixCylinderAzimut::dumpVRML(ostream& os) const
    os << "    coord Coordinate {" << endl;
    os << "      point [" << endl;
    for (int iz = 0; iz < 2; iz++) {
-      double z = iz == 0 ? m_zmin : m_zmax; // Концентрические круги
+      double z = iz == 0 ? m_zmin : m_zmax; // РљРѕРЅС†РµРЅС‚СЂРёС‡РµСЃРєРёРµ РєСЂСѓРіРё
       for (ir = 1; ir <= m_nr; ir++) {
          double r = sqrt(m_r2step * ir);
          for (ia = 0; ia <= m_na; ia ++) {
@@ -206,7 +206,7 @@ void mcScoreMatrixCylinderAzimut::dumpVRML(ostream& os) const
             os << "        " << p.x() << ' ' << p.y() << ' ' << p.z() << endl;
             count++;
          }
-      } // Радиусы
+      } // Р Р°РґРёСѓСЃС‹
       for (ia = 0; ia < m_na; ia++) {
          geomVector3D p = geomVector3D(0, 0, z) * mttow;
          os << "        " << p.x() << ' ' << p.y() << ' ' << p.z() << endl;
@@ -214,7 +214,7 @@ void mcScoreMatrixCylinderAzimut::dumpVRML(ostream& os) const
          os << "        " << p.x() << ' ' << p.y() << ' ' << p.z() << endl;
          count++;
       }
-   } // Линии вдоль оси цилиндра
+   } // Р›РёРЅРёРё РІРґРѕР»СЊ РѕСЃРё С†РёР»РёРЅРґСЂР°
    for (ir = 1; ir <= m_nr; ir++) {
       double r = sqrt(m_r2step * ir);
       for (ia = 0; ia < m_na; ia++) {
@@ -263,3 +263,6 @@ void mcScoreMatrixCylinderAzimut::dumpStatistic(ostream& os) const
       os << endl;
    }
 }
+
+
+

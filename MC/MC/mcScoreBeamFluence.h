@@ -1,4 +1,4 @@
-// Radiation Oncology Monte Carlo open source project
+п»ї// Radiation Oncology Monte Carlo open source project
 //
 // Author: [2005-2017] Gennady Gorlachev (ggorlachev@roiss.ru) 
 //---------------------------------------------------------------------------
@@ -25,8 +25,11 @@ public:
 
 protected:
    int nsub_;
-   mcScoreBeamFluenceSubsource* subsources_[10]; // Нужно для vrml
+   mcScoreBeamFluenceSubsource* subsources_[10]; // РќСѓР¶РЅРѕ РґР»СЏ vrml
    int nr_;
    double rmax_;
    double rstep_;
 };
+
+
+

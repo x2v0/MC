@@ -662,3 +662,6 @@ double mcGeometry::getDistanceToConvexPolygonCircleOutside(const geomVector3D& p
    }
    return dcount;
 }
+
+
+

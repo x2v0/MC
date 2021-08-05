@@ -87,3 +87,6 @@ public: /// <summary>
    static double getDistanceToConvexPolygonCircleOutside(const geomVector3D& p, const geomVector3D& v,
                                                          const std::vector<double>& pz, const std::vector<double>& pr);
 };
+
+
+

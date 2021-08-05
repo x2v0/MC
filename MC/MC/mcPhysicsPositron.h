@@ -1,4 +1,4 @@
-// Radiation Oncology Monte Carlo open source project
+п»ї// Radiation Oncology Monte Carlo open source project
 //
 // Author: [2005-2017] Gennady Gorlachev (ggorlachev@roiss.ru) 
 //---------------------------------------------------------------------------
@@ -16,7 +16,7 @@ public:
 
    double DoInterruction(mcParticle* p, const mcMedium* med) const override;
 
-   // Изменяет энергию частицы в соответствии с de/dx и расчитывает передачу энергии на отрезке step.
+   // РР·РјРµРЅСЏРµС‚ СЌРЅРµСЂРіРёСЋ С‡Р°СЃС‚РёС†С‹ РІ СЃРѕРѕС‚РІРµС‚СЃС‚РІРёРё СЃ de/dx Рё СЂР°СЃС‡РёС‚С‹РІР°РµС‚ РїРµСЂРµРґР°С‡Сѓ СЌРЅРµСЂРіРёРё РЅР° РѕС‚СЂРµР·РєРµ step.
    double TakeOneStep(mcParticle* p, const mcMedium& med, double& step) const override;
 
    bool Discarge(mcParticle* p, const mcMedium& med, double& edep) const override;
@@ -32,3 +32,6 @@ protected:
 
    static void GetAnnihilationEnergies(mcRng& rng, double ke_in, double p_in, double* e_phot1, double* e_phot2);
 };
+
+
+

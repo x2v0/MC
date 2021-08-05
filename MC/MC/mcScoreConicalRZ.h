@@ -1,4 +1,4 @@
-// Radiation Oncology Monte Carlo open source project
+п»ї// Radiation Oncology Monte Carlo open source project
 //
 // Author: [2005-2017] Gennady Gorlachev (ggorlachev@roiss.ru) 
 //---------------------------------------------------------------------------
@@ -6,22 +6,22 @@
 #include "mcscore.h"
 
 /// <summary>
-/// Скоринг дозовых распределений в геометрии RZ с веерными гранями вдоль оси пучка.
+/// РЎРєРѕСЂРёРЅРі РґРѕР·РѕРІС‹С… СЂР°СЃРїСЂРµРґРµР»РµРЅРёР№ РІ РіРµРѕРјРµС‚СЂРёРё RZ СЃ РІРµРµСЂРЅС‹РјРё РіСЂР°РЅСЏРјРё РІРґРѕР»СЊ РѕСЃРё РїСѓС‡РєР°.
 /// </summary>
 class mcScoreConicalRZ : public mcScore
 {
 public: /// <summary>
-	/// Основной конструктора скоринга в веерной RZ геометрии
+	/// РћСЃРЅРѕРІРЅРѕР№ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂР° СЃРєРѕСЂРёРЅРіР° РІ РІРµРµСЂРЅРѕР№ RZ РіРµРѕРјРµС‚СЂРёРё
 	/// </summary>
-	/// <param name="module_name">произвольное название объекта</param>
-	/// <param name="nThreads">количество обслуживаемых потоков</param>
-	/// <param name="nr">количество колец скоринга</param>
-	/// <param name="nz">количество слоев скоринга</param>
-	/// <param name="rmax">радиус внешнего кольца на уровне изоцентра</param>
-	/// <param name="zmin">глубина залегания передней поверхности скоринга в родительском фантоме</param>
-	/// <param name="zmax">глубина залегания дальней поверхнсти скоринга</param>
-	/// <param name="ziso">глубина залегания изоцентра в родительском фантоме</param>
-	/// <param name="sad">расстояние - источник - изоцентр аппарата</param>
+	/// <param name="module_name">РїСЂРѕРёР·РІРѕР»СЊРЅРѕРµ РЅР°Р·РІР°РЅРёРµ РѕР±СЉРµРєС‚Р°</param>
+	/// <param name="nThreads">РєРѕР»РёС‡РµСЃС‚РІРѕ РѕР±СЃР»СѓР¶РёРІР°РµРјС‹С… РїРѕС‚РѕРєРѕРІ</param>
+	/// <param name="nr">РєРѕР»РёС‡РµСЃС‚РІРѕ РєРѕР»РµС† СЃРєРѕСЂРёРЅРіР°</param>
+	/// <param name="nz">РєРѕР»РёС‡РµСЃС‚РІРѕ СЃР»РѕРµРІ СЃРєРѕСЂРёРЅРіР°</param>
+	/// <param name="rmax">СЂР°РґРёСѓСЃ РІРЅРµС€РЅРµРіРѕ РєРѕР»СЊС†Р° РЅР° СѓСЂРѕРІРЅРµ РёР·РѕС†РµРЅС‚СЂР°</param>
+	/// <param name="zmin">РіР»СѓР±РёРЅР° Р·Р°Р»РµРіР°РЅРёСЏ РїРµСЂРµРґРЅРµР№ РїРѕРІРµСЂС…РЅРѕСЃС‚Рё СЃРєРѕСЂРёРЅРіР° РІ СЂРѕРґРёС‚РµР»СЊСЃРєРѕРј С„Р°РЅС‚РѕРјРµ</param>
+	/// <param name="zmax">РіР»СѓР±РёРЅР° Р·Р°Р»РµРіР°РЅРёСЏ РґР°Р»СЊРЅРµР№ РїРѕРІРµСЂС…РЅСЃС‚Рё СЃРєРѕСЂРёРЅРіР°</param>
+	/// <param name="ziso">РіР»СѓР±РёРЅР° Р·Р°Р»РµРіР°РЅРёСЏ РёР·РѕС†РµРЅС‚СЂР° РІ СЂРѕРґРёС‚РµР»СЊСЃРєРѕРј С„Р°РЅС‚РѕРјРµ</param>
+	/// <param name="sad">СЂР°СЃСЃС‚РѕСЏРЅРёРµ - РёСЃС‚РѕС‡РЅРёРє - РёР·РѕС†РµРЅС‚СЂ Р°РїРїР°СЂР°С‚Р°</param>
    mcScoreConicalRZ(const char* module_name, int nThreads, int nr, int nz, double rmax, double zmin, double zmax,
                     double ziso, double sad);
 
@@ -85,11 +85,11 @@ public:
 
    double Dose(int ir, int iz) const;
 
-   double Sigma(int ir, int iz) const; //double Dosemean (int iThread, int ir, int iz) const; средняя доза по вокселям
+   double Sigma(int ir, int iz) const; //double Dosemean (int iThread, int ir, int iz) const; СЃСЂРµРґРЅСЏСЏ РґРѕР·Р° РїРѕ РІРѕРєСЃРµР»СЏРј
    //double Sigma (int iThread, int ir, int iz) const;
 protected:
-   int m_nr, m_nz;       // число вокселов по радиусу (m_nr) и по z (m_nz)
-   double m_rmax, m_rm2; // m_rm2 - квадрат максимального радиуса
+   int m_nr, m_nz;       // С‡РёСЃР»Рѕ РІРѕРєСЃРµР»РѕРІ РїРѕ СЂР°РґРёСѓСЃСѓ (m_nr) Рё РїРѕ z (m_nz)
+   double m_rmax, m_rm2; // m_rm2 - РєРІР°РґСЂР°С‚ РјР°РєСЃРёРјР°Р»СЊРЅРѕРіРѕ СЂР°РґРёСѓСЃР°
    double m_zmin, m_zmax;
    double m_rstep, m_zstep;
    double m_iso;
@@ -97,3 +97,6 @@ protected:
    double* m_MAll;
    double** m_M;
 };
+
+
+

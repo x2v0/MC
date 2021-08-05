@@ -1,4 +1,4 @@
-#include "mcScoreParticleContainer.h"
+п»ї#include "mcScoreParticleContainer.h"
 #include "mcThread.h"
 
 mcScoreParticleContainer::
@@ -59,8 +59,8 @@ void mcScoreParticleContainer::dumpStatistic(ostream& os) const
 {
    mcScore::dumpStatistic(os);
    os << "Etotal Others = " << etotal_other() << endl;
-   // Расчетные параметры: распределение средней энергии по углу и распределение среднего угла по энергии.
-   // Разбиваем частицы с шагом 1 градус и 0.01 МэВ
+   // Р Р°СЃС‡РµС‚РЅС‹Рµ РїР°СЂР°РјРµС‚СЂС‹: СЂР°СЃРїСЂРµРґРµР»РµРЅРёРµ СЃСЂРµРґРЅРµР№ СЌРЅРµСЂРіРёРё РїРѕ СѓРіР»Сѓ Рё СЂР°СЃРїСЂРµРґРµР»РµРЅРёРµ СЃСЂРµРґРЅРµРіРѕ СѓРіР»Р° РїРѕ СЌРЅРµСЂРіРёРё.
+   // Р Р°Р·Р±РёРІР°РµРј С‡Р°СЃС‚РёС†С‹ СЃ С€Р°РіРѕРј 1 РіСЂР°РґСѓСЃ Рё 0.01 РњСЌР’
    float de = 0.1f;
    int eidxmax = 0;
    vector<float> emeans(90, 0.f);
@@ -86,7 +86,7 @@ void mcScoreParticleContainer::dumpStatistic(ostream& os) const
             acounts[eidx]++;
          }
       }
-   } // Вывод средних значений
+   } // Р’С‹РІРѕРґ СЃСЂРµРґРЅРёС… Р·РЅР°С‡РµРЅРёР№
    os << "Mean energy distribution" << endl;
    os << "------------------------" << endl;
    os << "Angle\tEnergy" << endl;
@@ -98,7 +98,7 @@ void mcScoreParticleContainer::dumpStatistic(ostream& os) const
    os << "Energy\tAngle" << endl;
    for (i = 0; i <= static_cast<size_t>(eidxmax); i++)
       os << (de * (i + 0.5f)) << "\t" << (acounts[i] > 0 ? ameans[i] / acounts[i] : 0) << endl;
-   os << endl; // Вывод частиц
+   os << endl; // Р’С‹РІРѕРґ С‡Р°СЃС‚РёС†
    os << "List of" << (ptypeFilter_ == MCP_NEGATRON ? "electron" : ptypeFilter_ == MCP_POSITRON ? "positron" : "photon")
       << "s on the score surface:" << endl;
    os << endl;
@@ -113,3 +113,6 @@ void mcScoreParticleContainer::dumpStatistic(ostream& os) const
    }
    os << endl;
 }
+
+
+

@@ -1,4 +1,4 @@
-#include "mcScoreMatrixXY.h"
+ï»¿#include "mcScoreMatrixXY.h"
 #include "mcGeometry.h"
 #include "mctransport.h"
 #include "ProfileProcessor.h"
@@ -164,7 +164,7 @@ void mcScoreMatrixXY::dumpStatistic(ostream& os) const
             os << '\t' << Dose(i, j);
          os << endl;
       }
-   } // Ýêñïîðò èçîáðàæåíèÿ 
+   } // Ð­ÐºÑÐ¿Ð¾Ñ€Ñ‚ Ð¸Ð·Ð¾Ð±Ñ€Ð°Ð¶ÐµÐ½Ð¸Ñ 
    if (!image_file_.empty()) {
       bool useCalibration = !calibration_file_.empty();
       RO::Dicom::SimpleImage calibrimage;
@@ -230,11 +230,11 @@ void mcScoreMatrixXY::dumpVRML(ostream& os) const
    os << "  }" << endl;
    os << "  geometry IndexedLineSet {" << endl;
    os << "    coord Coordinate {" << endl;
-   os << "      point [" << endl; // Ãðàíè XY (÷åòíûå òî÷êè íà Zmin, íå÷åòíûå - Zmax)
+   os << "      point [" << endl; // Ð“Ñ€Ð°Ð½Ð¸ XY (Ñ‡ÐµÑ‚Ð½Ñ‹Ðµ Ñ‚Ð¾Ñ‡ÐºÐ¸ Ð½Ð° Zmin, Ð½ÐµÑ‡ÐµÑ‚Ð½Ñ‹Ðµ - Zmax)
    unsigned ncount = 0;
    for (j = 0; j < nj; j++) {
       if (j != 0 && j != nj - 1)
-         continue; // Ïðîïóñêàåì âíóòðåííèå ëèíèè. Ðèñóåì òîëüêî ïåðèìåòð
+         continue; // ÐŸÑ€Ð¾Ð¿ÑƒÑÐºÐ°ÐµÐ¼ Ð²Ð½ÑƒÑ‚Ñ€ÐµÐ½Ð½Ð¸Ðµ Ð»Ð¸Ð½Ð¸Ð¸. Ð Ð¸ÑÑƒÐµÐ¼ Ñ‚Ð¾Ð»ÑŒÐºÐ¾ Ð¿ÐµÑ€Ð¸Ð¼ÐµÑ‚Ñ€
       double y = miny_ + j * psy_;
       for (i = 0; i < ni; i++) {
          if (i != 0 && i != ni - 1)
@@ -246,7 +246,7 @@ void mcScoreMatrixXY::dumpVRML(ostream& os) const
          os << "        " << p.x() << ' ' << p.y() << ' ' << p.z() << endl;
          ncount++;
       }
-   } // Ãðàíè XZ
+   } // Ð“Ñ€Ð°Ð½Ð¸ XZ
    for (k = 0; k < nk; k++) {
       double z = z0_ + k * psz_;
       for (i = 0; i < ni; i++) {
@@ -259,7 +259,7 @@ void mcScoreMatrixXY::dumpVRML(ostream& os) const
          os << "        " << p.x() << ' ' << p.y() << ' ' << p.z() << endl;
          ncount++;
       }
-   } // Ãðàíè YZ
+   } // Ð“Ñ€Ð°Ð½Ð¸ YZ
    for (k = 0; k < nk; k++) {
       double z = z0_ + k * psz_;
       for (j = 0; j < nj; j++) {
@@ -282,3 +282,6 @@ void mcScoreMatrixXY::dumpVRML(ostream& os) const
    os << "  }" << endl;
    os << "}" << endl;
 }
+
+
+

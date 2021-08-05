@@ -1,27 +1,27 @@
-// Radiation Oncology Monte Carlo open source project
+п»ї// Radiation Oncology Monte Carlo open source project
 //
 // Author: [2005-2017] Gennady Gorlachev (ggorlachev@roiss.ru) 
 //---------------------------------------------------------------------------
 #pragma once
 #include "mcscore.h"
 
-// Класс матрицы детекторов в плоскости XY.
-// Матрица однослойная.
-// Детекторы распределены симметрично относительно осе X и Y.
-/// Scoring дозового распределения в плоскости XY
+// РљР»Р°СЃСЃ РјР°С‚СЂРёС†С‹ РґРµС‚РµРєС‚РѕСЂРѕРІ РІ РїР»РѕСЃРєРѕСЃС‚Рё XY.
+// РњР°С‚СЂРёС†Р° РѕРґРЅРѕСЃР»РѕР№РЅР°СЏ.
+// Р”РµС‚РµРєС‚РѕСЂС‹ СЂР°СЃРїСЂРµРґРµР»РµРЅС‹ СЃРёРјРјРµС‚СЂРёС‡РЅРѕ РѕС‚РЅРѕСЃРёС‚РµР»СЊРЅРѕ РѕСЃРµ X Рё Y.
+/// Scoring РґРѕР·РѕРІРѕРіРѕ СЂР°СЃРїСЂРµРґРµР»РµРЅРёСЏ РІ РїР»РѕСЃРєРѕСЃС‚Рё XY
 class mcScoreMatrixXY : public mcScore
 {
 public: /// <summary>
-	/// Единственный конструктор.
+	/// Р•РґРёРЅСЃС‚РІРµРЅРЅС‹Р№ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ.
 	/// </summary>
-	/// <param name="module_name">имя модуля транспорта, к которому привязывается scoring.</param>
-	/// <param name="nThreads">Количество задействованных потоков.</param>
-	/// <param name="nx">Размер матрицы по X.</param>
-	/// <param name="ny">Размер матрицы по Y.</param>
-	/// <param name="psx">Размер voxel X.</param>
-	/// <param name="psy">Размер voxel Y.</param>
-	/// <param name="psz">Размер voxel Z.</param>
-	/// <param name="z0">Глубина размещения передней поверхности матрицы.</param>
+	/// <param name="module_name">РёРјСЏ РјРѕРґСѓР»СЏ С‚СЂР°РЅСЃРїРѕСЂС‚Р°, Рє РєРѕС‚РѕСЂРѕРјСѓ РїСЂРёРІСЏР·С‹РІР°РµС‚СЃСЏ scoring.</param>
+	/// <param name="nThreads">РљРѕР»РёС‡РµСЃС‚РІРѕ Р·Р°РґРµР№СЃС‚РІРѕРІР°РЅРЅС‹С… РїРѕС‚РѕРєРѕРІ.</param>
+	/// <param name="nx">Р Р°Р·РјРµСЂ РјР°С‚СЂРёС†С‹ РїРѕ X.</param>
+	/// <param name="ny">Р Р°Р·РјРµСЂ РјР°С‚СЂРёС†С‹ РїРѕ Y.</param>
+	/// <param name="psx">Р Р°Р·РјРµСЂ voxel X.</param>
+	/// <param name="psy">Р Р°Р·РјРµСЂ voxel Y.</param>
+	/// <param name="psz">Р Р°Р·РјРµСЂ voxel Z.</param>
+	/// <param name="z0">Р“Р»СѓР±РёРЅР° СЂР°Р·РјРµС‰РµРЅРёСЏ РїРµСЂРµРґРЅРµР№ РїРѕРІРµСЂС…РЅРѕСЃС‚Рё РјР°С‚СЂРёС†С‹.</param>
    mcScoreMatrixXY(const char* module_name, int nThreads, int nx, int ny, double psx, double psy, double psz,
                    double z0);
 
@@ -55,9 +55,12 @@ protected:
    double psy_;
    double psz_;
    double* MAll_;
-   double** M_; // Служебные переменные
+   double** M_; // РЎР»СѓР¶РµР±РЅС‹Рµ РїРµСЂРµРјРµРЅРЅС‹Рµ
    double z1_;
-   double minx_, miny_; // Имя калибровочного файла и файла экспортированного изображения
+   double minx_, miny_; // РРјСЏ РєР°Р»РёР±СЂРѕРІРѕС‡РЅРѕРіРѕ С„Р°Р№Р»Р° Рё С„Р°Р№Р»Р° СЌРєСЃРїРѕСЂС‚РёСЂРѕРІР°РЅРЅРѕРіРѕ РёР·РѕР±СЂР°Р¶РµРЅРёСЏ
    string calibration_file_;
    string image_file_;
 };
+
+
+

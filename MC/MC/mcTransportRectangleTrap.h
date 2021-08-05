@@ -1,19 +1,19 @@
-// Radiation Oncology Monte Carlo open source project
+п»ї// Radiation Oncology Monte Carlo open source project
 //
 // Author: [2005-2017] Gennady Gorlachev (ggorlachev@roiss.ru) 
 //---------------------------------------------------------------------------
 #pragma once
 #include "mcTransport.h"
 
-// Класс транспорта который поглощает все частицы, за исключением тех
-// которые летят в положительном направлении и попадают в заданный прямоугольник.
+// РљР»Р°СЃСЃ С‚СЂР°РЅСЃРїРѕСЂС‚Р° РєРѕС‚РѕСЂС‹Р№ РїРѕРіР»РѕС‰Р°РµС‚ РІСЃРµ С‡Р°СЃС‚РёС†С‹, Р·Р° РёСЃРєР»СЋС‡РµРЅРёРµРј С‚РµС…
+// РєРѕС‚РѕСЂС‹Рµ Р»РµС‚СЏС‚ РІ РїРѕР»РѕР¶РёС‚РµР»СЊРЅРѕРј РЅР°РїСЂР°РІР»РµРЅРёРё Рё РїРѕРїР°РґР°СЋС‚ РІ Р·Р°РґР°РЅРЅС‹Р№ РїСЂСЏРјРѕСѓРіРѕР»СЊРЅРёРє.
 class mcTransportRectangleTrap : public mcTransport
 {
 public:
    mcTransportRectangleTrap(const geomVector3D& orgn, const geomVector3D& z, const geomVector3D& x);
 
-   ~mcTransportRectangleTrap(void); // Начало транспорта переписано, так как не нужно запускать симуляцию частиц.
-   // Их просто нужно отфильтровать.
+   ~mcTransportRectangleTrap(void); // РќР°С‡Р°Р»Рѕ С‚СЂР°РЅСЃРїРѕСЂС‚Р° РїРµСЂРµРїРёСЃР°РЅРѕ, С‚Р°Рє РєР°Рє РЅРµ РЅСѓР¶РЅРѕ Р·Р°РїСѓСЃРєР°С‚СЊ СЃРёРјСѓР»СЏС†РёСЋ С‡Р°СЃС‚РёС†.
+   // РС… РїСЂРѕСЃС‚Рѕ РЅСѓР¶РЅРѕ РѕС‚С„РёР»СЊС‚СЂРѕРІР°С‚СЊ.
    void beginTransport(mcParticle& p) override;
 
    void dumpVRML(ostream& os) const override;
@@ -26,3 +26,6 @@ protected:
    double fsy1_;
    double fsy2_;
 };
+
+
+

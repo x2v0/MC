@@ -1,4 +1,4 @@
-#include "mcTransportWedge.h"
+п»ї#include "mcTransportWedge.h"
 #include <float.h>
 
 mcTransportWedge::mcTransportWedge() : mcTransport()
@@ -28,7 +28,7 @@ void mcTransportWedge::setGeometry(double ax, double ay, double az)
 
 double mcTransportWedge::getDistanceInside(mcParticle& p) const
 {
-   // 5 плоскостей. Выбираем минимальное расстояние
+   // 5 РїР»РѕСЃРєРѕСЃС‚РµР№. Р’С‹Р±РёСЂР°РµРј РјРёРЅРёРјР°Р»СЊРЅРѕРµ СЂР°СЃСЃС‚РѕСЏРЅРёРµ
    double dx0 = p.u.x() < 0 ? -(p.p.x() + ax_) / p.u.x() : DBL_MAX;
    double dx1 = p.u.x() > 0 ? (ax_ - p.p.x()) / p.u.x() : DBL_MAX;
    double dy0 = p.u.y() < 0 ? -(p.p.y() + ay_) / p.u.y() : DBL_MAX;
@@ -40,9 +40,9 @@ double mcTransportWedge::getDistanceInside(mcParticle& p) const
 
 double mcTransportWedge::getDistanceOutside(mcParticle& p) const
 {
-   // Перебираем все плоскости и определяем если есть столкновение то попадаем ли в рамку.
-   // Если попадаем в рамку, то это уже сразу правильный вход.
-   // наклонная грань
+   // РџРµСЂРµР±РёСЂР°РµРј РІСЃРµ РїР»РѕСЃРєРѕСЃС‚Рё Рё РѕРїСЂРµРґРµР»СЏРµРј РµСЃР»Рё РµСЃС‚СЊ СЃС‚РѕР»РєРЅРѕРІРµРЅРёРµ С‚Рѕ РїРѕРїР°РґР°РµРј Р»Рё РІ СЂР°РјРєСѓ.
+   // Р•СЃР»Рё РїРѕРїР°РґР°РµРј РІ СЂР°РјРєСѓ, С‚Рѕ СЌС‚Рѕ СѓР¶Рµ СЃСЂР°Р·Сѓ РїСЂР°РІРёР»СЊРЅС‹Р№ РІС…РѕРґ.
+   // РЅР°РєР»РѕРЅРЅР°СЏ РіСЂР°РЅСЊ
    double cn = p.u * n_;
    if (cn < 0) {
       double h = (p.p - cy_) * n_;
@@ -76,7 +76,7 @@ double mcTransportWedge::getDistanceOutside(mcParticle& p) const
       geomVector3D pc = p.p + (p.u * dist);
       if (pc.y() > -ay_ && pc.y() < ay_ && pc.z() < az_ * (ay_ - p.p.y()) / (2 * ay_))
          return dist;
-   } // Не попали ни в одну из граней
+   } // РќРµ РїРѕРїР°Р»Рё РЅРё РІ РѕРґРЅСѓ РёР· РіСЂР°РЅРµР№
    return DBL_MAX;
 }
 
@@ -131,3 +131,6 @@ void mcTransportWedge::dumpVRML(ostream& os) const
    os << "      }" << endl;
    os << "    }" << endl;
 }
+
+
+

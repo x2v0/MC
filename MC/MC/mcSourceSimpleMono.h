@@ -1,4 +1,4 @@
-// Radiation Oncology Monte Carlo open source project
+п»ї// Radiation Oncology Monte Carlo open source project
 //
 // Author: [2005-2017] Gennady Gorlachev (ggorlachev@roiss.ru) 
 //---------------------------------------------------------------------------
@@ -15,10 +15,10 @@ public:
 
    virtual ~mcSourceSimpleMono(void);
 
-   void init(mc_particle_t type        // тип частиц
-             , double ke               // кинетическая энергия
-             , const geomVector3D& p   // точка рождения частиц
-             , const geomVector3D& v); // направление движения (единичный вектор)
+   void init(mc_particle_t type        // С‚РёРї С‡Р°СЃС‚РёС†
+             , double ke               // РєРёРЅРµС‚РёС‡РµСЃРєР°СЏ СЌРЅРµСЂРіРёСЏ
+             , const geomVector3D& p   // С‚РѕС‡РєР° СЂРѕР¶РґРµРЅРёСЏ С‡Р°СЃС‚РёС†
+             , const geomVector3D& v); // РЅР°РїСЂР°РІР»РµРЅРёРµ РґРІРёР¶РµРЅРёСЏ (РµРґРёРЅРёС‡РЅС‹Р№ РІРµРєС‚РѕСЂ)
    void sample(mcParticle& p, mcThread* thread) override;
 
    void dumpVRML(ostream& os) const override;
@@ -38,5 +38,8 @@ protected:
    double ke_;
    geomVector3D p_;
    geomVector3D v_;
-   int q_; // заряд
+   int q_; // Р·Р°СЂСЏРґ
 };
+
+
+

@@ -88,3 +88,6 @@ double mcGeomTriangleSide::getDNear(const geomVector3D& p) const
    }
    return sqrt(dmin * dmin + h * h);
 }
+
+
+

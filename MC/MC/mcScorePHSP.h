@@ -1,10 +1,10 @@
-// Radiation Oncology Monte Carlo open source project
+п»ї// Radiation Oncology Monte Carlo open source project
 //
 // Author: [2005-2017] Gennady Gorlachev (ggorlachev@roiss.ru) 
 //---------------------------------------------------------------------------
 #pragma once
 #include "mcscore.h"
-class mcPhaseSpaceIO; // Класс регистрации частиц в файле фазового пространства
+class mcPhaseSpaceIO; // РљР»Р°СЃСЃ СЂРµРіРёСЃС‚СЂР°С†РёРё С‡Р°СЃС‚РёС† РІ С„Р°Р№Р»Рµ С„Р°Р·РѕРІРѕРіРѕ РїСЂРѕСЃС‚СЂР°РЅСЃС‚РІР°
 class mcScorePHSP : public mcScore
 {
 public:
@@ -21,3 +21,6 @@ public:
 protected:
    mcPhaseSpaceIO* phsp_;
 };
+
+
+

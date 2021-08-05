@@ -1,4 +1,4 @@
-#include "mcParticle.h"
+﻿#include "mcParticle.h"
 
 mcParticle::mcParticle(void) : t(MCP_PHOTON), q(0), ke(0), dnear(0), weight(1), mfps(0), regDensityRatio(1),
                                transport_(nullptr), transportNearest_(nullptr), trackScore_(nullptr), thread_(nullptr),
@@ -17,3 +17,6 @@ mcParticle::mcParticle(const mcParticle& p) : t(p.t), q(p.q), ke(p.ke), p(p.p), 
                                               regionFlags(p.regionFlags), exitSurface_(p.exitSurface_) {}
 
 mcParticle::~mcParticle(void) {}
+
+
+

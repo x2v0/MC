@@ -1,4 +1,4 @@
-#include "mcTransportRectangleRing.h"
+п»ї#include "mcTransportRectangleRing.h"
 #include "mcGeometry.h"
 #include <float.h>
 
@@ -11,9 +11,9 @@ mcTransportRectangleRing::~mcTransportRectangleRing(void) {}
 
 double mcTransportRectangleRing::getDistanceInside(mcParticle& p) const
 {
-   // Цилиндр
+   // Р¦РёР»РёРЅРґСЂ
    double cd1 = mcGeometry::getDistanceToRectanglePipeInside(p.p, p.u, x1_ - d_, x2_ + d_, y1_ - d_, y2_ + d_);
-   double cd2 = mcGeometry::getDistanceToRectanglePipeOutside(p.p, p.u, x1_, x2_, y1_, y2_); // Плоскости
+   double cd2 = mcGeometry::getDistanceToRectanglePipeOutside(p.p, p.u, x1_, x2_, y1_, y2_); // РџР»РѕСЃРєРѕСЃС‚Рё
    double vz = p.u.z();
    double pd = (vz < 0) ? -p.p.z() / vz : (vz > 0) ? (h_ - p.p.z()) / vz : DBL_MAX;
    return NNEG(MIN(MIN(cd1, cd2), pd));
@@ -23,15 +23,15 @@ double mcTransportRectangleRing::getDistanceOutside(mcParticle& p) const
 {
    double z = p.p.z(), vz = p.u.z();
    double cd = 0;
-   geomVector3D c(p.p); // Частица за объектом
+   geomVector3D c(p.p); // Р§Р°СЃС‚РёС†Р° Р·Р° РѕР±СЉРµРєС‚РѕРј
    if (z <= 0) {
       if (vz <= 0)
-         return DBL_MAX; // Доводим частицу до ближайшей плоскости объекта
+         return DBL_MAX; // Р”РѕРІРѕРґРёРј С‡Р°СЃС‚РёС†Сѓ РґРѕ Р±Р»РёР¶Р°Р№С€РµР№ РїР»РѕСЃРєРѕСЃС‚Рё РѕР±СЉРµРєС‚Р°
       cd = -z / vz;
       c = p.p + (p.u * cd);
       if (isXYInside(c.x(), c.y()))
          return cd;
-   } // Частица перед объектом
+   } // Р§Р°СЃС‚РёС†Р° РїРµСЂРµРґ РѕР±СЉРµРєС‚РѕРј
    else if (z >= h_) {
       if (vz >= 0)
          return DBL_MAX;
@@ -39,7 +39,7 @@ double mcTransportRectangleRing::getDistanceOutside(mcParticle& p) const
       c = p.p + (p.u * cd);
       if (isXYInside(c.x(), c.y()))
          return cd;
-   } // Частица на уровне объекта и она либо в дырке, либо за пределами периметра
+   } // Р§Р°СЃС‚РёС†Р° РЅР° СѓСЂРѕРІРЅРµ РѕР±СЉРµРєС‚Р° Рё РѕРЅР° Р»РёР±Рѕ РІ РґС‹СЂРєРµ, Р»РёР±Рѕ Р·Р° РїСЂРµРґРµР»Р°РјРё РїРµСЂРёРјРµС‚СЂР°
    double dd = isXYInsideField(c.x(), c.y())
                   ? mcGeometry::getDistanceToRectanglePipeInside(p.p, p.u, x1_, x2_, y1_, y2_)
                   : isXYOutsideCollimator(c.x(), c.y())
@@ -131,3 +131,6 @@ void mcTransportRectangleRing::dumpVRML(ostream& os) const
    os << "  ]" << endl;
    os << "}" << endl;
 }
+
+
+

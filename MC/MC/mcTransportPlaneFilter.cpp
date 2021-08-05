@@ -1,4 +1,4 @@
-#include "mcTransportPlaneFilter.h"
+п»ї#include "mcTransportPlaneFilter.h"
 #include "mcScore.h"
 #include "mcScoreTrack.h"
 #include "mcThread.h"
@@ -29,7 +29,7 @@ void mcTransportPlaneFilter::beginTransport(mcParticle& p)
 
 void mcTransportPlaneFilter::dumpVRML(ostream& os) const
 {
-   double a = 30; // размера бокса
+   double a = 30; // СЂР°Р·РјРµСЂР° Р±РѕРєСЃР°
    geomVector3D p = geomVector3D(0, 0, 0.005) * mttow_;
    os << "# Slab: " << this->getName() << endl;
    os << "Transform {" << endl;
@@ -47,3 +47,6 @@ void mcTransportPlaneFilter::dumpVRML(ostream& os) const
    os << "  ]" << endl;
    os << "}" << endl;
 }
+
+
+

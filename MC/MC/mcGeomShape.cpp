@@ -49,3 +49,6 @@ inline double mcGeomShape::getDNearInside(const geomVector3D& p) const
 {
    return getDNear(p);
 }
+
+
+

@@ -1,4 +1,4 @@
-#include "mcTransportPolygon.h"
+п»ї#include "mcTransportPolygon.h"
 #include "../geometry/vec2d.h"
 using namespace std;
 mcTransportPolygon::mcTransportPolygon(void) : _ptr(nullptr), _np(0), _r(0), _h(0) {}
@@ -28,7 +28,7 @@ void mcTransportPolygon::setGeometry(int np, double h, double r)
    //		cout << "top point ";
    //		double zTop, rTop;
    //		cin >> zTop >> rTop;
-   //		polyArray[i] = geomVector2D(zTop, rTop);//?проверить, что пишется в массив
+   //		polyArray[i] = geomVector2D(zTop, rTop);//?РїСЂРѕРІРµСЂРёС‚СЊ, С‡С‚Рѕ РїРёС€РµС‚СЃСЏ РІ РјР°СЃСЃРёРІ
    //	}
    //	else
    //	{
@@ -39,7 +39,7 @@ void mcTransportPolygon::setGeometry(int np, double h, double r)
    //	}
    //}
    //cout << "========================================================";
-   //проверить как выполняется эта строка??
+   //РїСЂРѕРІРµСЂРёС‚СЊ РєР°Рє РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ СЌС‚Р° СЃС‚СЂРѕРєР°??
    //_r = _ptr->y();
 }
 
@@ -47,7 +47,7 @@ double mcTransportPolygon::getDistanceInside(mcParticle& p) const
 {
    double vx = p.u.x(), vy = p.u.y(), vz = p.u.z();
    double px = p.p.x(), py = p.p.y(), pz = p.p.z();
-   if (vz < 0) //пересечение с основанием 
+   if (vz < 0) //РїРµСЂРµСЃРµС‡РµРЅРёРµ СЃ РѕСЃРЅРѕРІР°РЅРёРµРј 
    {
       double d = fabs(pz / vz);
       geomVector3D pp = p.p + (p.u * d);
@@ -55,8 +55,8 @@ double mcTransportPolygon::getDistanceInside(mcParticle& p) const
          return d;
    }
    double dCone = DBL_MAX;
-   double dCone_temp; //пересечение с основанием отсутствует;
-   //ищем пересечение с боковой поверхностью.
+   double dCone_temp; //РїРµСЂРµСЃРµС‡РµРЅРёРµ СЃ РѕСЃРЅРѕРІР°РЅРёРµРј РѕС‚СЃСѓС‚СЃС‚РІСѓРµС‚;
+   //РёС‰РµРј РїРµСЂРµСЃРµС‡РµРЅРёРµ СЃ Р±РѕРєРѕРІРѕР№ РїРѕРІРµСЂС…РЅРѕСЃС‚СЊСЋ.
    for (int register i = 0; i < (_np - 1); i++) {
       geomVector2D* ptr = _ptr;
       double z_i = ptr->x();
@@ -64,17 +64,17 @@ double mcTransportPolygon::getDistanceInside(mcParticle& p) const
       ptr++;
       double z_i_plus1 = ptr->x();
       double r_i_plus1 = ptr->y();
-      double A = (r_i - r_i_plus1) / (z_i - z_i_plus1); //тангенс угла наклона одного из конусов, образующих полигон 
+      double A = (r_i - r_i_plus1) / (z_i - z_i_plus1); //С‚Р°РЅРіРµРЅСЃ СѓРіР»Р° РЅР°РєР»РѕРЅР° РѕРґРЅРѕРіРѕ РёР· РєРѕРЅСѓСЃРѕРІ, РѕР±СЂР°Р·СѓСЋС‰РёС… РїРѕР»РёРіРѕРЅ 
       A *= A;
       double a = p.u.sqLengthXY() - A * vz * vz;
       double b = px * vx + py * vy - A * vz * (pz - _h);
       double c = p.p.sqLengthXY() - A * (pz - _h) * (pz - _h);
-      double det = b * b - a * c; // Решение может отсутствовать только за пределами конуса,
-      // что практически возможно в окрестности его поверхности.
+      double det = b * b - a * c; // Р РµС€РµРЅРёРµ РјРѕР¶РµС‚ РѕС‚СЃСѓС‚СЃС‚РІРѕРІР°С‚СЊ С‚РѕР»СЊРєРѕ Р·Р° РїСЂРµРґРµР»Р°РјРё РєРѕРЅСѓСЃР°,
+      // С‡С‚Рѕ РїСЂР°РєС‚РёС‡РµСЃРєРё РІРѕР·РјРѕР¶РЅРѕ РІ РѕРєСЂРµСЃС‚РЅРѕСЃС‚Рё РµРіРѕ РїРѕРІРµСЂС…РЅРѕСЃС‚Рё.
       if (det < 0)
-         dCone_temp = DBL_MAX; //пересечение через вершину
+         dCone_temp = DBL_MAX; //РїРµСЂРµСЃРµС‡РµРЅРёРµ С‡РµСЂРµР· РІРµСЂС€РёРЅСѓ
       else if (det == 0)
-         dCone_temp = -b / a; //пересечение через боковую поверхность
+         dCone_temp = -b / a; //РїРµСЂРµСЃРµС‡РµРЅРёРµ С‡РµСЂРµР· Р±РѕРєРѕРІСѓСЋ РїРѕРІРµСЂС…РЅРѕСЃС‚СЊ
       else
          dCone_temp = (a > 0) ? ((-b + sqrt(det)) / a) : ((-b - sqrt(det)) / a);
       dCone = (dCone > dCone_temp) ? dCone_temp : dCone;
@@ -85,15 +85,15 @@ double mcTransportPolygon::getDistanceInside(mcParticle& p) const
 double mcTransportPolygon::getDistanceOutside(mcParticle& p) const
 {
    double vx = p.u.x(), vy = p.u.y(), vz = p.u.z();
-   double px = p.p.x(), py = p.p.y(), pz = p.p.z(); //частица летит от полигона
+   double px = p.p.x(), py = p.p.y(), pz = p.p.z(); //С‡Р°СЃС‚РёС†Р° Р»РµС‚РёС‚ РѕС‚ РїРѕР»РёРіРѕРЅР°
    if ((pz <= 0 && vz <= 0) || (pz >= _h && vz >= 0))
-      return DBL_MAX; //пересечение основаниe полигона
+      return DBL_MAX; //РїРµСЂРµСЃРµС‡РµРЅРёРµ РѕСЃРЅРѕРІР°РЅРёe РїРѕР»РёРіРѕРЅР°
    if (pz <= 0) {
       double d = fabs(pz / vz);
       geomVector3D pp = p.p + (p.u * d);
       if (pp.sqLengthXY() <= _r * _r)
          return d;
-   } //пересечение с боковой поверхностью полигона
+   } //РїРµСЂРµСЃРµС‡РµРЅРёРµ СЃ Р±РѕРєРѕРІРѕР№ РїРѕРІРµСЂС…РЅРѕСЃС‚СЊСЋ РїРѕР»РёРіРѕРЅР°
    double dCone = 0;
    double dCone_temp;
    for (int register i = 0; i < (_np - 1); i++) {
@@ -103,14 +103,14 @@ double mcTransportPolygon::getDistanceOutside(mcParticle& p) const
       ptr++;
       double z_i_plus1 = ptr->x();
       double r_i_plus1 = ptr->y();
-      double A = (r_i - r_i_plus1) / (z_i - z_i_plus1); //тангенс угла наклона одного из конусов, образующих полигон 
+      double A = (r_i - r_i_plus1) / (z_i - z_i_plus1); //С‚Р°РЅРіРµРЅСЃ СѓРіР»Р° РЅР°РєР»РѕРЅР° РѕРґРЅРѕРіРѕ РёР· РєРѕРЅСѓСЃРѕРІ, РѕР±СЂР°Р·СѓСЋС‰РёС… РїРѕР»РёРіРѕРЅ 
       A *= A;
       double a = p.u.sqLengthXY() - A * vz * vz;
       double b = px * vx + py * vy - A * vz * (pz - _h);
       double c = p.p.sqLengthXY() - A * (pz - _h) * (pz - _h);
-      double det = b * b - a * c; //пересечений нет
+      double det = b * b - a * c; //РїРµСЂРµСЃРµС‡РµРЅРёР№ РЅРµС‚
       if (det <= 0 || a == 0)
-         dCone = 0; //пересечение через боковую поверхность
+         dCone = 0; //РїРµСЂРµСЃРµС‡РµРЅРёРµ С‡РµСЂРµР· Р±РѕРєРѕРІСѓСЋ РїРѕРІРµСЂС…РЅРѕСЃС‚СЊ
       else {
          dCone_temp = (a > 0) ? (-b - sqrt(det)) / a : (-b + sqrt(det)) / a;
          geomVector3D pp = p.p + (p.u * dCone_temp);
@@ -124,3 +124,6 @@ double mcTransportPolygon::getDNearInside(const geomVector3D& p) const
 {
    return 0;
 }
+
+
+

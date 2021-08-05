@@ -44,3 +44,6 @@ protected: // Массив граней, формирующих тело кли�
    unsigned int nSides_;
    mcGeomSide** Sides_;
 };
+
+
+

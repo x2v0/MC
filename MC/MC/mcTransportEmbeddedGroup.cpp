@@ -1,4 +1,4 @@
-#include "mcTransportEmbeddedGroup.h"
+ï»¿#include "mcTransportEmbeddedGroup.h"
 #include "mcGeometry.h"
 
 mcTransportEmbeddedGroup::mcTransportEmbeddedGroup(const geomVector3D& orgn, const geomVector3D& z,
@@ -12,10 +12,10 @@ mcTransportEmbeddedGroup::~mcTransportEmbeddedGroup(void)
 
 void mcTransportEmbeddedGroup::beginTransportInside(mcParticle& p)
 {
-   // Êîìó ïåðåäàòü óïðàâëåíèå çàâèñèò îò òîãî êòî ïîñëàë ÷àñòèöó.
-   // Åñëè ýòî áûë ðîäèòåëü, òî ÷àñòèöà äîëæíà áûòü ïåðåäàíà îäíîìó èç îáúåêòîâ ãðóïïû.
-   // ×òîáû íå ïîâòîðÿòü âû÷èñëåíèå ðàññòîÿíèÿ äî îáúåêòà â ÷àñòèöå ïðåäóñìîòðåí
-   // óêàçàòåëü åùå íà îäèí òðàíñïîðò, êîòîðûé óñòàíàâëèâàåòñÿ ïðè ïðåäûäóùåì èçìåðåíèè
+   // ÐšÐ¾Ð¼Ñƒ Ð¿ÐµÑ€ÐµÐ´Ð°Ñ‚ÑŒ ÑƒÐ¿Ñ€Ð°Ð²Ð»ÐµÐ½Ð¸Ðµ Ð·Ð°Ð²Ð¸ÑÐ¸Ñ‚ Ð¾Ñ‚ Ñ‚Ð¾Ð³Ð¾ ÐºÑ‚Ð¾ Ð¿Ð¾ÑÐ»Ð°Ð» Ñ‡Ð°ÑÑ‚Ð¸Ñ†Ñƒ.
+   // Ð•ÑÐ»Ð¸ ÑÑ‚Ð¾ Ð±Ñ‹Ð» Ñ€Ð¾Ð´Ð¸Ñ‚ÐµÐ»ÑŒ, Ñ‚Ð¾ Ñ‡Ð°ÑÑ‚Ð¸Ñ†Ð° Ð´Ð¾Ð»Ð¶Ð½Ð° Ð±Ñ‹Ñ‚ÑŒ Ð¿ÐµÑ€ÐµÐ´Ð°Ð½Ð° Ð¾Ð´Ð½Ð¾Ð¼Ñƒ Ð¸Ð· Ð¾Ð±ÑŠÐµÐºÑ‚Ð¾Ð² Ð³Ñ€ÑƒÐ¿Ð¿Ñ‹.
+   // Ð§Ñ‚Ð¾Ð±Ñ‹ Ð½Ðµ Ð¿Ð¾Ð²Ñ‚Ð¾Ñ€ÑÑ‚ÑŒ Ð²Ñ‹Ñ‡Ð¸ÑÐ»ÐµÐ½Ð¸Ðµ Ñ€Ð°ÑÑÑ‚Ð¾ÑÐ½Ð¸Ñ Ð´Ð¾ Ð¾Ð±ÑŠÐµÐºÑ‚Ð° Ð² Ñ‡Ð°ÑÑ‚Ð¸Ñ†Ðµ Ð¿Ñ€ÐµÐ´ÑƒÑÐ¼Ð¾Ñ‚Ñ€ÐµÐ½
+   // ÑƒÐºÐ°Ð·Ð°Ñ‚ÐµÐ»ÑŒ ÐµÑ‰Ðµ Ð½Ð° Ð¾Ð´Ð¸Ð½ Ñ‚Ñ€Ð°Ð½ÑÐ¿Ð¾Ñ€Ñ‚, ÐºÐ¾Ñ‚Ð¾Ñ€Ñ‹Ð¹ ÑƒÑÑ‚Ð°Ð½Ð°Ð²Ð»Ð¸Ð²Ð°ÐµÑ‚ÑÑ Ð¿Ñ€Ð¸ Ð¿Ñ€ÐµÐ´Ñ‹Ð´ÑƒÑ‰ÐµÐ¼ Ð¸Ð·Ð¼ÐµÑ€ÐµÐ½Ð¸Ð¸
    if (p.transportNearest_ != nullptr) {
       auto t = p.transportNearest_;
       p.transportNearest_ = nullptr;
@@ -34,7 +34,7 @@ void mcTransportEmbeddedGroup::endTransport(mcParticle* particle)
 void mcTransportEmbeddedGroup::addTransport(mcTransport* t)
 {
    t->setExternalTransport(this);
-   embeddedTransports_.push_back(t); // HACK!!! Íåéòðàëèçóåì ïðåäûäóùóþ óñòàíîâêó.
+   embeddedTransports_.push_back(t); // HACK!!! ÐÐµÐ¹Ñ‚Ñ€Ð°Ð»Ð¸Ð·ÑƒÐµÐ¼ Ð¿Ñ€ÐµÐ´Ñ‹Ð´ÑƒÑ‰ÑƒÑŽ ÑƒÑÑ‚Ð°Ð½Ð¾Ð²ÐºÑƒ.
    this->setInternalTransport(nullptr);
 }
 
@@ -48,7 +48,7 @@ double mcTransportEmbeddedGroup::getDistanceOutside(mcParticle& p) const
    p.exitSurface_ = mcParticle::temb_shit_t::External;
    double dist = DBL_MAX;
    for each (auto t in embeddedTransports_) {
-      // Íóæíî ïåðåâîäèòü â ñèñòåìó îáúåêòà
+      // ÐÑƒÐ¶Ð½Ð¾ Ð¿ÐµÑ€ÐµÐ²Ð¾Ð´Ð¸Ñ‚ÑŒ Ð² ÑÐ¸ÑÑ‚ÐµÐ¼Ñƒ Ð¾Ð±ÑŠÐµÐºÑ‚Ð°
       geomVector3D p_old = p.p;
       geomVector3D u_old = p.u;
       p.p = p.p * t->MW2T();
@@ -93,7 +93,7 @@ void mcTransportEmbeddedGroup::dumpVRML(ostream& os) const
       t->dumpVRML(os);
       mcScore* s = t->getScore();
       if (s)
-         s->dumpVRML(os); // Âëîæåíèÿ
+         s->dumpVRML(os); // Ð’Ð»Ð¾Ð¶ÐµÐ½Ð¸Ñ
       mcTransport* ti = t;
       if (ti != nullptr)
          ti = ti->getInternalTransport();
@@ -106,3 +106,6 @@ void mcTransportEmbeddedGroup::dumpVRML(ostream& os) const
       }
    }
 }
+
+
+

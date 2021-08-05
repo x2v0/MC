@@ -1,4 +1,4 @@
-#include "mcTransportJawPairRounded.h"
+ï»¿#include "mcTransportJawPairRounded.h"
 #include "mcGeometry.h"
 #include <float.h>
 mcTransportJawPairRounded::mcTransportJawPairRounded(void) : mcTransport() {}
@@ -13,7 +13,7 @@ double mcTransportJawPairRounded::getDistanceInside(mcParticle& p) const
 {
    double x = p.p.x();
    bool isRight = (x < fscenter_) ? false : true;
-   double dist = 0; // Ïðèâîäèì ðàñ÷åò òîëüêî ê îäíîé ïîëîâèíêå
+   double dist = 0; // ÐŸÑ€Ð¸Ð²Ð¾Ð´Ð¸Ð¼ Ñ€Ð°ÑÑ‡ÐµÑ‚ Ñ‚Ð¾Ð»ÑŒÐºÐ¾ Ðº Ð¾Ð´Ð½Ð¾Ð¹ Ð¿Ð¾Ð»Ð¾Ð²Ð¸Ð½ÐºÐµ
    geomVector3D position(p.p);
    geomVector3D direction(p.u);
    if (isRight) {
@@ -22,8 +22,8 @@ double mcTransportJawPairRounded::getDistanceInside(mcParticle& p) const
       direction(0) = -direction.x();
       direction(1) = -direction.y();
       x = position.x();
-   } // Íóæíî äâèãàòüñÿ â äâà ýòàïà.
-   // Ñíà÷àëà íà ïîâåðõíîñòü îäíîé ÷àñòè, çàòåì, â çàâèñèìîñòè îò ìåñòà ïåðåñå÷åíèÿ, äîáàâëÿåì îòðåçîê âíóòðè âòîðîé.
+   } // ÐÑƒÐ¶Ð½Ð¾ Ð´Ð²Ð¸Ð³Ð°Ñ‚ÑŒÑÑ Ð² Ð´Ð²Ð° ÑÑ‚Ð°Ð¿Ð°.
+   // Ð¡Ð½Ð°Ñ‡Ð°Ð»Ð° Ð½Ð° Ð¿Ð¾Ð²ÐµÑ€Ñ…Ð½Ð¾ÑÑ‚ÑŒ Ð¾Ð´Ð½Ð¾Ð¹ Ñ‡Ð°ÑÑ‚Ð¸, Ð·Ð°Ñ‚ÐµÐ¼, Ð² Ð·Ð°Ð²Ð¸ÑÐ¸Ð¼Ð¾ÑÑ‚Ð¸ Ð¾Ñ‚ Ð¼ÐµÑÑ‚Ð° Ð¿ÐµÑ€ÐµÑÐµÑ‡ÐµÐ½Ð¸Ñ, Ð´Ð¾Ð±Ð°Ð²Ð»ÑÐµÐ¼ Ð¾Ñ‚Ñ€ÐµÐ·Ð¾Ðº Ð²Ð½ÑƒÑ‚Ñ€Ð¸ Ð²Ñ‚Ð¾Ñ€Ð¾Ð¹.
    x -= fsx1_ - dx_;
    geomVector3D pp(position);
    pp(0) = x;
@@ -93,7 +93,7 @@ void mcTransportJawPairRounded::dumpVRML(ostream& os) const
       geomMatrix3D M = (k == 0)
                           ? (geomMatrix3D::ParallelShift(fsx1_ - dx_, 0, 0) * mttow_)
                           : (geomMatrix3D::RotationAroundOz(180) * geomMatrix3D::ParallelShift(fsx2_ + dx_, 0, 0) *
-                             mttow_); // Ïðÿìîóãîëüíàÿ ÷àñòü
+                             mttow_); // ÐŸÑ€ÑÐ¼Ð¾ÑƒÐ³Ð¾Ð»ÑŒÐ½Ð°Ñ Ñ‡Ð°ÑÑ‚ÑŒ
       int i = 0;
       geomVector3D p[8];
       p[i++] = geomVector3D(0, -r_, 0) * M;
@@ -132,9 +132,12 @@ void mcTransportJawPairRounded::dumpVRML(ostream& os) const
       os << "            ]" << endl;
       os << "        }" << endl;
       os << "      }" << endl;
-      os << "    }" << endl; // Ïîëóöèëèíäð
+      os << "    }" << endl; // ÐŸÐ¾Ð»ÑƒÑ†Ð¸Ð»Ð¸Ð½Ð´Ñ€
       dumpVRMLCylinderSemiSide(os, r_, h_, M);
       dumpVRMLSemiCircle(os, r_, h_, true, M);
       dumpVRMLSemiCircle(os, r_, 0, false, M);
    }
 }
+
+
+

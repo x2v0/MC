@@ -1,11 +1,11 @@
-// Radiation Oncology Monte Carlo open source project
+п»ї// Radiation Oncology Monte Carlo open source project
 //
 // Author: [2005-2017] Gennady Gorlachev (ggorlachev@roiss.ru) 
 //---------------------------------------------------------------------------
 #pragma once
 #include "mcTransport.h"
 
-// Класс транспорта в цилиндрическом кольце
+// РљР»Р°СЃСЃ С‚СЂР°РЅСЃРїРѕСЂС‚Р° РІ С†РёР»РёРЅРґСЂРёС‡РµСЃРєРѕРј РєРѕР»СЊС†Рµ
 class mcTransportRing : public mcTransport
 {
 public:
@@ -45,7 +45,10 @@ protected:
    double getDNearInside(const geomVector3D& p) const override;
 
 protected:
-   double r0_; // внутренний радиус
-   double r1_; // внешний радиус
-   double h_;  // высота кольца
+   double r0_; // РІРЅСѓС‚СЂРµРЅРЅРёР№ СЂР°РґРёСѓСЃ
+   double r1_; // РІРЅРµС€РЅРёР№ СЂР°РґРёСѓСЃ
+   double h_;  // РІС‹СЃРѕС‚Р° РєРѕР»СЊС†Р°
 };
+
+
+

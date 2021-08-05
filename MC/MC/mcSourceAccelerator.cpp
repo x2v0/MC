@@ -1,4 +1,4 @@
-#include "mcSourceAccelerator.h"
+﻿#include "mcSourceAccelerator.h"
 #include "mcDefs.h"
 #include "mcThread.h"
 #include "../geometry/vec3d.h"
@@ -76,3 +76,6 @@ void mcSourceAccelerator::dumpVRML(ostream& os) const
    os << "  ]" << endl;
    os << "}" << endl;
 }
+
+
+

@@ -1,4 +1,4 @@
-#include "mcTransportSimpleSplitter.h"
+п»ї#include "mcTransportSimpleSplitter.h"
 
 mcTransportSimpleSplitter::mcTransportSimpleSplitter(const geomVector3D& orgn, const geomVector3D& z,
                                                      const geomVector3D& x, mc_particle_t ptype, int nsplit) :
@@ -20,9 +20,9 @@ double mcTransportSimpleSplitter::getDistanceOutside(mcParticle& p) const
 
 void mcTransportSimpleSplitter::beginTransport(mcParticle& p)
 {
-   // Не трогаем стэк.
-   // Частицы можно вообще транспортировать начиная с какого-то объекта.
-   // Нюанс только в контроле за потоками.
+   // РќРµ С‚СЂРѕРіР°РµРј СЃС‚СЌРє.
+   // Р§Р°СЃС‚РёС†С‹ РјРѕР¶РЅРѕ РІРѕРѕР±С‰Рµ С‚СЂР°РЅСЃРїРѕСЂС‚РёСЂРѕРІР°С‚СЊ РЅР°С‡РёРЅР°СЏ СЃ РєР°РєРѕРіРѕ-С‚Рѕ РѕР±СЉРµРєС‚Р°.
+   // РќСЋР°РЅСЃ С‚РѕР»СЊРєРѕ РІ РєРѕРЅС‚СЂРѕР»Рµ Р·Р° РїРѕС‚РѕРєР°РјРё.
    if (p.u.z() < 0 && previousTransport_ != nullptr)
       previousTransport_->beginTransport(p);
    else if (p.u.z() > 0 && nextTransport_ != nullptr) {
@@ -46,7 +46,7 @@ void mcTransportSimpleSplitter::beginTransportInside(mcParticle& p)
 
 void mcTransportSimpleSplitter::dumpVRML(ostream& os) const
 {
-   double a = 20; // размера бокса
+   double a = 20; // СЂР°Р·РјРµСЂР° Р±РѕРєСЃР°
    geomVector3D p = geomVector3D(0, 0, 0.005) * mttow_;
    os << "# Slab: " << this->getName() << endl;
    os << "Transform {" << endl;
@@ -64,3 +64,6 @@ void mcTransportSimpleSplitter::dumpVRML(ostream& os) const
    os << "  ]" << endl;
    os << "}" << endl;
 }
+
+
+

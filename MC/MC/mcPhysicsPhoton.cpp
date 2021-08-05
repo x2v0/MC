@@ -509,3 +509,6 @@ void mcPhysicsPhoton::RayleighScatter(mcParticle* p, const mcMediumXE* pMedium)
    ChangeDirection(cosTheta, sinTheta, cosPhi, sinPhi, p->u);
    p->plast = p->p;
 }
+
+
+

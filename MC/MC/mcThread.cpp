@@ -1,4 +1,4 @@
-#include "mcThread.h"
+ï»¿#include "mcThread.h"
 #include "mcParticle.h"
 #define MC_STACK_SIZE   15
 
@@ -41,9 +41,12 @@ mcParticle* mcThread::DuplicateParticle()
    if (pCurParticle_ < particleStack_)
       throw std::exception("mcThread::DuplicateParticle: can not duplicate particle, nothing to duplicate");
    mcParticle* p = pCurParticle_;
-   pCurParticle_++; // Ïðîñòî óäîáíîå ìåñòî äëÿ ñáðîñà MFPs.
-   // Ýòî íóæíî ñäåëàòü, òàê êàê ðàçìíîæåíèå ÷àñòèö âñåøäà âçàèìîäåéñòâèå, ïîñëå êîòîðîãî âñå íà÷èíàåòñÿ ñíà÷àëà
+   pCurParticle_++; // ÐŸÑ€Ð¾ÑÑ‚Ð¾ ÑƒÐ´Ð¾Ð±Ð½Ð¾Ðµ Ð¼ÐµÑÑ‚Ð¾ Ð´Ð»Ñ ÑÐ±Ñ€Ð¾ÑÐ° MFPs.
+   // Ð­Ñ‚Ð¾ Ð½ÑƒÐ¶Ð½Ð¾ ÑÐ´ÐµÐ»Ð°Ñ‚ÑŒ, Ñ‚Ð°Ðº ÐºÐ°Ðº Ñ€Ð°Ð·Ð¼Ð½Ð¾Ð¶ÐµÐ½Ð¸Ðµ Ñ‡Ð°ÑÑ‚Ð¸Ñ† Ð²ÑÐµÑˆÐ´Ð° Ð²Ð·Ð°Ð¸Ð¼Ð¾Ð´ÐµÐ¹ÑÑ‚Ð²Ð¸Ðµ, Ð¿Ð¾ÑÐ»Ðµ ÐºÐ¾Ñ‚Ð¾Ñ€Ð¾Ð³Ð¾ Ð²ÑÐµ Ð½Ð°Ñ‡Ð¸Ð½Ð°ÐµÑ‚ÑÑ ÑÐ½Ð°Ñ‡Ð°Ð»Ð°
    p->mfps = 0;
    *pCurParticle_ = *p;
    return pCurParticle_;
 }
+
+
+

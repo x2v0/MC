@@ -1,4 +1,4 @@
-#include "mcScoreEnergyFluence.h"
+п»ї#include "mcScoreEnergyFluence.h"
 #include "mcThread.h"
 #include "mcTransport.h"
 
@@ -18,8 +18,8 @@ void mcScoreEnergyFluence::ScoreFluence(const mcParticle& particle)
       int iThread = particle.thread_->id();
       double edep = particle.ke * particle.weight;
       etotal_[iThread] += edep;
-      // !!! Scoring вызывается до перемещения частицы на поверхность объекта к которому привязана частица.
-      // Нужно ее перенести здесь на поверхность.
+      // !!! Scoring РІС‹Р·С‹РІР°РµС‚СЃСЏ РґРѕ РїРµСЂРµРјРµС‰РµРЅРёСЏ С‡Р°СЃС‚РёС†С‹ РЅР° РїРѕРІРµСЂС…РЅРѕСЃС‚СЊ РѕР±СЉРµРєС‚Р° Рє РєРѕС‚РѕСЂРѕРјСѓ РїСЂРёРІСЏР·Р°РЅР° С‡Р°СЃС‚РёС†Р°.
+      // РќСѓР¶РЅРѕ РµРµ РїРµСЂРµРЅРµСЃС‚Рё Р·РґРµСЃСЊ РЅР° РїРѕРІРµСЂС…РЅРѕСЃС‚СЊ.
       geomVector3D p = particle.p + (particle.u * (-particle.p.z() / particle.u.z()));
       double r = p.lengthXY();
       int ridx = int(r / rstep_);
@@ -37,7 +37,7 @@ void mcScoreEnergyFluence::dumpVRML(ostream& os) const
    }
    const geomMatrix3D& mttow = transport_->MT2W();
    int it, count = 0;
-   int da = 15; // шаг по углу 15 градусов
+   int da = 15; // С€Р°Рі РїРѕ СѓРіР»Сѓ 15 РіСЂР°РґСѓСЃРѕРІ
    double mPi = PI / 180;
    double r = sqrt(rmax_);
    os << "Shape {" << endl;
@@ -48,7 +48,7 @@ void mcScoreEnergyFluence::dumpVRML(ostream& os) const
    os << "  }" << endl;
    os << "  geometry IndexedLineSet {" << endl;
    os << "    coord Coordinate {" << endl;
-   os << "      point [" << endl; // Концентрический круг
+   os << "      point [" << endl; // РљРѕРЅС†РµРЅС‚СЂРёС‡РµСЃРєРёР№ РєСЂСѓРі
    for (it = 0; it < 360; it += da) {
       geomVector3D p = geomVector3D(r * sin(mPi * it), r * cos(mPi * it), 0) * mttow;
       os << "        " << p.x() << ' ' << p.y() << ' ' << p.z() << endl;
@@ -70,7 +70,7 @@ void mcScoreEnergyFluence::dumpStatistic(ostream& os) const
 {
    mcScore::dumpStatistic(os);
    double sf = 1 / (2 * PI * rstep_ * rstep_);
-   os << endl << "Радиально симметричные профили потока энергии" << endl;
+   os << endl << "Р Р°РґРёР°Р»СЊРЅРѕ СЃРёРјРјРµС‚СЂРёС‡РЅС‹Рµ РїСЂРѕС„РёР»Рё РїРѕС‚РѕРєР° СЌРЅРµСЂРіРёРё" << endl;
    os << "----------------------------------------------------- " << endl;
    int i, ni = static_cast<int>(fluence_[0].size());
    for (i = -ni + 1; i <= 0; i++) {
@@ -86,3 +86,6 @@ void mcScoreEnergyFluence::dumpStatistic(ostream& os) const
       os << (i + 0.5) * rstep_ << "\t" << (energy * sf / (2 * i + 1)) << endl;
    }
 }
+
+
+

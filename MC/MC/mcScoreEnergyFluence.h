@@ -1,4 +1,4 @@
-// Radiation Oncology Monte Carlo open source project
+п»ї// Radiation Oncology Monte Carlo open source project
 //
 // Author: [2005-2017] Gennady Gorlachev (ggorlachev@roiss.ru) 
 //---------------------------------------------------------------------------
@@ -6,8 +6,8 @@
 #include "mcscore.h"
 #include <vector>
 
-// Класс скоринга энергетическог спектра частиц определенного типа.
-// Изначально создан скорее для тестовых задач, чем для реальных расчетов.
+// РљР»Р°СЃСЃ СЃРєРѕСЂРёРЅРіР° СЌРЅРµСЂРіРµС‚РёС‡РµСЃРєРѕРі СЃРїРµРєС‚СЂР° С‡Р°СЃС‚РёС† РѕРїСЂРµРґРµР»РµРЅРЅРѕРіРѕ С‚РёРїР°.
+// РР·РЅР°С‡Р°Р»СЊРЅРѕ СЃРѕР·РґР°РЅ СЃРєРѕСЂРµРµ РґР»СЏ С‚РµСЃС‚РѕРІС‹С… Р·Р°РґР°С‡, С‡РµРј РґР»СЏ СЂРµР°Р»СЊРЅС‹С… СЂР°СЃС‡РµС‚РѕРІ.
 class mcScoreEnergyFluence : public mcScore
 {
 public:
@@ -30,3 +30,6 @@ protected:
    double rmax_;
    std::vector<std::vector<double>> fluence_;
 };
+
+
+

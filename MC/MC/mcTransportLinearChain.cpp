@@ -1,4 +1,4 @@
-#include "mcTransportLinearChain.h"
+ï»¿#include "mcTransportLinearChain.h"
 #include "mcGeometry.h"
 
 mcTransportLinearChain::
@@ -13,8 +13,8 @@ mcTransportLinearChain::~mcTransportLinearChain(void)
 
 void mcTransportLinearChain::beginTransport(mcParticle& p)
 {
-   // Ñþäà ÷àñòèöà ïîïàäàåò èç îäíîãî èç êðàéíèõ ìîäóëåé öåïî÷êè.
-   // Íóæíî ïðîñòî ïåðåïðàâèòü åå âíåøíåìó ìîäóëþ.
+   // Ð¡ÑŽÐ´Ð° Ñ‡Ð°ÑÑ‚Ð¸Ñ†Ð° Ð¿Ð¾Ð¿Ð°Ð´Ð°ÐµÑ‚ Ð¸Ð· Ð¾Ð´Ð½Ð¾Ð³Ð¾ Ð¸Ð· ÐºÑ€Ð°Ð¹Ð½Ð¸Ñ… Ð¼Ð¾Ð´ÑƒÐ»ÐµÐ¹ Ñ†ÐµÐ¿Ð¾Ñ‡ÐºÐ¸.
+   // ÐÑƒÐ¶Ð½Ð¾ Ð¿Ñ€Ð¾ÑÑ‚Ð¾ Ð¿ÐµÑ€ÐµÐ¿Ñ€Ð°Ð²Ð¸Ñ‚ÑŒ ÐµÐµ Ð²Ð½ÐµÑˆÐ½ÐµÐ¼Ñƒ Ð¼Ð¾Ð´ÑƒÐ»ÑŽ.
    externalTransport_->beginTransportInside(p);
 }
 
@@ -31,13 +31,13 @@ void mcTransportLinearChain::beginTransportInside(mcParticle& p)
 
 double mcTransportLinearChain::getDistanceOutside(mcParticle& p) const
 {
-   // HACK! Çàïðåùàåì äîñòóï ÷àñòèö ñíàðóæè, òàê êàê ïî íåïîíÿòíûì ïðè÷èíàì âîçíèêàåò
-   // çàöèêëåííîñòü îáðàùåíèé âíóòðü.
+   // HACK! Ð—Ð°Ð¿Ñ€ÐµÑ‰Ð°ÐµÐ¼ Ð´Ð¾ÑÑ‚ÑƒÐ¿ Ñ‡Ð°ÑÑ‚Ð¸Ñ† ÑÐ½Ð°Ñ€ÑƒÐ¶Ð¸, Ñ‚Ð°Ðº ÐºÐ°Ðº Ð¿Ð¾ Ð½ÐµÐ¿Ð¾Ð½ÑÑ‚Ð½Ñ‹Ð¼ Ð¿Ñ€Ð¸Ñ‡Ð¸Ð½Ð°Ð¼ Ð²Ð¾Ð·Ð½Ð¸ÐºÐ°ÐµÑ‚
+   // Ð·Ð°Ñ†Ð¸ÐºÐ»ÐµÐ½Ð½Ð¾ÑÑ‚ÑŒ Ð¾Ð±Ñ€Ð°Ñ‰ÐµÐ½Ð¸Ð¹ Ð²Ð½ÑƒÑ‚Ñ€ÑŒ.
    return DBL_MAX;
    p.exitSurface_ = mcParticle::temb_shit_t::External;
    double dist = DBL_MAX;
    for each (auto t in chainTransports_) {
-      // Íóæíî ïåðåâîäèòü â ñèñòåìó îáúåêòà
+      // ÐÑƒÐ¶Ð½Ð¾ Ð¿ÐµÑ€ÐµÐ²Ð¾Ð´Ð¸Ñ‚ÑŒ Ð² ÑÐ¸ÑÑ‚ÐµÐ¼Ñƒ Ð¾Ð±ÑŠÐµÐºÑ‚Ð°
       geomVector3D p_old = p.p;
       geomVector3D u_old = p.u;
       p.p = p.p * t->MW2T();
@@ -82,7 +82,7 @@ void mcTransportLinearChain::completeInit()
          chainTransports_[i]->setNextTransport(chainTransports_[i + 1]);
    }
    chainTransports_.front()->setPreviousTransport(this);
-   chainTransports_.back()->setNextTransport(this); // HACK!!! Íåéòðàëèçóåì ïðåäûäóùóþ óñòàíîâêó.
+   chainTransports_.back()->setNextTransport(this); // HACK!!! ÐÐµÐ¹Ñ‚Ñ€Ð°Ð»Ð¸Ð·ÑƒÐµÐ¼ Ð¿Ñ€ÐµÐ´Ñ‹Ð´ÑƒÑ‰ÑƒÑŽ ÑƒÑÑ‚Ð°Ð½Ð¾Ð²ÐºÑƒ.
    this->setPreviousTransport(nullptr);
    this->setNextTransport(nullptr);
 }
@@ -101,7 +101,7 @@ void mcTransportLinearChain::dumpVRML(ostream& os) const
       t->dumpVRML(os);
       mcScore* s = t->getScore();
       if (s)
-         s->dumpVRML(os); // Âëîæåíèÿ
+         s->dumpVRML(os); // Ð’Ð»Ð¾Ð¶ÐµÐ½Ð¸Ñ
       mcTransport* ti = t;
       if (ti != nullptr)
          ti = ti->getInternalTransport();
@@ -114,3 +114,6 @@ void mcTransportLinearChain::dumpVRML(ostream& os) const
       }
    }
 }
+
+
+

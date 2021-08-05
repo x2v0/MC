@@ -1,4 +1,4 @@
-// Radiation Oncology Monte Carlo open source project
+п»ї// Radiation Oncology Monte Carlo open source project
 //
 // Author: [2005-2017] Gennady Gorlachev (ggorlachev@roiss.ru) 
 //---------------------------------------------------------------------------
@@ -13,13 +13,13 @@ public:
 
    virtual ~mcPhysicsElectron(void);
 
-   // Средний путь до дискретного взаимодействия (рождение второго электрона, тормозного излучения).
-   // Непрерывные потери энергии сюда не входят.
+   // РЎСЂРµРґРЅРёР№ РїСѓС‚СЊ РґРѕ РґРёСЃРєСЂРµС‚РЅРѕРіРѕ РІР·Р°РёРјРѕРґРµР№СЃС‚РІРёСЏ (СЂРѕР¶РґРµРЅРёРµ РІС‚РѕСЂРѕРіРѕ СЌР»РµРєС‚СЂРѕРЅР°, С‚РѕСЂРјРѕР·РЅРѕРіРѕ РёР·Р»СѓС‡РµРЅРёСЏ).
+   // РќРµРїСЂРµСЂС‹РІРЅС‹Рµ РїРѕС‚РµСЂРё СЌРЅРµСЂРіРёРё СЃСЋРґР° РЅРµ РІС…РѕРґСЏС‚.
    double MeanFreePath(double ke, const mcMedium& med, double dens) const override;
 
    double DoInterruction(mcParticle* p, const mcMedium* med) const override;
 
-   // Изменяет энергию частицы в соответствии с de/dx и расчитывает передачу энергии на отрезке step.
+   // РР·РјРµРЅСЏРµС‚ СЌРЅРµСЂРіРёСЋ С‡Р°СЃС‚РёС†С‹ РІ СЃРѕРѕС‚РІРµС‚СЃС‚РІРёРё СЃ de/dx Рё СЂР°СЃС‡РёС‚С‹РІР°РµС‚ РїРµСЂРµРґР°С‡Сѓ СЌРЅРµСЂРіРёРё РЅР° РѕС‚СЂРµР·РєРµ step.
    double TakeOneStep(mcParticle* p, const mcMedium& med, double& step) const override;
 
    bool Discarge(mcParticle* p, const mcMedium& med, double& edep) const override;
@@ -39,3 +39,6 @@ protected:
 
    static double BremsRejectionFunction(double x, double zFactor, double r, double val1, double val2, double val3);
 };
+
+
+

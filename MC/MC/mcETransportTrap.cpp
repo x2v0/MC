@@ -55,3 +55,6 @@ void mcETransportTrap::dumpVRML(ostream& os) const
    os << "  ]" << endl;
    os << "}" << endl;
 }
+
+
+

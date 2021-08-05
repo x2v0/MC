@@ -1,11 +1,11 @@
-// Radiation Oncology Monte Carlo open source project
+п»ї// Radiation Oncology Monte Carlo open source project
 //
 // Author: [2005-2017] Gennady Gorlachev (ggorlachev@roiss.ru) 
 //---------------------------------------------------------------------------
 #pragma once
-enum mc_region_idx_t { MCRT_LIN_IDX = 0, MCRT_3D_IDX, MCRT_BOTH_IDX }; // Класс, отвечающий за обозначение региона.
-// Это может быть линейный индекс региона 
-// или 3 индекса 3D сетки, или и то и другое
+enum mc_region_idx_t { MCRT_LIN_IDX = 0, MCRT_3D_IDX, MCRT_BOTH_IDX }; // РљР»Р°СЃСЃ, РѕС‚РІРµС‡Р°СЋС‰РёР№ Р·Р° РѕР±РѕР·РЅР°С‡РµРЅРёРµ СЂРµРіРёРѕРЅР°.
+// Р­С‚Рѕ РјРѕР¶РµС‚ Р±С‹С‚СЊ Р»РёРЅРµР№РЅС‹Р№ РёРЅРґРµРєСЃ СЂРµРіРёРѕРЅР° 
+// РёР»Рё 3 РёРЅРґРµРєСЃР° 3D СЃРµС‚РєРё, РёР»Рё Рё С‚Рѕ Рё РґСЂСѓРіРѕРµ
 class mcRegionReference
 {
 public:
@@ -14,7 +14,10 @@ public:
    ~mcRegionReference(void);
 
    enum mc_region_idx_t type_;
-   short medidx_; // индекс среды
-   int idx_;      // индекс региона
+   short medidx_; // РёРЅРґРµРєСЃ СЃСЂРµРґС‹
+   int idx_;      // РёРЅРґРµРєСЃ СЂРµРіРёРѕРЅР°
    short gidx_[3];
 };
+
+
+

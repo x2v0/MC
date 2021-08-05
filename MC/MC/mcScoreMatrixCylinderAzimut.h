@@ -1,4 +1,4 @@
-// Radiation Oncology Monte Carlo open source project
+п»ї// Radiation Oncology Monte Carlo open source project
 //
 // Author: [2017] Gennady Gorlachev (ggorlachev@roiss.ru) 
 //---------------------------------------------------------------------------
@@ -71,14 +71,17 @@ public:
 
    double Dose(int ir, int iz) const;
 
-protected: // Определение индексов ячейки для указанной точки.
-   // Отрицательный индекс означает, что находимся за пределами скоинга.
+protected: // РћРїСЂРµРґРµР»РµРЅРёРµ РёРЅРґРµРєСЃРѕРІ СЏС‡РµР№РєРё РґР»СЏ СѓРєР°Р·Р°РЅРЅРѕР№ С‚РѕС‡РєРё.
+   // РћС‚СЂРёС†Р°С‚РµР»СЊРЅС‹Р№ РёРЅРґРµРєСЃ РѕР·РЅР°С‡Р°РµС‚, С‡С‚Рѕ РЅР°С…РѕРґРёРјСЃСЏ Р·Р° РїСЂРµРґРµР»Р°РјРё СЃРєРѕРёРЅРіР°.
    void getVoxelAtPoint(const geomVector3D& p, int& ir, int& ia);
 
-   int m_nr, m_na;       // число вокселов по радиусу (m_nr) и по азимуту (m_na)
-   double m_rmax, m_rm2; // m_rm2 - квадрат максимального радиуса
+   int m_nr, m_na;       // С‡РёСЃР»Рѕ РІРѕРєСЃРµР»РѕРІ РїРѕ СЂР°РґРёСѓСЃСѓ (m_nr) Рё РїРѕ Р°Р·РёРјСѓС‚Сѓ (m_na)
+   double m_rmax, m_rm2; // m_rm2 - РєРІР°РґСЂР°С‚ РјР°РєСЃРёРјР°Р»СЊРЅРѕРіРѕ СЂР°РґРёСѓСЃР°
    double m_zmin, m_zmax;
    double m_r2step, m_astep;
    double* m_MAll;
    double** m_M;
 };
+
+
+

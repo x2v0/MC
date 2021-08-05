@@ -1,4 +1,4 @@
-#include "mcPhysicsPositron.h"
+ï»¿#include "mcPhysicsPositron.h"
 #include "mcMediumXE.h"
 #include "mcParticle.h"
 #include "mcRng.h"
@@ -13,10 +13,10 @@ bool mcPhysicsPositron::Discarge(mcParticle* p, const mcMedium& med, double& ede
 {
    if (p->ke <= ((const mcMediumXE&)med).transCutoff_elec || p->ke <= p->transport_->transCutoff_elec) {
       edep = p->ke;
-      AnnihilateAtRest(p); // ×àñòèöó íå óíè÷òîæàåì, õîòÿ ãîâîðèì, ÷òî äà.
-      // Äà îçíà÷àåò äàëüíåéøèé ó÷åò îñòàâøåéñÿ êèíåòè÷åñêîé ýíåðãèè ïîçèòðîíà.
-      // Íå óíè÷òîæàåì, ïîòîìó ÷òî åå ìåñòî çàíèìàåò îäèí èç ôîòîíîâ â ôóíêöèè àííèãèëÿöèè,
-      // ÷òî ýêâèâàëåíòíî óíè÷òîæåíèþ è ñîçäàíèþ â ñòýêå äâóõ íîâûõ ÷àñòèö.
+      AnnihilateAtRest(p); // Ð§Ð°ÑÑ‚Ð¸Ñ†Ñƒ Ð½Ðµ ÑƒÐ½Ð¸Ñ‡Ñ‚Ð¾Ð¶Ð°ÐµÐ¼, Ñ…Ð¾Ñ‚Ñ Ð³Ð¾Ð²Ð¾Ñ€Ð¸Ð¼, Ñ‡Ñ‚Ð¾ Ð´Ð°.
+      // Ð”Ð° Ð¾Ð·Ð½Ð°Ñ‡Ð°ÐµÑ‚ Ð´Ð°Ð»ÑŒÐ½ÐµÐ¹ÑˆÐ¸Ð¹ ÑƒÑ‡ÐµÑ‚ Ð¾ÑÑ‚Ð°Ð²ÑˆÐµÐ¹ÑÑ ÐºÐ¸Ð½ÐµÑ‚Ð¸Ñ‡ÐµÑÐºÐ¾Ð¹ ÑÐ½ÐµÑ€Ð³Ð¸Ð¸ Ð¿Ð¾Ð·Ð¸Ñ‚Ñ€Ð¾Ð½Ð°.
+      // ÐÐµ ÑƒÐ½Ð¸Ñ‡Ñ‚Ð¾Ð¶Ð°ÐµÐ¼, Ð¿Ð¾Ñ‚Ð¾Ð¼Ñƒ Ñ‡Ñ‚Ð¾ ÐµÐµ Ð¼ÐµÑÑ‚Ð¾ Ð·Ð°Ð½Ð¸Ð¼Ð°ÐµÑ‚ Ð¾Ð´Ð¸Ð½ Ð¸Ð· Ñ„Ð¾Ñ‚Ð¾Ð½Ð¾Ð² Ð² Ñ„ÑƒÐ½ÐºÑ†Ð¸Ð¸ Ð°Ð½Ð½Ð¸Ð³Ð¸Ð»ÑÑ†Ð¸Ð¸,
+      // Ñ‡Ñ‚Ð¾ ÑÐºÐ²Ð¸Ð²Ð°Ð»ÐµÐ½Ñ‚Ð½Ð¾ ÑƒÐ½Ð¸Ñ‡Ñ‚Ð¾Ð¶ÐµÐ½Ð¸ÑŽ Ð¸ ÑÐ¾Ð·Ð´Ð°Ð½Ð¸ÑŽ Ð² ÑÑ‚ÑÐºÐµ Ð´Ð²ÑƒÑ… Ð½Ð¾Ð²Ñ‹Ñ… Ñ‡Ð°ÑÑ‚Ð¸Ñ†.
       return true;
    } else
       return false;
@@ -40,7 +40,7 @@ double mcPhysicsPositron::TakeOneStep(mcParticle* p, const mcMedium& med, double
    double logKE = log(p->ke);
    int iLogKE = (int)(m.iLogKE0_elec + logKE * m.iLogKE1_elec);
    double dedx = p->regDensityRatio * (m.dedx0_posi[iLogKE] + logKE * m.dedx1_posi[iLogKE]);
-   // Ñèòóàöèÿ, êîãäà ÷àñòèöà çàâåäîìî íå âûéäåò èç îáëàñòè.
+   // Ð¡Ð¸Ñ‚ÑƒÐ°Ñ†Ð¸Ñ, ÐºÐ¾Ð³Ð´Ð° Ñ‡Ð°ÑÑ‚Ð¸Ñ†Ð° Ð·Ð°Ð²ÐµÐ´Ð¾Ð¼Ð¾ Ð½Ðµ Ð²Ñ‹Ð¹Ð´ÐµÑ‚ Ð¸Ð· Ð¾Ð±Ð»Ð°ÑÑ‚Ð¸.
    double range = p->ke / dedx;
    if (range < step && range < p->dnear) {
       step = range;
@@ -55,19 +55,19 @@ double mcPhysicsPositron::TakeOneStep(mcParticle* p, const mcMedium& med, double
    betaSquared = MAX(betaSquared, minBetaSquared);
    double tscat = twoOverEsubS * betaSquared * eTotal;
    tscat = m.radLength * SQUARE(tscat) / p->regDensityRatio;
-   // Ðåàëüíûé øàã âûáèðàåòñÿ êàê ìèíèìàëüíûé èç øàãà äî äèñêðåòíîãî ñîáûòèÿ, 
-   // øàãà íåïðåðûâíûõ ïîòåðü è ðàññòîÿíèå, íà êîòîðîì âëèÿíèå ðàññåÿíèÿ íå ñòàíâèòñÿ êðèòè÷íûì äëÿ ìîäåëè.
+   // Ð ÐµÐ°Ð»ÑŒÐ½Ñ‹Ð¹ ÑˆÐ°Ð³ Ð²Ñ‹Ð±Ð¸Ñ€Ð°ÐµÑ‚ÑÑ ÐºÐ°Ðº Ð¼Ð¸Ð½Ð¸Ð¼Ð°Ð»ÑŒÐ½Ñ‹Ð¹ Ð¸Ð· ÑˆÐ°Ð³Ð° Ð´Ð¾ Ð´Ð¸ÑÐºÑ€ÐµÑ‚Ð½Ð¾Ð³Ð¾ ÑÐ¾Ð±Ñ‹Ñ‚Ð¸Ñ, 
+   // ÑˆÐ°Ð³Ð° Ð½ÐµÐ¿Ñ€ÐµÑ€Ñ‹Ð²Ð½Ñ‹Ñ… Ð¿Ð¾Ñ‚ÐµÑ€ÑŒ Ð¸ Ñ€Ð°ÑÑÑ‚Ð¾ÑÐ½Ð¸Ðµ, Ð½Ð° ÐºÐ¾Ñ‚Ð¾Ñ€Ð¾Ð¼ Ð²Ð»Ð¸ÑÐ½Ð¸Ðµ Ñ€Ð°ÑÑÐµÑÐ½Ð¸Ñ Ð½Ðµ ÑÑ‚Ð°Ð½Ð²Ð¸Ñ‚ÑÑ ÐºÑ€Ð¸Ñ‚Ð¸Ñ‡Ð½Ñ‹Ð¼ Ð´Ð»Ñ Ð¼Ð¾Ð´ÐµÐ»Ð¸.
    double stepSize = (m.stepSize0_posi[iLogKE] + logKE * m.stepSize1_posi[iLogKE]) / p->regDensityRatio;
    step = MIN(stepSize, MIN(step, 0.3 * tscat));
-   // Äëèíà òðåêà áîëüøå ðàññòîÿíèÿ ìåæäó òî÷êàìè è ñâÿçàíà ðàññåèâàþùåé ïîñïîñîáíîñòüþ.
+   // Ð”Ð»Ð¸Ð½Ð° Ñ‚Ñ€ÐµÐºÐ° Ð±Ð¾Ð»ÑŒÑˆÐµ Ñ€Ð°ÑÑÑ‚Ð¾ÑÐ½Ð¸Ñ Ð¼ÐµÐ¶Ð´Ñƒ Ñ‚Ð¾Ñ‡ÐºÐ°Ð¼Ð¸ Ð¸ ÑÐ²ÑÐ·Ð°Ð½Ð° Ñ€Ð°ÑÑÐµÐ¸Ð²Ð°ÑŽÑ‰ÐµÐ¹ Ð¿Ð¾ÑÐ¿Ð¾ÑÐ¾Ð±Ð½Ð¾ÑÑ‚ÑŒÑŽ.
    double pathLength = ReducedPathLength(step, tscat);
-   // Ïîòåðè â òðåêå ðàñ÷èòûâàþòñÿ â äâà øàãà, ñíà÷àëà äëÿ dedx òåêóùåé ýíåðãèè, çàòåì ñðåäíåé.
+   // ÐŸÐ¾Ñ‚ÐµÑ€Ð¸ Ð² Ñ‚Ñ€ÐµÐºÐµ Ñ€Ð°ÑÑ‡Ð¸Ñ‚Ñ‹Ð²Ð°ÑŽÑ‚ÑÑ Ð² Ð´Ð²Ð° ÑˆÐ°Ð³Ð°, ÑÐ½Ð°Ñ‡Ð°Ð»Ð° Ð´Ð»Ñ dedx Ñ‚ÐµÐºÑƒÑ‰ÐµÐ¹ ÑÐ½ÐµÑ€Ð³Ð¸Ð¸, Ð·Ð°Ñ‚ÐµÐ¼ ÑÑ€ÐµÐ´Ð½ÐµÐ¹.
    e_dep = dedx * pathLength;
    e_dep = MIN(e_dep, p->ke);
    logKE = log(p->ke - 0.5 * e_dep);
    iLogKE = int(m.iLogKE0_elec + logKE * m.iLogKE1_elec);
    if (iLogKE < 0)
-      iLogKE = 0; // âáëèçè ýíåðãèè ïîãëîùåíèÿ âîçìîæíà ïðîáëåìà èíäåêñîâ
+      iLogKE = 0; // Ð²Ð±Ð»Ð¸Ð·Ð¸ ÑÐ½ÐµÑ€Ð³Ð¸Ð¸ Ð¿Ð¾Ð³Ð»Ð¾Ñ‰ÐµÐ½Ð¸Ñ Ð²Ð¾Ð·Ð¼Ð¾Ð¶Ð½Ð° Ð¿Ñ€Ð¾Ð±Ð»ÐµÐ¼Ð° Ð¸Ð½Ð´ÐµÐºÑÐ¾Ð²
    dedx = p->regDensityRatio * (m.dedx0_posi[iLogKE] + logKE * m.dedx1_posi[iLogKE]);
    e_dep = dedx * pathLength;
    e_dep = MIN(e_dep, p->ke);
@@ -254,3 +254,7 @@ void mcPhysicsPositron::AnnihilateAtRest(mcParticle* p)
    DuplicateParticle(p)->u *= -1.0;
    return;
 }
+
+
+
+

@@ -1,4 +1,4 @@
-#include "mcTransportPrimaryCollimator.h"
+п»ї#include "mcTransportPrimaryCollimator.h"
 #include <float.h>
 
 mcTransportPrimaryCollimator::mcTransportPrimaryCollimator(void)
@@ -19,7 +19,7 @@ void mcTransportPrimaryCollimator::setGeometry(double r0, double r1, double h)
 {
    r0_ = r0;
    r1_ = r1;
-   h_col_ = h; //толщина коллиматора
+   h_col_ = h; //С‚РѕР»С‰РёРЅР° РєРѕР»Р»РёРјР°С‚РѕСЂР°
    A_ = h == 0 ? 0 : (r1 - r0) / h;
    A_ *= A_;
 }
@@ -35,13 +35,13 @@ double mcTransportPrimaryCollimator::getDistanceInside(mcParticle& p) const
    double px = p.p.x(), py = p.p.y(), pz = p.p.z();
    double vx = p.u.x(), vy = p.u.y(), vz = p.u.z();
    double dCone, dSlab;
-   static double h = h_col_ * (r1_ / (r1_ - r0_)); //высота конуса вращения
+   static double h = h_col_ * (r1_ / (r1_ - r0_)); //РІС‹СЃРѕС‚Р° РєРѕРЅСѓСЃР° РІСЂР°С‰РµРЅРёСЏ
    double a = vx * vx + vy * vy - A_ * vz * vz;
    double b = px * vx + py * vy - A_ * vz * (pz + (h - h_col_));
    double c = px * px + py * py - A_ * (pz + (h - h_col_)) * (pz + (h - h_col_));
    double det = b * b - a * c;
    dSlab = (vz < 0) ? (-pz) / vz : (h_col_ - pz) / vz;
-   if ((a == 0) || (det <= 0)) //ч-ца внутри кол-ра летит по касательной к конусу
+   if ((a == 0) || (det <= 0)) //С‡-С†Р° РІРЅСѓС‚СЂРё РєРѕР»-СЂР° Р»РµС‚РёС‚ РїРѕ РєР°СЃР°С‚РµР»СЊРЅРѕР№ Рє РєРѕРЅСѓСЃСѓ
       dCone = DBL_MAX;
    else
       dCone = (a > 0) ? ((-b - sqrt(det)) / a) : ((-b + sqrt(det)) / a);
@@ -62,7 +62,7 @@ double mcTransportPrimaryCollimator::getDistanceOutside(mcParticle& p) const
    if ((pz <= 0 && vz <= 0) || (pz >= h_col_ && vz >= 0))
       return DBL_MAX;
    double dCone1, dCone2, dSlab;
-   static double h = h_col_ * (r1_ / (r1_ - r0_)); //высота конуса вращения
+   static double h = h_col_ * (r1_ / (r1_ - r0_)); //РІС‹СЃРѕС‚Р° РєРѕРЅСѓСЃР° РІСЂР°С‰РµРЅРёСЏ
    double a = vx * vx + vy * vy - A_ * vz * vz;
    double b = px * vx + py * vy - A_ * vz * (pz + (h - h_col_));
    double c = px * px + py * py - A_ * (pz + (h - h_col_)) * (pz + (h - h_col_));
@@ -81,15 +81,15 @@ double mcTransportPrimaryCollimator::getDistanceOutside(mcParticle& p) const
    geomVector3D pp_Cone1 = p.p + (p.u * dCone1);
    geomVector3D pp_Cone2 = p.p + (p.u * dCone2);
    if (((pp_Slab.z() < 0.1) && (pp_Slab.sqLengthXY() > r0_ * r0_)) ||
-       //pp_Slab.z() < 0.1 ----> избежание залипания частицы на поверхности
+       //pp_Slab.z() < 0.1 ----> РёР·Р±РµР¶Р°РЅРёРµ Р·Р°Р»РёРїР°РЅРёСЏ С‡Р°СЃС‚РёС†С‹ РЅР° РїРѕРІРµСЂС…РЅРѕСЃС‚Рё
        ((pp_Slab.z() > (h_col_ - 0.1)) && (pp_Slab.sqLengthXY() > r1_ * r1_)))
-      //pp_Slab.z() > (h_col_-0.1) ----> избежание залипания частицы на поверхности
+      //pp_Slab.z() > (h_col_-0.1) ----> РёР·Р±РµР¶Р°РЅРёРµ Р·Р°Р»РёРїР°РЅРёСЏ С‡Р°СЃС‚РёС†С‹ РЅР° РїРѕРІРµСЂС…РЅРѕСЃС‚Рё
       dSlab = dSlab;
    else
       dSlab = DBL_MAX;
    dCone1 = ((pp_Cone1.z() < 0) || (pp_Cone1.z() > h_col_) || (dCone1 < 0)) ? DBL_MAX : dCone1;
    dCone2 = ((pp_Cone2.z() < 0) || (pp_Cone2.z() > h_col_) || (dCone2 < 0)) ? DBL_MAX : dCone2;
-   //избежание залипания частицы на поверхности
+   //РёР·Р±РµР¶Р°РЅРёРµ Р·Р°Р»РёРїР°РЅРёСЏ С‡Р°СЃС‚РёС†С‹ РЅР° РїРѕРІРµСЂС…РЅРѕСЃС‚Рё
    if (fabs(c) < 1e-10 && a * b < 0)
       dCone1 = DBL_MAX;
    dCone1 = MIN(dCone1, dCone2);
@@ -110,7 +110,7 @@ void mcTransportPrimaryCollimator::dump(ostream& os) const
 
 void mcTransportPrimaryCollimator::dumpVRML(ostream& os) const
 {
-   double h_ = h_col_ * (r1_ / (r1_ - r0_)); //высота конуса
+   double h_ = h_col_ * (r1_ / (r1_ - r0_)); //РІС‹СЃРѕС‚Р° РєРѕРЅСѓСЃР°
    geomVector3D p = geomVector3D(0, 0, h_ * 0.5) * mttow_;
    geomVector3D v(0, 0, 1);
    v(3) = 0;
@@ -136,3 +136,6 @@ void mcTransportPrimaryCollimator::dumpVRML(ostream& os) const
    os << "  ]" << endl;
    os << "}" << endl;
 }
+
+
+

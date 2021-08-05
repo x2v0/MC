@@ -1,11 +1,11 @@
-// Radiation Oncology Monte Carlo open source project
+п»ї// Radiation Oncology Monte Carlo open source project
 //
 // Author: [2005-2017] Gennady Gorlachev (ggorlachev@roiss.ru) 
 //---------------------------------------------------------------------------
 #pragma once
 #include "mcscore.h"
 
-// Класс сбора статистики потока излучения в координатах XY.
+// РљР»Р°СЃСЃ СЃР±РѕСЂР° СЃС‚Р°С‚РёСЃС‚РёРєРё РїРѕС‚РѕРєР° РёР·Р»СѓС‡РµРЅРёСЏ РІ РєРѕРѕСЂРґРёРЅР°С‚Р°С… XY.
 class mcScoreBeamFluenceXY : public mcScore
 {
 public:
@@ -52,6 +52,9 @@ protected:
    double emax_;
    double estep_;
    double* spectrum_all_;
-   double** spectrum_; // Служебные переменные
+   double** spectrum_; // РЎР»СѓР¶РµР±РЅС‹Рµ РїРµСЂРµРјРµРЅРЅС‹Рµ
    double minx_, miny_;
 };
+
+
+

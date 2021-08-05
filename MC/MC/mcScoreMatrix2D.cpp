@@ -1,4 +1,4 @@
-#include "mcScoreMatrix2D.h"
+п»ї#include "mcScoreMatrix2D.h"
 #include "mcGeometry.h"
 #include "mcTransport.h"
 
@@ -151,12 +151,12 @@ double mcScoreMatrix2D::Dose(int ix, int iz) const
 
 double mcScoreMatrix2D::Sigma(int ix, int iz) const
 {
-   double f = Dose(ix, iz); // суммарная доза по батчам (средняя доза умнож на кол-во потоков)
+   double f = Dose(ix, iz); // СЃСѓРјРјР°СЂРЅР°СЏ РґРѕР·Р° РїРѕ Р±Р°С‚С‡Р°Рј (СЃСЂРµРґРЅСЏСЏ РґРѕР·Р° СѓРјРЅРѕР¶ РЅР° РєРѕР»-РІРѕ РїРѕС‚РѕРєРѕРІ)
    if (f == 0)
       return 0;
-   f /= nThreads_; // средняя доза по батчам
+   f /= nThreads_; // СЃСЂРµРґРЅСЏСЏ РґРѕР·Р° РїРѕ Р±Р°С‚С‡Р°Рј
    double sigma = 0;
-   for (int register i = 0; i < nThreads_; i++) ///цикл для суммирования сигма по батчам
+   for (int register i = 0; i < nThreads_; i++) ///С†РёРєР» РґР»СЏ СЃСѓРјРјРёСЂРѕРІР°РЅРёСЏ СЃРёРіРјР° РїРѕ Р±Р°С‚С‡Р°Рј
    {
       sigma += pow((m_M[i][iz * m_nx + ix] - f), 2);
    }
@@ -227,7 +227,7 @@ void mcScoreMatrix2D::dumpVRML(ostream& os) const
       return;
    }
    const geomMatrix3D& mttow = transport_->MT2W();
-   // TODO: Надо задействовать преобразование координат в мировую систему !!!
+   // TODO: РќР°РґРѕ Р·Р°РґРµР№СЃС‚РІРѕРІР°С‚СЊ РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ РєРѕРѕСЂРґРёРЅР°С‚ РІ РјРёСЂРѕРІСѓСЋ СЃРёСЃС‚РµРјСѓ !!!
    unsigned i, j, k, ni = m_nx + 1, nj = 2, nk = m_nz + 1;
    os << "# Score: " << name_ << endl;
    os << "Shape {" << endl;
@@ -239,7 +239,7 @@ void mcScoreMatrix2D::dumpVRML(ostream& os) const
    os << "  }" << endl;
    os << "  geometry IndexedLineSet {" << endl;
    os << "    coord Coordinate {" << endl;
-   os << "      point [" << endl; // Грани XY (четные точки нам Zmin, нечетные - Zmax)
+   os << "      point [" << endl; // Р“СЂР°РЅРё XY (С‡РµС‚РЅС‹Рµ С‚РѕС‡РєРё РЅР°Рј Zmin, РЅРµС‡РµС‚РЅС‹Рµ - Zmax)
    unsigned ncount = 0;
    for (j = 0; j < nj; j++) {
       double y = m_ymin + j * (m_ymax - m_ymin) / (nj - 1);
@@ -251,7 +251,7 @@ void mcScoreMatrix2D::dumpVRML(ostream& os) const
          os << "        " << p.x() << ' ' << p.y() << ' ' << p.z() << endl;
          ncount++;
       }
-   } // Грани XZ
+   } // Р“СЂР°РЅРё XZ
    for (k = 0; k < nk; k++) {
       double z = m_zmin + k * m_zstep;
       for (i = 0; i < ni; i++) {
@@ -262,7 +262,7 @@ void mcScoreMatrix2D::dumpVRML(ostream& os) const
          os << "        " << p.x() << ' ' << p.y() << ' ' << p.z() << endl;
          ncount++;
       }
-   } // Грани YZ
+   } // Р“СЂР°РЅРё YZ
    for (k = 0; k < nk; k++) {
       double z = m_zmin + k * m_zstep;
       for (j = 0; j < nj; j++) {
@@ -283,3 +283,6 @@ void mcScoreMatrix2D::dumpVRML(ostream& os) const
    os << "  }" << endl;
    os << "}" << endl;
 }
+
+
+

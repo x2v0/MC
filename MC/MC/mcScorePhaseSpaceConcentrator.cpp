@@ -1,4 +1,4 @@
-#include "mcScorePhaseSpaceConcentrator.h"
+п»ї#include "mcScorePhaseSpaceConcentrator.h"
 #include "mcParticle.h"
 #include "mcThread.h"
 #include "mcTransport.h"
@@ -15,14 +15,14 @@ mcScorePhaseSpaceConcentrator::mcScorePhaseSpaceConcentrator(const char* module_
 {
    isxray_ = isXray ? 1 : 0;
    de_ = emax_ / ne_;
-   dr_ = 2.0 / nr_; // Координатой поворота здесь является не угол, а величина 1 - cos(theta)
-   // В этом случае мы сможем избавить от синусов и косинусов при самплинге.
-   // Частицы в обратном направлении не рассматриваются
+   dr_ = 2.0 / nr_; // РљРѕРѕСЂРґРёРЅР°С‚РѕР№ РїРѕРІРѕСЂРѕС‚Р° Р·РґРµСЃСЊ СЏРІР»СЏРµС‚СЃСЏ РЅРµ СѓРіРѕР», Р° РІРµР»РёС‡РёРЅР° 1 - cos(theta)
+   // Р’ СЌС‚РѕРј СЃР»СѓС‡Р°Рµ РјС‹ СЃРјРѕР¶РµРј РёР·Р±Р°РІРёС‚СЊ РѕС‚ СЃРёРЅСѓСЃРѕРІ Рё РєРѕСЃРёРЅСѓСЃРѕРІ РїСЂРё СЃР°РјРїР»РёРЅРіРµ.
+   // Р§Р°СЃС‚РёС†С‹ РІ РѕР±СЂР°С‚РЅРѕРј РЅР°РїСЂР°РІР»РµРЅРёРё РЅРµ СЂР°СЃСЃРјР°С‚СЂРёРІР°СЋС‚СЃСЏ
    thetmax_abs_ = thetmax * PI / 180.0;
    thetmax_ = 1 - cos(thetmax_abs_);
    if (thetmax_ >= 1.0)
       throw std::exception(
-         "mcScorePhaseSpaceConcentrator:: возможность движения частиц в обратном направлении не рассматривается");
+         "mcScorePhaseSpaceConcentrator:: РІРѕР·РјРѕР¶РЅРѕСЃС‚СЊ РґРІРёР¶РµРЅРёСЏ С‡Р°СЃС‚РёС† РІ РѕР±СЂР°С‚РЅРѕРј РЅР°РїСЂР°РІР»РµРЅРёРё РЅРµ СЂР°СЃСЃРјР°С‚СЂРёРІР°РµС‚СЃСЏ");
    dthet_ = thetmax_ / nthet_;
    daxial_ = PI / naxial_;
    nnt_ = nthet_ * naxial_;
@@ -51,7 +51,7 @@ void mcScorePhaseSpaceConcentrator::ScoreFluence(const mcParticle& particle)
 
 int mcScorePhaseSpaceConcentrator::particleIdx(const mcParticle& particle) const
 {
-   // Переносим частицу в плоскость самплинга распределения
+   // РџРµСЂРµРЅРѕСЃРёРј С‡Р°СЃС‚РёС†Сѓ РІ РїР»РѕСЃРєРѕСЃС‚СЊ СЃР°РјРїР»РёРЅРіР° СЂР°СЃРїСЂРµРґРµР»РµРЅРёСЏ
    geomVector3D p = particle.p + (particle.u * (-particle.p.z() / particle.u.z()));
    int eidx;
    eidx = int(particle.ke / de_);
@@ -64,32 +64,32 @@ int mcScorePhaseSpaceConcentrator::particleIdx(const mcParticle& particle) const
          return -1;
    } else if (eidx >= ne_)
       return -1;
-   double r = p.lengthXY(); // !! Вероятно при каких то почти горизонтальных движениях возможно переполнение
-   // integer, при котором индекс становится равным 0 и частицы попадают 
-   // в нулевой бин по радиусу, если их не отсечь дополнительно по радиусу.
+   double r = p.lengthXY(); // !! Р’РµСЂРѕСЏС‚РЅРѕ РїСЂРё РєР°РєРёС… С‚Рѕ РїРѕС‡С‚Рё РіРѕСЂРёР·РѕРЅС‚Р°Р»СЊРЅС‹С… РґРІРёР¶РµРЅРёСЏС… РІРѕР·РјРѕР¶РЅРѕ РїРµСЂРµРїРѕР»РЅРµРЅРёРµ
+   // integer, РїСЂРё РєРѕС‚РѕСЂРѕРј РёРЅРґРµРєСЃ СЃС‚Р°РЅРѕРІРёС‚СЃСЏ СЂР°РІРЅС‹Рј 0 Рё С‡Р°СЃС‚РёС†С‹ РїРѕРїР°РґР°СЋС‚ 
+   // РІ РЅСѓР»РµРІРѕР№ Р±РёРЅ РїРѕ СЂР°РґРёСѓСЃСѓ, РµСЃР»Рё РёС… РЅРµ РѕС‚СЃРµС‡СЊ РґРѕРїРѕР»РЅРёС‚РµР»СЊРЅРѕ РїРѕ СЂР°РґРёСѓСЃСѓ.
    if (r >= rmax_)
       return -1;
    r = 1.0 - cos(PI * r / rmax_);
    int ridx = int(r / dr_);
    if (ridx < 0 || ridx >= nr_)
-      return -1; // Векторы ортогональной системы координат с осями
-   // vp - вдоль линии, соединяющея фокус с положением частицы
+      return -1; // Р’РµРєС‚РѕСЂС‹ РѕСЂС‚РѕРіРѕРЅР°Р»СЊРЅРѕР№ СЃРёСЃС‚РµРјС‹ РєРѕРѕСЂРґРёРЅР°С‚ СЃ РѕСЃСЏРјРё
+   // vp - РІРґРѕР»СЊ Р»РёРЅРёРё, СЃРѕРµРґРёРЅСЏСЋС‰РµСЏ С„РѕРєСѓСЃ СЃ РїРѕР»РѕР¶РµРЅРёРµРј С‡Р°СЃС‚РёС†С‹
    geomVector3D vp(p.x(), p.y(), focus_);
    vp.normalize(); //
-   // Отклонение от фокуса
+   // РћС‚РєР»РѕРЅРµРЅРёРµ РѕС‚ С„РѕРєСѓСЃР°
    //
-   // GG 20150112 Изменение модели для угла отклонения от направления из фокуса.
-   // Угловое распределение тормозных пучков и рассеянных даже для C60 имеет 
-   // ярко выраженный экспоненциальный характер даже не смотря 
-   // на квадратичную зависимость телесного угла от планарного. 
-   // Как реализовать экспоненциональное преобразование координат не ясно
-   // из-за неопределенности показателя экспоненты.
-   // Поэтому просто используем линейное масштабирование на весь диапазон
-   // в надежде, что при очень малых углах экспонента то же линейна и 
-   // большая часть фотонов именно при малых углах.
+   // GG 20150112 РР·РјРµРЅРµРЅРёРµ РјРѕРґРµР»Рё РґР»СЏ СѓРіР»Р° РѕС‚РєР»РѕРЅРµРЅРёСЏ РѕС‚ РЅР°РїСЂР°РІР»РµРЅРёСЏ РёР· С„РѕРєСѓСЃР°.
+   // РЈРіР»РѕРІРѕРµ СЂР°СЃРїСЂРµРґРµР»РµРЅРёРµ С‚РѕСЂРјРѕР·РЅС‹С… РїСѓС‡РєРѕРІ Рё СЂР°СЃСЃРµСЏРЅРЅС‹С… РґР°Р¶Рµ РґР»СЏ C60 РёРјРµРµС‚ 
+   // СЏСЂРєРѕ РІС‹СЂР°Р¶РµРЅРЅС‹Р№ СЌРєСЃРїРѕРЅРµРЅС†РёР°Р»СЊРЅС‹Р№ С…Р°СЂР°РєС‚РµСЂ РґР°Р¶Рµ РЅРµ СЃРјРѕС‚СЂСЏ 
+   // РЅР° РєРІР°РґСЂР°С‚РёС‡РЅСѓСЋ Р·Р°РІРёСЃРёРјРѕСЃС‚СЊ С‚РµР»РµСЃРЅРѕРіРѕ СѓРіР»Р° РѕС‚ РїР»Р°РЅР°СЂРЅРѕРіРѕ. 
+   // РљР°Рє СЂРµР°Р»РёР·РѕРІР°С‚СЊ СЌРєСЃРїРѕРЅРµРЅС†РёРѕРЅР°Р»СЊРЅРѕРµ РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ РєРѕРѕСЂРґРёРЅР°С‚ РЅРµ СЏСЃРЅРѕ
+   // РёР·-Р·Р° РЅРµРѕРїСЂРµРґРµР»РµРЅРЅРѕСЃС‚Рё РїРѕРєР°Р·Р°С‚РµР»СЏ СЌРєСЃРїРѕРЅРµРЅС‚С‹.
+   // РџРѕСЌС‚РѕРјСѓ РїСЂРѕСЃС‚Рѕ РёСЃРїРѕР»СЊР·СѓРµРј Р»РёРЅРµР№РЅРѕРµ РјР°СЃС€С‚Р°Р±РёСЂРѕРІР°РЅРёРµ РЅР° РІРµСЃСЊ РґРёР°РїР°Р·РѕРЅ
+   // РІ РЅР°РґРµР¶РґРµ, С‡С‚Рѕ РїСЂРё РѕС‡РµРЅСЊ РјР°Р»С‹С… СѓРіР»Р°С… СЌРєСЃРїРѕРЅРµРЅС‚Р° С‚Рѕ Р¶Рµ Р»РёРЅРµР№РЅР° Рё 
+   // Р±РѕР»СЊС€Р°СЏ С‡Р°СЃС‚СЊ С„РѕС‚РѕРЅРѕРІ РёРјРµРЅРЅРѕ РїСЂРё РјР°Р»С‹С… СѓРіР»Р°С….
    double thet;
    if (eidx >= ne_) {
-      // Нерассеяные фотоны регистрируются с разрешением в 4 раза выше
+      // РќРµСЂР°СЃСЃРµСЏРЅС‹Рµ С„РѕС‚РѕРЅС‹ СЂРµРіРёСЃС‚СЂРёСЂСѓСЋС‚СЃСЏ СЃ СЂР°Р·СЂРµС€РµРЅРёРµРј РІ 4 СЂР°Р·Р° РІС‹С€Рµ
       thet = (1 - (vp * particle.u)) * 4.0;
       if (thet >= thetmax_)
          return -1;
@@ -98,13 +98,13 @@ int mcScorePhaseSpaceConcentrator::particleIdx(const mcParticle& particle) const
       thet = acos(vp * particle.u) / thetmax_abs_;
       if (thet >= 1)
          return -1;
-   } // Не понятно почему, но по аналогии с радиусом есть проблема усиления нулевого бина, 
-   // хотя и менее значительная. Следующая строка ее убирает.
+   } // РќРµ РїРѕРЅСЏС‚РЅРѕ РїРѕС‡РµРјСѓ, РЅРѕ РїРѕ Р°РЅР°Р»РѕРіРёРё СЃ СЂР°РґРёСѓСЃРѕРј РµСЃС‚СЊ РїСЂРѕР±Р»РµРјР° СѓСЃРёР»РµРЅРёСЏ РЅСѓР»РµРІРѕРіРѕ Р±РёРЅР°, 
+   // С…РѕС‚СЏ Рё РјРµРЅРµРµ Р·РЅР°С‡РёС‚РµР»СЊРЅР°СЏ. РЎР»РµРґСѓСЋС‰Р°СЏ СЃС‚СЂРѕРєР° РµРµ СѓР±РёСЂР°РµС‚.
    if (thet < 0)
       return -1;
    int thetidx = int(thet * nthet_);
    if (thetidx >= nthet_)
-      return -1; // Азимут
+      return -1; // РђР·РёРјСѓС‚
    geomVector3D vu = vp - particle.u;
    vu(2) = 0;
    vu.normalize();
@@ -131,7 +131,7 @@ void mcScorePhaseSpaceConcentrator::dumpStatistic(ostream& os) const
    os << "rmax_:\t" << rmax_ << endl;
    os << "thetmax_abs_:\t" << thetmax_abs_ << endl;
    os << "thetmax_:\t" << thetmax_ << endl;
-   os << "model_file_:\t" << model_file_.c_str() << endl; // Суммируем данные потоков
+   os << "model_file_:\t" << model_file_.c_str() << endl; // РЎСѓРјРјРёСЂСѓРµРј РґР°РЅРЅС‹Рµ РїРѕС‚РѕРєРѕРІ
    double i, count = 0;
    double* dtmp = new double[nne_];
    memset(dtmp, 0, nne_ * sizeof(double));
@@ -143,7 +143,7 @@ void mcScorePhaseSpaceConcentrator::dumpStatistic(ostream& os) const
       count += *pdest;
    }
    os << "count = \t" << count << endl;
-   // Генерируем файл модели для самплинга частиц из данной модели фазового пространства
+   // Р“РµРЅРµСЂРёСЂСѓРµРј С„Р°Р№Р» РјРѕРґРµР»Рё РґР»СЏ СЃР°РјРїР»РёРЅРіР° С‡Р°СЃС‚РёС† РёР· РґР°РЅРЅРѕР№ РјРѕРґРµР»Рё С„Р°Р·РѕРІРѕРіРѕ РїСЂРѕСЃС‚СЂР°РЅСЃС‚РІР°
    mcSourceModelRadialPhsp modelFile("Histogram based source", 1, 0.0);
    modelFile.createFromDistribution(isxray_, ne_, nr_, nthet_, naxial_, emax_, rmax_, thetmax_abs_ * 180.0 / PI, focus_,
                                     dtmp);
@@ -155,10 +155,10 @@ void mcScorePhaseSpaceConcentrator::dumpStatistic(ostream& os) const
    if (fopen_s(&modelfile, model_file_.c_str(), "wb") != 0)
       throw std::exception("mcScorePhaseSpaceConcentrator:: Cannot open model file for writing");
    fwrite(memobj, 1, len, modelfile);
-   fclose(modelfile); // Для исключения проблем на этапе сохранения и восстановления сохраняем модель и восстанавливаем
+   fclose(modelfile); // Р”Р»СЏ РёСЃРєР»СЋС‡РµРЅРёСЏ РїСЂРѕР±Р»РµРј РЅР° СЌС‚Р°РїРµ СЃРѕС…СЂР°РЅРµРЅРёСЏ Рё РІРѕСЃСЃС‚Р°РЅРѕРІР»РµРЅРёСЏ СЃРѕС…СЂР°РЅСЏРµРј РјРѕРґРµР»СЊ Рё РІРѕСЃСЃС‚Р°РЅР°РІР»РёРІР°РµРј
    mcSourceModelRadialPhsp model("Histogram based source", 1, 0.0);
    model.readFromMemory(memobj);
-   free(memobj); // Самплим частицы из модели
+   free(memobj); // РЎР°РјРїР»РёРј С‡Р°СЃС‚РёС†С‹ РёР· РјРѕРґРµР»Рё
    mcRng rng;
    rng.init(33, 37);
    mcParticle particle;
@@ -169,14 +169,14 @@ void mcScorePhaseSpaceConcentrator::dumpStatistic(ostream& os) const
       int idx = particleIdx(particle);
       if (idx >= 0)
          dmodel[idx] += particle.weight;
-   } // Интегральные характеристики потоков
+   } // РРЅС‚РµРіСЂР°Р»СЊРЅС‹Рµ С…Р°СЂР°РєС‚РµСЂРёСЃС‚РёРєРё РїРѕС‚РѕРєРѕРІ
    dumpDistributions(os, dtmp, dmodel);
    os << endl << "M O D E L" << endl << endl;
    os << model;
    delete [] dtmp;
    delete [] dmodel;
-} // Нормировка распределения следующим образом:
-// каждый элемент массива делится на сумму всех элементов и умножается на 10^6.
+} // РќРѕСЂРјРёСЂРѕРІРєР° СЂР°СЃРїСЂРµРґРµР»РµРЅРёСЏ СЃР»РµРґСѓСЋС‰РёРј РѕР±СЂР°Р·РѕРј:
+// РєР°Р¶РґС‹Р№ СЌР»РµРјРµРЅС‚ РјР°СЃСЃРёРІР° РґРµР»РёС‚СЃСЏ РЅР° СЃСѓРјРјСѓ РІСЃРµС… СЌР»РµРјРµРЅС‚РѕРІ Рё СѓРјРЅРѕР¶Р°РµС‚СЃСЏ РЅР° 10^6.
 void normalizeDistribution(std::vector<double>& d)
 {
    double f = 0;
@@ -190,7 +190,7 @@ void normalizeDistribution(std::vector<double>& d)
 
 void mcScorePhaseSpaceConcentrator::dumpDistributions(ostream& os, double* dsim, double* dmodel) const
 {
-   // Интегральные характеристики потоков
+   // РРЅС‚РµРіСЂР°Р»СЊРЅС‹Рµ С…Р°СЂР°РєС‚РµСЂРёСЃС‚РёРєРё РїРѕС‚РѕРєРѕРІ
    int ne = (isxray_ ? ne_ : ne_ + 2);
    vector<double> espec(ne, 0), espec_2(ne, 0);
    vector<double> rspec(nr_, 0), rspec_2(nr_, 0);
@@ -228,7 +228,7 @@ void mcScorePhaseSpaceConcentrator::dumpDistributions(ostream& os, double* dsim,
       }
       espec[ie] = se;
       espec_2[ie] = se_2;
-   } // Две линии кобальта если применимо
+   } // Р”РІРµ Р»РёРЅРёРё РєРѕР±Р°Р»СЊС‚Р° РµСЃР»Рё РїСЂРёРјРµРЅРёРјРѕ
    if (isxray_ == 0) {
       for (int ir = 0; ir < nr_; ir++) {
          for (int it = 0; it < nthet_; it++) {
@@ -256,7 +256,7 @@ void mcScorePhaseSpaceConcentrator::dumpDistributions(ostream& os, double* dsim,
             }
          }
       }
-   } // Нормировка всех распределений
+   } // РќРѕСЂРјРёСЂРѕРІРєР° РІСЃРµС… СЂР°СЃРїСЂРµРґРµР»РµРЅРёР№
    normalizeDistribution(espec);
    normalizeDistribution(espec_2);
    normalizeDistribution(rspec);
@@ -280,11 +280,11 @@ void mcScorePhaseSpaceConcentrator::dumpDistributions(ostream& os, double* dsim,
       normalizeDistribution(a2spec_2);
    }
    int i;
-   os << endl << "Распределение по энергии (МэВ)" << endl;
+   os << endl << "Р Р°СЃРїСЂРµРґРµР»РµРЅРёРµ РїРѕ СЌРЅРµСЂРіРёРё (РњСЌР’)" << endl;
    os << "--------------------------------------" << endl;
    for (i = 0; i < ne; i++)
       os << (i + 0.5) * de_ << "\t" << espec[i] << "\t" << espec_2[i] << endl;
-   os << endl << "Распределение по радиусу (см)" << endl;
+   os << endl << "Р Р°СЃРїСЂРµРґРµР»РµРЅРёРµ РїРѕ СЂР°РґРёСѓСЃСѓ (СЃРј)" << endl;
    os << "-------------------------------------" << endl;
    for (i = 0; i < nr_; i++) {
       os << rmax_ * acos(1 - dr_ * (i + 0.5)) / PI << "\t" << rspec[i];
@@ -295,7 +295,7 @@ void mcScorePhaseSpaceConcentrator::dumpDistributions(ostream& os, double* dsim,
          os << "\t" << r1spec_2[i] << "\t" << r2spec_2[i];
       os << endl;
    }
-   os << endl << "Распределение по углу (градусы)" << endl;
+   os << endl << "Р Р°СЃРїСЂРµРґРµР»РµРЅРёРµ РїРѕ СѓРіР»Сѓ (РіСЂР°РґСѓСЃС‹)" << endl;
    os << "---------------------------------------" << endl;
    for (i = 0; i < nthet_; i++) {
       os << (i + 0.5) * (thetmax_abs_ / nthet_) * 180.0 / PI << "\t" << tspec[i];
@@ -303,7 +303,7 @@ void mcScorePhaseSpaceConcentrator::dumpDistributions(ostream& os, double* dsim,
       os << endl;
    }
    if (isxray_ == 0) {
-      os << endl << "Распределение по углу (нерассеянные фотоны гамма-источника)" << endl;
+      os << endl << "Р Р°СЃРїСЂРµРґРµР»РµРЅРёРµ РїРѕ СѓРіР»Сѓ (РЅРµСЂР°СЃСЃРµСЏРЅРЅС‹Рµ С„РѕС‚РѕРЅС‹ РіР°РјРјР°-РёСЃС‚РѕС‡РЅРёРєР°)" << endl;
       os << "---------------------------------------------------------------" << endl;
       for (i = 0; i < nthet_; i++) {
          os << acos(1.0 - asin((i + 0.5) * dthet_)) * 180.0 / PI << "\t" << tspec[i];
@@ -311,7 +311,7 @@ void mcScorePhaseSpaceConcentrator::dumpDistributions(ostream& os, double* dsim,
          os << endl;
       }
    }
-   os << endl << "Распределение по азимуту (градусы)" << endl;
+   os << endl << "Р Р°СЃРїСЂРµРґРµР»РµРЅРёРµ РїРѕ Р°Р·РёРјСѓС‚Сѓ (РіСЂР°РґСѓСЃС‹)" << endl;
    os << "------------------------------------------" << endl;
    for (i = 0; i < naxial_; i++) {
       os << ((i + 0.5) * daxial_) * 180.0 / PI << "\t" << aspec[i];
@@ -333,7 +333,7 @@ void mcScorePhaseSpaceConcentrator::dumpVRML(ostream& os) const
    }
    const geomMatrix3D& mttow = transport_->MT2W();
    int ir, it, count = 0;
-   int da = 15; // шаг по углу 15 градусов
+   int da = 15; // С€Р°Рі РїРѕ СѓРіР»Сѓ 15 РіСЂР°РґСѓСЃРѕРІ
    double mPi = PI / 180;
    os << "Shape {" << endl;
    os << "  appearance Appearance {" << endl;
@@ -343,7 +343,7 @@ void mcScorePhaseSpaceConcentrator::dumpVRML(ostream& os) const
    os << "  }" << endl;
    os << "  geometry IndexedLineSet {" << endl;
    os << "    coord Coordinate {" << endl;
-   os << "      point [" << endl; // Концентрические круги
+   os << "      point [" << endl; // РљРѕРЅС†РµРЅС‚СЂРёС‡РµСЃРєРёРµ РєСЂСѓРіРё
    for (ir = 1; ir <= nr_; ir++) {
       double r = (rmax_ / PI) * acos(1 - dr_ * ir);
       for (it = 0; it < 360; it += da) {
@@ -363,3 +363,6 @@ void mcScorePhaseSpaceConcentrator::dumpVRML(ostream& os) const
    os << "  }" << endl;
    os << "}" << endl;
 }
+
+
+

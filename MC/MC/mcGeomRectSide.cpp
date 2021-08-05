@@ -59,3 +59,6 @@ double mcGeomRectSide::getDNear(const geomVector3D& p) const
       return sqrt(y * y + h * h);
    return sqrt((y - ay_) * (y - ay_) + h * h);
 }
+
+
+

@@ -1,4 +1,4 @@
-#include "mcSourceSphereC60.h"
+ï»¿#include "mcSourceSphereC60.h"
 #include "mcThread.h"
 #include "../geometry/vec3d.h"
 #include "mcPhysics.h"
@@ -16,7 +16,7 @@ void mcSourceSphereC60::sample(mcParticle& p, mcThread* thread)
    mcRng& rng = thread->rng();
    p.t = MCP_PHOTON;
    p.q = 0;
-   p.ke = rng.rnd() < 0.5 ? 1.33 : 1.17; // Ïî ðàäèóñó ðàñïðåäåëåíèå ïðîïîðöèîíàëüíî êóáè÷åñêîìó êîðíþ.
+   p.ke = rng.rnd() < 0.5 ? 1.33 : 1.17; // ÐŸÐ¾ Ñ€Ð°Ð´Ð¸ÑƒÑÑƒ Ñ€Ð°ÑÐ¿Ñ€ÐµÐ´ÐµÐ»ÐµÐ½Ð¸Ðµ Ð¿Ñ€Ð¾Ð¿Ð¾Ñ€Ñ†Ð¸Ð¾Ð½Ð°Ð»ÑŒÐ½Ð¾ ÐºÑƒÐ±Ð¸Ñ‡ÐµÑÐºÐ¾Ð¼Ñƒ ÐºÐ¾Ñ€Ð½ÑŽ.
    const static double y = 1.0 / 3.0;
    double r = r_ * pow(rng.rnd(), y);
    mcPhysics::GoInRandomDirection(rng.rnd(), rng.rnd(), p.p);
@@ -31,8 +31,8 @@ void mcSourceSphereC60::sample(mcParticle& p, mcThread* thread)
 
 void mcSourceSphereC60::dumpVRML(ostream& os) const
 {
-   mcSource::dumpVRML(os); // Èñòî÷íèê çàäàåòñÿ â àáñîëþòíûõ êîîðäèíàòàõ.
-   // Ïîýòîìó åìó íå íóæíà ìàòðèöà ïðåîáðàçîâàíèÿ êîîðäèíàò.
+   mcSource::dumpVRML(os); // Ð˜ÑÑ‚Ð¾Ñ‡Ð½Ð¸Ðº Ð·Ð°Ð´Ð°ÐµÑ‚ÑÑ Ð² Ð°Ð±ÑÐ¾Ð»ÑŽÑ‚Ð½Ñ‹Ñ… ÐºÐ¾Ð¾Ñ€Ð´Ð¸Ð½Ð°Ñ‚Ð°Ñ….
+   // ÐŸÐ¾ÑÑ‚Ð¾Ð¼Ñƒ ÐµÐ¼Ñƒ Ð½Ðµ Ð½ÑƒÐ¶Ð½Ð° Ð¼Ð°Ñ‚Ñ€Ð¸Ñ†Ð° Ð¿Ñ€ÐµÐ¾Ð±Ñ€Ð°Ð·Ð¾Ð²Ð°Ð½Ð¸Ñ ÐºÐ¾Ð¾Ñ€Ð´Ð¸Ð½Ð°Ñ‚.
    os << "# Source: " << name_ << endl;
    os << "Transform {" << endl;
    os << "  translation " << p_.x() << ' ' << p_.y() << ' ' << p_.z() << endl;
@@ -49,3 +49,6 @@ void mcSourceSphereC60::dumpVRML(ostream& os) const
    os << "  ]" << endl;
    os << "}" << endl;
 }
+
+
+

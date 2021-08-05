@@ -1,4 +1,4 @@
-#include "mcMediumXE.h"
+п»ї#include "mcMediumXE.h"
 #include "mcDefs.h"
 #include "../geometry/text.h"
 #include <math.h>
@@ -22,11 +22,11 @@ void mcMediumXE::read(istream& is)
    vector<int> ia; // Line
    getline(is, line, '\n');
    if (is.fail())
-      return; // Тип среды, плотность
+      return; // РўРёРї СЃСЂРµРґС‹, РїР»РѕС‚РЅРѕСЃС‚СЊ
    string eletype;
    GetTwoStringsFromLine(line, eletype, s2);
    line = s2;
-   this->density_ = atof(ParseLine(line, "RHO").c_str()); // Элементарный состав
+   this->density_ = atof(ParseLine(line, "RHO").c_str()); // Р­Р»РµРјРµРЅС‚Р°СЂРЅС‹Р№ СЃРѕСЃС‚Р°РІ
    int i, j, ne = atoi(ParseLine(line, "NE").c_str());
    this->elements_.resize(ne);
    for (i = 0; i < ne; i++) {
@@ -47,8 +47,8 @@ void mcMediumXE::read(istream& is)
       throw std::exception("Five parameters expected in the line");
    this->radLength = a[0];
    this->eventCutoff_elec = a[1];
-   this->eventCutoff_phot = a[2]; // Максимальные энергии фотонов и электронов, для которых имеются сечения.
-   // В оригинальной версии использовались для контроля удовлетворения PEGS файла задаче.
+   this->eventCutoff_phot = a[2]; // РњР°РєСЃРёРјР°Р»СЊРЅС‹Рµ СЌРЅРµСЂРіРёРё С„РѕС‚РѕРЅРѕРІ Рё СЌР»РµРєС‚СЂРѕРЅРѕРІ, РґР»СЏ РєРѕС‚РѕСЂС‹С… РёРјРµСЋС‚СЃСЏ СЃРµС‡РµРЅРёСЏ.
+   // Р’ РѕСЂРёРіРёРЅР°Р»СЊРЅРѕР№ РІРµСЂСЃРёРё РёСЃРїРѕР»СЊР·РѕРІР°Р»РёСЃСЊ РґР»СЏ РєРѕРЅС‚СЂРѕР»СЏ СѓРґРѕРІР»РµС‚РІРѕСЂРµРЅРёСЏ PEGS С„Р°Р№Р»Р° Р·Р°РґР°С‡Рµ.
    double eMax_elec = a[3];
    double eMax_phot = a[4]; // Note: The following lines adjust for the fact that PEGS reports total
    // energies whereas this program carries kinetic energies. */
@@ -62,7 +62,7 @@ void mcMediumXE::read(istream& is)
    int nBins_phot = ia[1];
    int nBins_elec = ia[3];
    this->rayleigh = ia[7]; // Read bremsstrahlung data:
-   // 8 строк объединяем в одну, что будет соответсвовать всему блоку
+   // 8 СЃС‚СЂРѕРє РѕР±СЉРµРґРёРЅСЏРµРј РІ РѕРґРЅСѓ, С‡С‚Рѕ Р±СѓРґРµС‚ СЃРѕРѕС‚РІРµС‚СЃРІРѕРІР°С‚СЊ РІСЃРµРјСѓ Р±Р»РѕРєСѓ
    line.clear();
    for (i = 0; i < 8; i++) {
       // Line
@@ -321,3 +321,6 @@ void mcMediumXE::InitializeAngularDistribution()
    this->zFactor_angDist /= norm;
    this->zFactor_angDist = oneOver111Squared * pow(this->zFactor_angDist, oneThird);
 }
+
+
+

@@ -1,4 +1,4 @@
-#include "mcTransportMLC.h"
+п»ї#include "mcTransportMLC.h"
 #include "mcGeometry.h"
 #include <float.h>
 
@@ -21,7 +21,7 @@ mcTransportMLC::~mcTransportMLC(void) {}
 
 double mcTransportMLC::getDistanceInside(mcParticle& p) const
 {
-   // Идея решения в разбиении на три слоя (шесть кусков) и расчеты по отдельности в каждом
+   // РРґРµСЏ СЂРµС€РµРЅРёСЏ РІ СЂР°Р·Р±РёРµРЅРёРё РЅР° С‚СЂРё СЃР»РѕСЏ (С€РµСЃС‚СЊ РєСѓСЃРєРѕРІ) Рё СЂР°СЃС‡РµС‚С‹ РїРѕ РѕС‚РґРµР»СЊРЅРѕСЃС‚Рё РІ РєР°Р¶РґРѕРј
    geomVector3D position(p.p);
    geomVector3D direction(p.u);
    double x = position.x();
@@ -30,23 +30,23 @@ double mcTransportMLC::getDistanceInside(mcParticle& p) const
    double xx = fsx1_;
    bool isRight = false;
    double dist = 0;
-   // Для определения текущего блока проектируем положение частицы на нижнюю плоскость
-   double y0 = y * focus_ / (focus_ - z); // Определяем содержащий блок и необходимость перевернуть стороны.
+   // Р”Р»СЏ РѕРїСЂРµРґРµР»РµРЅРёСЏ С‚РµРєСѓС‰РµРіРѕ Р±Р»РѕРєР° РїСЂРѕРµРєС‚РёСЂСѓРµРј РїРѕР»РѕР¶РµРЅРёРµ С‡Р°СЃС‚РёС†С‹ РЅР° РЅРёР¶РЅСЋСЋ РїР»РѕСЃРєРѕСЃС‚СЊ
+   double y0 = y * focus_ / (focus_ - z); // РћРїСЂРµРґРµР»СЏРµРј СЃРѕРґРµСЂР¶Р°С‰РёР№ Р±Р»РѕРє Рё РЅРµРѕР±С…РѕРґРёРјРѕСЃС‚СЊ РїРµСЂРµРІРµСЂРЅСѓС‚СЊ СЃС‚РѕСЂРѕРЅС‹.
    if (y0 < fsy1_ || y0 > fsy2_) {
       if (x > 0)
          isRight = true;
    } else {
       if (x > 0.5 * (fsx1_ + fsx2_))
          isRight = true;
-   } // Перевернуть если необходимо
+   } // РџРµСЂРµРІРµСЂРЅСѓС‚СЊ РµСЃР»Рё РЅРµРѕР±С…РѕРґРёРјРѕ
    if (isRight) {
       position(0) = -position.x();
       direction(0) = -direction.x();
       xx = -fsx2_;
-   } // Определение растояний в зависимости от блока
+   } // РћРїСЂРµРґРµР»РµРЅРёРµ СЂР°СЃС‚РѕСЏРЅРёР№ РІ Р·Р°РІРёСЃРёРјРѕСЃС‚Рё РѕС‚ Р±Р»РѕРєР°
    if (y0 < fsy1_) {
       dist = getDistanceToBlockInside(position, direction, -0.5 * w_, fsy1_, 0);
-      position += direction * dist; // Если оказались на поверхности следующего блока, то двигаемся еще и в нем
+      position += direction * dist; // Р•СЃР»Рё РѕРєР°Р·Р°Р»РёСЃСЊ РЅР° РїРѕРІРµСЂС…РЅРѕСЃС‚Рё СЃР»РµРґСѓСЋС‰РµРіРѕ Р±Р»РѕРєР°, С‚Рѕ РґРІРёРіР°РµРјСЃСЏ РµС‰Рµ Рё РІ РЅРµРј
       if (isOnOnTheLeftLeaf(position, fsy1_, xx)) {
          double d = getDistanceToBlockInside(position, direction, fsy1_, fsy2_, xx);
          position += direction * d;
@@ -81,7 +81,7 @@ double mcTransportMLC::getDistanceOutside(mcParticle& p) const
    geomVector3D direction(p.u);
    double z = position.z();
    double vz = direction.z();
-   double dist = 0; // Если мы не между слоями Z, то перемещаемся на первый на пути
+   double dist = 0; // Р•СЃР»Рё РјС‹ РЅРµ РјРµР¶РґСѓ СЃР»РѕСЏРјРё Z, С‚Рѕ РїРµСЂРµРјРµС‰Р°РµРјСЃСЏ РЅР° РїРµСЂРІС‹Р№ РЅР° РїСѓС‚Рё
    if (z >= h_) {
       if (vz < 0) {
          dist = (h_ - z) / vz;
@@ -98,7 +98,7 @@ double mcTransportMLC::getDistanceOutside(mcParticle& p) const
             return dist;
       } else
          return DBL_MAX;
-   } // К данному моменту частица находится по Z между 0 и h_
+   } // Рљ РґР°РЅРЅРѕРјСѓ РјРѕРјРµРЅС‚Сѓ С‡Р°СЃС‚РёС†Р° РЅР°С…РѕРґРёС‚СЃСЏ РїРѕ Z РјРµР¶РґСѓ 0 Рё h_
    double dd = isOutsideMLC(position.x(), position.y() * sfy_)
                   ? getDistanceToMlcOutsideField(position, direction)
                   : getDistanceToMlcInsideField(position, direction);
@@ -114,13 +114,13 @@ double mcTransportMLC::getDistanceToBlockInside(const geomVector3D& p, const geo
                                                 double xx) const
 {
    double cd1 = DBL_MAX, cd2 = DBL_MAX, cd3 = DBL_MAX, cd4 = DBL_MAX, cd5 = DBL_MAX;
-   // Расстояние до плоскостей слоя MLC
+   // Р Р°СЃСЃС‚РѕСЏРЅРёРµ РґРѕ РїР»РѕСЃРєРѕСЃС‚РµР№ СЃР»РѕСЏ MLC
    double z = p.z(), vz = u.z();
    if (vz < 0)
       cd1 = -z / vz;
    else
       if (vz > 0)
-         cd1 = (h_ - z) / vz; // Пересечение с наклонными плоскостями XZ
+         cd1 = (h_ - z) / vz; // РџРµСЂРµСЃРµС‡РµРЅРёРµ СЃ РЅР°РєР»РѕРЅРЅС‹РјРё РїР»РѕСЃРєРѕСЃС‚СЏРјРё XZ
    geomVector3D zxn1(0, focus_, y1), zxn2(0, -focus_, -y2);
    zxn1.normalize();
    zxn2.normalize();
@@ -130,20 +130,20 @@ double mcTransportMLC::getDistanceToBlockInside(const geomVector3D& p, const geo
       cd2 = ((p - py1) * zxn1) / dir;
    dir = -(u * zxn2);
    if (dir > 0)
-      cd3 = ((p - py2) * zxn2) / dir; // Расстояние до левого торца x = const
+      cd3 = ((p - py2) * zxn2) / dir; // Р Р°СЃСЃС‚РѕСЏРЅРёРµ РґРѕ Р»РµРІРѕРіРѕ С‚РѕСЂС†Р° x = const
    double x = p.x(), vx = u.x();
    if (vx < 0)
-      cd4 = (-l_ + xx - x) / vx; // Расстояние до скругленного торца
-   // Можно грубо отсечь пересечения за пределами слоя МЛК на основании пересечения с плоскостями z = const
+      cd4 = (-l_ + xx - x) / vx; // Р Р°СЃСЃС‚РѕСЏРЅРёРµ РґРѕ СЃРєСЂСѓРіР»РµРЅРЅРѕРіРѕ С‚РѕСЂС†Р°
+   // РњРѕР¶РЅРѕ РіСЂСѓР±Рѕ РѕС‚СЃРµС‡СЊ РїРµСЂРµСЃРµС‡РµРЅРёСЏ Р·Р° РїСЂРµРґРµР»Р°РјРё СЃР»РѕСЏ РњР›Рљ РЅР° РѕСЃРЅРѕРІР°РЅРёРё РїРµСЂРµСЃРµС‡РµРЅРёСЏ СЃ РїР»РѕСЃРєРѕСЃС‚СЏРјРё z = const
    if (cd1 == DBL_MAX || ((x + vx * cd1) > (xx - dx_))) {
       double d = 0;
       double rx = x + r_ - xx;
       z -= h_ / 2;
       double rr = rx * rx + z * z;
       geomVector3D pp(rx, z, 0);
-      geomVector3D vv(vx, vz, u.y()); // Потенциальная проблема в том, что можем находиться за пределеами цилиндра.
-      // На этот случай проверяем где находимся и при необходимости переезжаем в плоскость через ось цилиндра.
-      // Перемещаем на поверхность цилиндра снаружи если необходимо
+      geomVector3D vv(vx, vz, u.y()); // РџРѕС‚РµРЅС†РёР°Р»СЊРЅР°СЏ РїСЂРѕР±Р»РµРјР° РІ С‚РѕРј, С‡С‚Рѕ РјРѕР¶РµРј РЅР°С…РѕРґРёС‚СЊСЃСЏ Р·Р° РїСЂРµРґРµР»РµР°РјРё С†РёР»РёРЅРґСЂР°.
+      // РќР° СЌС‚РѕС‚ СЃР»СѓС‡Р°Р№ РїСЂРѕРІРµСЂСЏРµРј РіРґРµ РЅР°С…РѕРґРёРјСЃСЏ Рё РїСЂРё РЅРµРѕР±С…РѕРґРёРјРѕСЃС‚Рё РїРµСЂРµРµР·Р¶Р°РµРј РІ РїР»РѕСЃРєРѕСЃС‚СЊ С‡РµСЂРµР· РѕСЃСЊ С†РёР»РёРЅРґСЂР°.
+      // РџРµСЂРµРјРµС‰Р°РµРј РЅР° РїРѕРІРµСЂС…РЅРѕСЃС‚СЊ С†РёР»РёРЅРґСЂР° СЃРЅР°СЂСѓР¶Рё РµСЃР»Рё РЅРµРѕР±С…РѕРґРёРјРѕ
       if (rr > r2_) {
          d = mcGeometry::getDistanceToInfiniteCylinderOutside(pp, vv, r_);
          if (d != DBL_MAX)
@@ -161,7 +161,7 @@ double mcTransportMLC::getDistanceToBlockInside(const geomVector3D& p, const geo
 
 double mcTransportMLC::getDistanceToMlcOutsideField(const geomVector3D& p, const geomVector3D& u) const
 {
-   // Для начала впихиваем между плоскостями XZ
+   // Р”Р»СЏ РЅР°С‡Р°Р»Р° РІРїРёС…РёРІР°РµРј РјРµР¶РґСѓ РїР»РѕСЃРєРѕСЃС‚СЏРјРё XZ
    double dist = 0;
    double y = p.y() * focus_ / (focus_ - p.z());
    geomVector3D pp(p);
@@ -176,7 +176,7 @@ double mcTransportMLC::getDistanceToMlcOutsideField(const geomVector3D& p, const
       if (isOnOutsideLeaf(pp))
          return dist;
       if (fabs(pp.x()) < dx_) {
-         // Попали в щель между закрытыми лепестками
+         // РџРѕРїР°Р»Рё РІ С‰РµР»СЊ РјРµР¶РґСѓ Р·Р°РєСЂС‹С‚С‹РјРё Р»РµРїРµСЃС‚РєР°РјРё
          double d = getDistanceToMlcInsideField(p, u);
          return d == DBL_MAX ? DBL_MAX : d;
       }
@@ -191,15 +191,15 @@ double mcTransportMLC::getDistanceToMlcOutsideField(const geomVector3D& p, const
       if (isOnOutsideLeaf(pp))
          return dist;
       if (fabs(pp.x()) < dx_) {
-         // Попали в щель между закрытыми лепестками
+         // РџРѕРїР°Р»Рё РІ С‰РµР»СЊ РјРµР¶РґСѓ Р·Р°РєСЂС‹С‚С‹РјРё Р»РµРїРµСЃС‚РєР°РјРё
          double d = getDistanceToMlcInsideField(p, u);
          return d == DBL_MAX ? DBL_MAX : d;
       }
-   } // Теперь остается только одно направление возможных пересечений - ось X
+   } // РўРµРїРµСЂСЊ РѕСЃС‚Р°РµС‚СЃСЏ С‚РѕР»СЊРєРѕ РѕРґРЅРѕ РЅР°РїСЂР°РІР»РµРЅРёРµ РІРѕР·РјРѕР¶РЅС‹С… РїРµСЂРµСЃРµС‡РµРЅРёР№ - РѕСЃСЊ X
    double x = pp.x();
    if (x < 0) {
-      // Сначала переводим за плоскость выступающей части
-      if (fsx1_ < 0) // выступает центральная часть 
+      // РЎРЅР°С‡Р°Р»Р° РїРµСЂРµРІРѕРґРёРј Р·Р° РїР»РѕСЃРєРѕСЃС‚СЊ РІС‹СЃС‚СѓРїР°СЋС‰РµР№ С‡Р°СЃС‚Рё
+      if (fsx1_ < 0) // РІС‹СЃС‚СѓРїР°РµС‚ С†РµРЅС‚СЂР°Р»СЊРЅР°СЏ С‡Р°СЃС‚СЊ 
       {
          if (x <= -l_ + fsx1_) {
             if (u.x() <= 0)
@@ -214,7 +214,7 @@ double mcTransportMLC::getDistanceToMlcOutsideField(const geomVector3D& p, const
                return DBL_MAX;
             if (y >= fsy1_ && y <= fsy2_)
                return dist;
-         } // Транспорт в двух угловых закутках
+         } // РўСЂР°РЅСЃРїРѕСЂС‚ РІ РґРІСѓС… СѓРіР»РѕРІС‹С… Р·Р°РєСѓС‚РєР°С…
          if (y < 0) {
             double d = getDistanceToMlcRectangleConeInside(pp, u, -l_, -l_ + fsx1_, -w_ / 2, fsy1_);
             if (d == DBL_MAX)
@@ -247,17 +247,17 @@ double mcTransportMLC::getDistanceToMlcOutsideField(const geomVector3D& p, const
             return DBL_MAX;
          if (y >= fsy2_ || y <= fsy1_)
             return dist;
-      } // Транспорт внутри закутка
+      } // РўСЂР°РЅСЃРїРѕСЂС‚ РІРЅСѓС‚СЂРё Р·Р°РєСѓС‚РєР°
       double d = getDistanceToMlcRectangleConeInside(pp, u, -l_, -l_ + fsx1_, fsy1_, fsy2_);
       if (d == DBL_MAX)
-         return DBL_MAX; // В закутке мым могли просто стартовать. 
-      // Поэтому остается вариант вылета из него через открытую боковую поверхность.
+         return DBL_MAX; // Р’ Р·Р°РєСѓС‚РєРµ РјС‹Рј РјРѕРіР»Рё РїСЂРѕСЃС‚Рѕ СЃС‚Р°СЂС‚РѕРІР°С‚СЊ. 
+      // РџРѕСЌС‚РѕРјСѓ РѕСЃС‚Р°РµС‚СЃСЏ РІР°СЂРёР°РЅС‚ РІС‹Р»РµС‚Р° РёР· РЅРµРіРѕ С‡РµСЂРµР· РѕС‚РєСЂС‹С‚СѓСЋ Р±РѕРєРѕРІСѓСЋ РїРѕРІРµСЂС…РЅРѕСЃС‚СЊ.
       pp += u * d;
       if (pp.x() < -l_)
          return DBL_MAX;
       return d + dist;
-   }              // Сначала переводим за плоскость выступающей части
-   if (fsx2_ > 0) // выступает центральная часть 
+   }              // РЎРЅР°С‡Р°Р»Р° РїРµСЂРµРІРѕРґРёРј Р·Р° РїР»РѕСЃРєРѕСЃС‚СЊ РІС‹СЃС‚СѓРїР°СЋС‰РµР№ С‡Р°СЃС‚Рё
+   if (fsx2_ > 0) // РІС‹СЃС‚СѓРїР°РµС‚ С†РµРЅС‚СЂР°Р»СЊРЅР°СЏ С‡Р°СЃС‚СЊ 
    {
       if (x >= l_ + fsx2_) {
          if (u.x() >= 0)
@@ -272,7 +272,7 @@ double mcTransportMLC::getDistanceToMlcOutsideField(const geomVector3D& p, const
             return DBL_MAX;
          if (y >= fsy1_ && y <= fsy2_)
             return dist;
-      } // Транспорт в двух угловых закутках
+      } // РўСЂР°РЅСЃРїРѕСЂС‚ РІ РґРІСѓС… СѓРіР»РѕРІС‹С… Р·Р°РєСѓС‚РєР°С…
       if (y < 0) {
          double d = getDistanceToMlcRectangleConeInside(pp, u, l_, l_ + fsx2_, -w_ / 2, fsy1_);
          if (d == DBL_MAX)
@@ -305,7 +305,7 @@ double mcTransportMLC::getDistanceToMlcOutsideField(const geomVector3D& p, const
          return DBL_MAX;
       if (y >= fsy2_ || y <= fsy1_)
          return dist;
-   } // Транспорт внутри закутка
+   } // РўСЂР°РЅСЃРїРѕСЂС‚ РІРЅСѓС‚СЂРё Р·Р°РєСѓС‚РєР°
    double d = getDistanceToMlcRectangleConeInside(pp, u, l_, l_ + fsx2_, fsy1_, fsy2_);
    if (d == DBL_MAX)
       return DBL_MAX;
@@ -318,11 +318,11 @@ double mcTransportMLC::getDistanceToMlcOutsideField(const geomVector3D& p, const
 
 double mcTransportMLC::getDistanceToMlcInsideField(const geomVector3D& p, const geomVector3D& u) const
 {
-   // Перебираем выходы из блока пока не вылетим, не столкнемся с границей или не перейдем в другой блок
+   // РџРµСЂРµР±РёСЂР°РµРј РІС‹С…РѕРґС‹ РёР· Р±Р»РѕРєР° РїРѕРєР° РЅРµ РІС‹Р»РµС‚РёРј, РЅРµ СЃС‚РѕР»РєРЅРµРјСЃСЏ СЃ РіСЂР°РЅРёС†РµР№ РёР»Рё РЅРµ РїРµСЂРµР№РґРµРј РІ РґСЂСѓРіРѕР№ Р±Р»РѕРє
    double dist = 0;
    double y = p.y() * focus_ / (focus_ - p.z());
-   geomVector3D pp(p); // Цикл нужен для перебора пока не вывалимся.
-   // На всякий случай не бесконечный.
+   geomVector3D pp(p); // Р¦РёРєР» РЅСѓР¶РµРЅ РґР»СЏ РїРµСЂРµР±РѕСЂР° РїРѕРєР° РЅРµ РІС‹РІР°Р»РёРјСЃСЏ.
+   // РќР° РІСЃСЏРєРёР№ СЃР»СѓС‡Р°Р№ РЅРµ Р±РµСЃРєРѕРЅРµС‡РЅС‹Р№.
    for (int k = 0; k < 3; k++) {
       if (y <= fsy1_) {
          double d = getDistanceToMlcInsideFieldBlock(pp, u, 0, 0, -w_ / 2, fsy1_);
@@ -332,13 +332,13 @@ double mcTransportMLC::getDistanceToMlcInsideField(const geomVector3D& p, const 
          dist += d;
          y = pp.y() * focus_ / (focus_ - pp.z());
          if (fabs(y - fsy1_) <= DBL_EPSILON) {
-            y = fsy1_; // Проверяем не уперлись ли в лепесток сбоку
+            y = fsy1_; // РџСЂРѕРІРµСЂСЏРµРј РЅРµ СѓРїРµСЂР»РёСЃСЊ Р»Рё РІ Р»РµРїРµСЃС‚РѕРє СЃР±РѕРєСѓ
             if (isOnOnTheLeftLeaf(pp, y, fsx1_) || isOnOnTheLeftLeaf(geomVector3D(-pp.x(), pp.y(), pp.z()), y, -fsx2_))
                break;
          } else if (fabs(y + w_ / 2) <= DBL_EPSILON)
             return DBL_MAX;
          else
-            break; // попали в торец лепестков
+            break; // РїРѕРїР°Р»Рё РІ С‚РѕСЂРµС† Р»РµРїРµСЃС‚РєРѕРІ
       }
       if (y >= fsy1_ && y < fsy2_) {
          double d = getDistanceToMlcInsideFieldBlock(pp, u, fsx1_, fsx2_, fsy1_, fsy2_);
@@ -372,7 +372,7 @@ double mcTransportMLC::getDistanceToMlcInsideField(const geomVector3D& p, const 
          } else if (fabs(y - w_ / 2) <= DBL_EPSILON)
             return DBL_MAX;
          else
-            break; // попали в торец лепестков
+            break; // РїРѕРїР°Р»Рё РІ С‚РѕСЂРµС† Р»РµРїРµСЃС‚РєРѕРІ
       }
    }
    return dist;
@@ -383,13 +383,13 @@ double mcTransportMLC::getDistanceToMlcInsideFieldBlock(const geomVector3D& p, c
 {
    double vx = u.x(), vy = u.y(), vz = u.z();
    double x = p.x(), y = p.y(), z = p.z();
-   // Из-за вогнутости поверхности нужно сначада проверять столкновение со скругленными торцами
+   // РР·-Р·Р° РІРѕРіРЅСѓС‚РѕСЃС‚Рё РїРѕРІРµСЂС…РЅРѕСЃС‚Рё РЅСѓР¶РЅРѕ СЃРЅР°С‡Р°РґР° РїСЂРѕРІРµСЂСЏС‚СЊ СЃС‚РѕР»РєРЅРѕРІРµРЅРёРµ СЃРѕ СЃРєСЂСѓРіР»РµРЅРЅС‹РјРё С‚РѕСЂС†Р°РјРё
    geomVector3D vv(vx, vz, vy);
    geomVector3D pp(x - x1 + r_, z - h_ / 2, 0);
    double d1 = mcGeometry::getDistanceToInfiniteCylinderOutside(pp, vv, r_);
    pp.set(x - r_ - x2, z - h_ / 2, 0);
    double d2 = mcGeometry::getDistanceToInfiniteCylinderOutside(pp, vv, r_);
-   double dist = MIN(d1, d2); // Места пересечения боковых поверхностей
+   double dist = MIN(d1, d2); // РњРµСЃС‚Р° РїРµСЂРµСЃРµС‡РµРЅРёСЏ Р±РѕРєРѕРІС‹С… РїРѕРІРµСЂС…РЅРѕСЃС‚РµР№
    double cd1 = DBL_MAX, cd2 = DBL_MAX;
    geomVector3D zxn1(0, focus_, y1), zxn2(0, -focus_, -y2);
    zxn1.normalize();
@@ -403,7 +403,7 @@ double mcTransportMLC::getDistanceToMlcInsideFieldBlock(const geomVector3D& p, c
       cd2 = ((p - py2) * zxn2) / dir;
    dist = MIN(dist, MIN(cd1, cd2));
    if (dist == DBL_MAX)
-      return DBL_MAX; // Проверяем, произошло ли пересечение в слое MLC
+      return DBL_MAX; // РџСЂРѕРІРµСЂСЏРµРј, РїСЂРѕРёР·РѕС€Р»Рѕ Р»Рё РїРµСЂРµСЃРµС‡РµРЅРёРµ РІ СЃР»РѕРµ MLC
    double dd = z + vz * dist;
    if (dd <= 0 || dd >= h_)
       return DBL_MAX;
@@ -493,8 +493,8 @@ bool mcTransportMLC::isOnOnTheLeftLeaf(const geomVector3D& p, double y0, double 
 
 bool mcTransportMLC::isOutsideMLC(double x, double y) const
 {
-   // Требуется только определеить одно из возможных положений -
-   // внутри открытой части коллиматора или за пределами коллиматор
+   // РўСЂРµР±СѓРµС‚СЃСЏ С‚РѕР»СЊРєРѕ РѕРїСЂРµРґРµР»РµРёС‚СЊ РѕРґРЅРѕ РёР· РІРѕР·РјРѕР¶РЅС‹С… РїРѕР»РѕР¶РµРЅРёР№ -
+   // РІРЅСѓС‚СЂРё РѕС‚РєСЂС‹С‚РѕР№ С‡Р°СЃС‚Рё РєРѕР»Р»РёРјР°С‚РѕСЂР° РёР»Рё Р·Р° РїСЂРµРґРµР»Р°РјРё РєРѕР»Р»РёРјР°С‚РѕСЂ
    if (y <= -w_ / 2 || y >= w_ / 2 || x <= -l_ || x >= l_)
       return true;
    return false;
@@ -531,7 +531,7 @@ void mcTransportMLC::dumpVRMLMLC(ostream& os) const
    double xx[8], yy[4], ss[7];
    double dh = h_ / 6;
    double dx = r_ * (1 - sqrt(1.0 - 9.0 * dh * dh / r2_));
-   double sf = (focus_ - h_) / focus_; // масштаб перевода координаты y на верхнюю поверхность
+   double sf = (focus_ - h_) / focus_; // РјР°СЃС€С‚Р°Р± РїРµСЂРµРІРѕРґР° РєРѕРѕСЂРґРёРЅР°С‚С‹ y РЅР° РІРµСЂС…РЅСЋСЋ РїРѕРІРµСЂС…РЅРѕСЃС‚СЊ
    xx[0] = fsx1_ - l_;
    xx[1] = -l_;
    xx[2] = fsx1_ - dx;
@@ -545,7 +545,7 @@ void mcTransportMLC::dumpVRMLMLC(ostream& os) const
    yy[2] = fsy2_;
    yy[3] = w_ / 2;
    for (k = 0; k < 7; k++)
-      ss[k] = dx - r_ * (1 - sqrt(1.0 - (k - 3) * (k - 3) * dh * dh / r2_)); // Верхняя и нижняя поверхности коллиматора
+      ss[k] = dx - r_ * (1 - sqrt(1.0 - (k - 3) * (k - 3) * dh * dh / r2_)); // Р’РµСЂС…РЅСЏСЏ Рё РЅРёР¶РЅСЏСЏ РїРѕРІРµСЂС…РЅРѕСЃС‚Рё РєРѕР»Р»РёРјР°С‚РѕСЂР°
    p[i++] = geomVector3D(xx[1], yy[3], 0) * mttow_;
    p[i++] = geomVector3D(xx[1], yy[3] * sf, h_) * mttow_;
    p[i++] = geomVector3D(xx[3], yy[3], 0) * mttow_;
@@ -594,8 +594,8 @@ void mcTransportMLC::dumpVRMLMLC(ostream& os) const
    p[i++] = geomVector3D(xx[4], yy[0] * sf, h_) * mttow_;
    p[i++] = geomVector3D(xx[6], yy[0], 0) * mttow_;
    p[i++] = geomVector3D(xx[6], yy[0] * sf, h_) * mttow_;
-   int lcount = i; // счетчик точек, отвечающих за верхнюю и нижнюю поверхности
-   // Точки скругленных поверхностей МЛК
+   int lcount = i; // СЃС‡РµС‚С‡РёРє С‚РѕС‡РµРє, РѕС‚РІРµС‡Р°СЋС‰РёС… Р·Р° РІРµСЂС…РЅСЋСЋ Рё РЅРёР¶РЅСЋСЋ РїРѕРІРµСЂС…РЅРѕСЃС‚Рё
+   // РўРѕС‡РєРё СЃРєСЂСѓРіР»РµРЅРЅС‹С… РїРѕРІРµСЂС…РЅРѕСЃС‚РµР№ РњР›Рљ
    for (k = 0; k < 7; k++)
       p[i++] = geomVector3D(xx[3] + ss[k], yy[3] * (1 - dh * k / focus_), dh * k) * mttow_;
    for (k = 0; k < 7; k++)
@@ -630,7 +630,7 @@ void mcTransportMLC::dumpVRMLMLC(ostream& os) const
    os << "        }" << endl;
    os << "        geometry IndexedFaceSet {" << endl;
    os << "            coord Coordinate {" << endl;
-   os << "                point [" << endl; // Выводим все координаты
+   os << "                point [" << endl; // Р’С‹РІРѕРґРёРј РІСЃРµ РєРѕРѕСЂРґРёРЅР°С‚С‹
    for (i = 0; i < np; i++) {
       os << "                    " << p[i].x() << ' ' << p[i].y() << ' ' << p[i].z();
       if (i < np - 1)
@@ -639,7 +639,7 @@ void mcTransportMLC::dumpVRMLMLC(ostream& os) const
    }
    os << "                ]" << endl;
    os << "            }" << endl;
-   os << "            coordIndex [" << endl; // Нижняя и верхняя поверхности
+   os << "            coordIndex [" << endl; // РќРёР¶РЅСЏСЏ Рё РІРµСЂС…РЅСЏСЏ РїРѕРІРµСЂС…РЅРѕСЃС‚Рё
    //os << "                0, 10, 8, 24, 26, 40, 42, 30, 28, 12, 14, 2, -1," << endl;
    //os << "                1, 3, 15, 13, 29, 31, 43, 41, 27, 25, 9, 11, -1," << endl;
    //os << "                4, 6, 20, 22, 38, 36, 46, 44, 32, 34, 18, 16, -1," << endl;
@@ -655,7 +655,7 @@ void mcTransportMLC::dumpVRMLMLC(ostream& os) const
    os << "                26, 30, 42, 40, -1," << endl;
    os << "                27, 41, 43, 31, -1," << endl;
    os << "                32, 36, 46, 44, -1," << endl;
-   os << "                33, 45, 47, 37, -1," << endl; // Внешние торцы
+   os << "                33, 45, 47, 37, -1," << endl; // Р’РЅРµС€РЅРёРµ С‚РѕСЂС†С‹
    os << "                0, 10, 11, 1, -1," << endl;
    os << "                10, 8, 9, 11, -1," << endl;
    os << "                8, 24, 25, 9, -1," << endl;
@@ -665,7 +665,7 @@ void mcTransportMLC::dumpVRMLMLC(ostream& os) const
    os << "                22, 20, 21, 23, -1," << endl;
    os << "                38, 22, 23, 39, -1," << endl;
    os << "                36, 38, 39, 37, -1," << endl;
-   os << "                46, 36, 37, 47, -1," << endl; // Скругленные боковые поверхности
+   os << "                46, 36, 37, 47, -1," << endl; // РЎРєСЂСѓРіР»РµРЅРЅС‹Рµ Р±РѕРєРѕРІС‹Рµ РїРѕРІРµСЂС…РЅРѕСЃС‚Рё
    os << "                0, 1, ";
    for (k = 6; k >= 0; k--)
       os << (lcount + k) << ", ";
@@ -681,7 +681,7 @@ void mcTransportMLC::dumpVRMLMLC(ostream& os) const
    os << "                46, 47, ";
    for (k = 6; k >= 0; k--)
       os << (lcount + 11 * 7 + k) << ", ";
-   os << " -1," << endl; // Внутренние боковые поверхности
+   os << " -1," << endl; // Р’РЅСѓС‚СЂРµРЅРЅРёРµ Р±РѕРєРѕРІС‹Рµ РїРѕРІРµСЂС…РЅРѕСЃС‚Рё
    os << "                ";
    for (k = 0; k < 7; k++)
       os << (lcount + 1 * 7 + k) << ", ";
@@ -705,7 +705,7 @@ void mcTransportMLC::dumpVRMLMLC(ostream& os) const
       os << (lcount + 10 * 7 + k) << ", ";
    for (k = 6; k >= 0; k--)
       os << (lcount + 9 * 7 + k) << ", ";
-   os << " -1," << endl; // Круглые торцы лепестков
+   os << " -1," << endl; // РљСЂСѓРіР»С‹Рµ С‚РѕСЂС†С‹ Р»РµРїРµСЃС‚РєРѕРІ
    os << "                ";
    for (k = 0; k < 6; k++)
       os << (lcount + 1 * 7 + k) << ", " << (lcount + 0 * 7 + k) << ", " << (lcount + 0 * 7 + k + 1) << ", " << (
@@ -735,3 +735,6 @@ void mcTransportMLC::dumpVRMLMLC(ostream& os) const
    os << "      }" << endl;
    os << "    }" << endl;
 }
+
+
+

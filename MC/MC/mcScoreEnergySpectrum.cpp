@@ -1,4 +1,4 @@
-#include "mcScoreEnergySpectrum.h"
+п»ї#include "mcScoreEnergySpectrum.h"
 #include "mcThread.h"
 #include "mcTransport.h"
 
@@ -34,7 +34,7 @@ void mcScoreEnergySpectrum::dumpVRML(ostream& os) const
    }
    const geomMatrix3D& mttow = transport_->MT2W();
    int it, count = 0;
-   int da = 15; // шаг по углу 15 градусов
+   int da = 15; // С€Р°Рі РїРѕ СѓРіР»Сѓ 15 РіСЂР°РґСѓСЃРѕРІ
    double mPi = PI / 180;
    double r = sqrt(rmax_);
    os << "Shape {" << endl;
@@ -45,7 +45,7 @@ void mcScoreEnergySpectrum::dumpVRML(ostream& os) const
    os << "  }" << endl;
    os << "  geometry IndexedLineSet {" << endl;
    os << "    coord Coordinate {" << endl;
-   os << "      point [" << endl; // Концентрический круг
+   os << "      point [" << endl; // РљРѕРЅС†РµРЅС‚СЂРёС‡РµСЃРєРёР№ РєСЂСѓРі
    for (it = 0; it < 360; it += da) {
       geomVector3D p = geomVector3D(r * sin(mPi * it), r * cos(mPi * it), 0) * mttow;
       os << "        " << p.x() << ' ' << p.y() << ' ' << p.z() << endl;
@@ -66,7 +66,7 @@ void mcScoreEnergySpectrum::dumpVRML(ostream& os) const
 void mcScoreEnergySpectrum::dumpStatistic(ostream& os) const
 {
    mcScore::dumpStatistic(os);
-   os << endl << "Распределение по энергии (МэВ)" << endl;
+   os << endl << "Р Р°СЃРїСЂРµРґРµР»РµРЅРёРµ РїРѕ СЌРЅРµСЂРіРёРё (РњСЌР’)" << endl;
    os << "--------------------------------------" << endl;
    for (unsigned i = 0; i < espec_[0].size(); i++) {
       double energy = 0;
@@ -75,3 +75,6 @@ void mcScoreEnergySpectrum::dumpStatistic(ostream& os) const
       os << (i + 0.5) * estep_ << "\t" << energy << endl;
    }
 }
+
+
+

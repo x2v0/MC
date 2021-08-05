@@ -1,4 +1,4 @@
-// Radiation Oncology Monte Carlo open source project
+﻿// Radiation Oncology Monte Carlo open source project
 //
 // Author: [2005-2017] Gennady Gorlachev (ggorlachev@roiss.ru) 
 //---------------------------------------------------------------------------
@@ -49,3 +49,6 @@ protected:
    static void GetRayleighAngle(mcRng& rng, const mcMediumXE* pMedium, double e_phot, double* cosTheta,
                                 double* sinTheta);
 };
+
+
+

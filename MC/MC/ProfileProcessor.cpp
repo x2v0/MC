@@ -1,10 +1,10 @@
-#include "ProfileProcessor.h"
+п»ї#include "ProfileProcessor.h"
 using namespace std;
 
 void ProfileProcessor::ProfileParameters(const std::vector<double>& x, const std::vector<double>& d,
                                          std::vector<double>& dd, double& width, double& penumbra, double& dindex)
 {
-   // Определяем примерный размер поля по полу высоте относительно максимальной дозы
+   // РћРїСЂРµРґРµР»СЏРµРј РїСЂРёРјРµСЂРЅС‹Р№ СЂР°Р·РјРµСЂ РїРѕР»СЏ РїРѕ РїРѕР»Сѓ РІС‹СЃРѕС‚Рµ РѕС‚РЅРѕСЃРёС‚РµР»СЊРЅРѕ РјР°РєСЃРёРјР°Р»СЊРЅРѕР№ РґРѕР·С‹
    int i, imax = 0, np = static_cast<int>(x.size());
    double dmax = 0;
    dd.resize(np);
@@ -29,10 +29,10 @@ void ProfileProcessor::ProfileParameters(const std::vector<double>& x, const std
    double x0 = (x1 + x2) / 2;
    if (x2 < x1)
       throw std::exception("ProfileProcessor::ProfileParameters: point coordinates should be in increasing order");
-   // Пределы апроксимации плато +/- 0.2 размера поля 
+   // РџСЂРµРґРµР»С‹ Р°РїСЂРѕРєСЃРёРјР°С†РёРё РїР»Р°С‚Рѕ +/- 0.2 СЂР°Р·РјРµСЂР° РїРѕР»СЏ 
    width = x2 - x1;
    x1 += width * 0.3;
-   x2 -= width * 0.3; // Аппроксимируем открытую часть симметричной параболой и подгоняем методом наименьших квадратов
+   x2 -= width * 0.3; // РђРїРїСЂРѕРєСЃРёРјРёСЂСѓРµРј РѕС‚РєСЂС‹С‚СѓСЋ С‡Р°СЃС‚СЊ СЃРёРјРјРµС‚СЂРёС‡РЅРѕР№ РїР°СЂР°Р±РѕР»РѕР№ Рё РїРѕРґРіРѕРЅСЏРµРј РјРµС‚РѕРґРѕРј РЅР°РёРјРµРЅСЊС€РёС… РєРІР°РґСЂР°С‚РѕРІ
    // ( d = a * x^2 + dmax )
    double A00 = 0, A01 = 0, A10 = 0, A11 = 0, B0 = 0, B1 = 0;
    for (i = 0; i < np; i++) {
@@ -54,7 +54,7 @@ void ProfileProcessor::ProfileParameters(const std::vector<double>& x, const std
          double xi = x[i] - x0;
          dd[i] = a * xi * xi + dmax;
       }
-   } // Аппроксимируем полутени на высоте +/- 0.2 dmax от полу высоты
+   } // РђРїРїСЂРѕРєСЃРёРјРёСЂСѓРµРј РїРѕР»СѓС‚РµРЅРё РЅР° РІС‹СЃРѕС‚Рµ +/- 0.2 dmax РѕС‚ РїРѕР»Сѓ РІС‹СЃРѕС‚С‹
    // ( d = a * x + b )
    double d1 = dmax * 0.3, d2 = dmax * 0.7;
    A00 = A01 = A10 = A11 = B0 = B1 = 0;
@@ -77,7 +77,7 @@ void ProfileProcessor::ProfileParameters(const std::vector<double>& x, const std
       double xi = x[i] - x0;
       if (d[i] > d1 && d[i] < d2)
          dd[i] = a * xi + b;
-   } // dindex1 - пределы стартуют от предсказания положения 80% по аппроксимации прямой линией
+   } // dindex1 - РїСЂРµРґРµР»С‹ СЃС‚Р°СЂС‚СѓСЋС‚ РѕС‚ РїСЂРµРґСЃРєР°Р·Р°РЅРёСЏ РїРѕР»РѕР¶РµРЅРёСЏ 80% РїРѕ Р°РїРїСЂРѕРєСЃРёРјР°С†РёРё РїСЂСЏРјРѕР№ Р»РёРЅРёРµР№
    double dindex1 = 0;
    int count = 0;
    double xx2 = x0 + (dmax * 0.8 - b) / a;
@@ -88,7 +88,7 @@ void ProfileProcessor::ProfileParameters(const std::vector<double>& x, const std
          count++;
       }
    }
-   dindex1 /= count * dmax; // Правая полутень
+   dindex1 /= count * dmax; // РџСЂР°РІР°СЏ РїРѕР»СѓС‚РµРЅСЊ
    A00 = A01 = A10 = A11 = B0 = B1 = 0;
    for (i = imax; i < np; i++) {
       double xi = x[i] - x0;
@@ -109,7 +109,7 @@ void ProfileProcessor::ProfileParameters(const std::vector<double>& x, const std
       double xi = x[i] - x0;
       if (d[i] > d1 && d[i] < d2)
          dd[i] = a * xi + b;
-   } // dindex1 - пределы стартуют от предсказания положения 80% по аппроксимации прямой линией
+   } // dindex1 - РїСЂРµРґРµР»С‹ СЃС‚Р°СЂС‚СѓСЋС‚ РѕС‚ РїСЂРµРґСЃРєР°Р·Р°РЅРёСЏ РїРѕР»РѕР¶РµРЅРёСЏ 80% РїРѕ Р°РїРїСЂРѕРєСЃРёРјР°С†РёРё РїСЂСЏРјРѕР№ Р»РёРЅРёРµР№
    double dindex2 = 0;
    count = 0;
    xx1 = x0 + (dmax * 0.8 - b) / a;
@@ -130,9 +130,9 @@ std::shared_ptr<vector<vector<double>>> ProfileProcessor::SmoothFanRZ(const vect
                                                                       unsigned nr, unsigned nz, double rstep)
 {
    //auto smatrix = make_shared<vector<vector<double>>>(nz, vector<double>(nr, 0));
-   // Копия исходной матрицы
+   // РљРѕРїРёСЏ РёСЃС…РѕРґРЅРѕР№ РјР°С‚СЂРёС†С‹
    auto smatrix = make_shared<vector<vector<double>>>(srcMatrix);
-   // Определяем размер поля и пределы индексов для сглаживания профилей параболой.
+   // РћРїСЂРµРґРµР»СЏРµРј СЂР°Р·РјРµСЂ РїРѕР»СЏ Рё РїСЂРµРґРµР»С‹ РёРЅРґРµРєСЃРѕРІ РґР»СЏ СЃРіР»Р°Р¶РёРІР°РЅРёСЏ РїСЂРѕС„РёР»РµР№ РїР°СЂР°Р±РѕР»РѕР№.
    int ir50 = 0, izc = nz / 2;
    double d50 = srcMatrix[izc][0] / 2;
    for (ir50 = 0; ir50 < static_cast<int>(nr); ir50++) {
@@ -141,14 +141,14 @@ std::shared_ptr<vector<vector<double>>> ProfileProcessor::SmoothFanRZ(const vect
    }
    if (ir50 == 0 || ir50 == nr)
       throw std::exception("ProfileProcessor::SmoothFanRZ: wrong profile (penumbra not found)");
-   // Пределы индексов для параболической аппроксимации минимум половины поля и не ближе 1.5 см до его размера.
+   // РџСЂРµРґРµР»С‹ РёРЅРґРµРєСЃРѕРІ РґР»СЏ РїР°СЂР°Р±РѕР»РёС‡РµСЃРєРѕР№ Р°РїРїСЂРѕРєСЃРёРјР°С†РёРё РјРёРЅРёРјСѓРј РїРѕР»РѕРІРёРЅС‹ РїРѕР»СЏ Рё РЅРµ Р±Р»РёР¶Рµ 1.5 СЃРј РґРѕ РµРіРѕ СЂР°Р·РјРµСЂР°.
    int nr2 = (ir50 * rstep) > 3.0 ? ir50 / 2 : ir50 - int(1.5 / rstep);
-   // Для слишком маленьких полей параболу не используем
+   // Р”Р»СЏ СЃР»РёС€РєРѕРј РјР°Р»РµРЅСЊРєРёС… РїРѕР»РµР№ РїР°СЂР°Р±РѕР»Сѓ РЅРµ РёСЃРїРѕР»СЊР·СѓРµРј
    unsigned ir, iz;
    if (nr2 > 5) {
       for (iz = 0; iz < nz; iz++)
          SmoothRZProfile((*smatrix)[iz], nr2);
-   } // Сглаживание вдоль FanLine
+   } // РЎРіР»Р°Р¶РёРІР°РЅРёРµ РІРґРѕР»СЊ FanLine
    vector<double> ptmp(nz);
    for (ir = 0; ir < nr; ir++) {
       for (iz = 0; iz < nz; iz++)
@@ -162,9 +162,9 @@ std::shared_ptr<vector<vector<double>>> ProfileProcessor::SmoothFanRZ(const vect
 
 void ProfileProcessor::SmoothRZProfile(vector<double>& p, unsigned nr)
 {
-   // Аппроксимируем открытую часть симметричной параболой и подгоняем методом наименьших квадратов
+   // РђРїРїСЂРѕРєСЃРёРјРёСЂСѓРµРј РѕС‚РєСЂС‹С‚СѓСЋ С‡Р°СЃС‚СЊ СЃРёРјРјРµС‚СЂРёС‡РЅРѕР№ РїР°СЂР°Р±РѕР»РѕР№ Рё РїРѕРґРіРѕРЅСЏРµРј РјРµС‚РѕРґРѕРј РЅР°РёРјРµРЅСЊС€РёС… РєРІР°РґСЂР°С‚РѕРІ
    // ( y = y0 + a * x^2 )
-   // Учитываем статистическую погрешность данных согласно площади колец детектора.
+   // РЈС‡РёС‚С‹РІР°РµРј СЃС‚Р°С‚РёСЃС‚РёС‡РµСЃРєСѓСЋ РїРѕРіСЂРµС€РЅРѕСЃС‚СЊ РґР°РЅРЅС‹С… СЃРѕРіР»Р°СЃРЅРѕ РїР»РѕС‰Р°РґРё РєРѕР»РµС† РґРµС‚РµРєС‚РѕСЂР°.
    unsigned i;
    double A00 = 0, A01 = 0, A10 = 0, A11 = 0, B0 = 0, B1 = 0;
    for (i = 0; i < nr; i++) {
@@ -192,7 +192,7 @@ void ProfileProcessor::SmoothSG1D(vector<double>& p, unsigned m, unsigned nl, un
    const double m4l4r4[] = {0.035, -0.128, 0.07, 0.315, 0.416, 0.315, 0.07, -0.128, 0.035};
    unsigned np = static_cast<unsigned>(p.size());
    if (np <= nl + nr)
-      return; // оставляем без изменения
+      return; // РѕСЃС‚Р°РІР»СЏРµРј Р±РµР· РёР·РјРµРЅРµРЅРёСЏ
    const double* c;
    if (m == 2 && nl == 2 && nr == 2)
       c = m2l2r2;
@@ -213,3 +213,6 @@ void ProfileProcessor::SmoothSG1D(vector<double>& p, unsigned m, unsigned nl, un
       p[i] = f;
    }
 }
+
+
+

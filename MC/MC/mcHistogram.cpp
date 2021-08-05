@@ -174,3 +174,6 @@ ostream& operator <<(ostream& os, const vector<mcHistogram>& ha)
    }
    return os;
 }
+
+
+

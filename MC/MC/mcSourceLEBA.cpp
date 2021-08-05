@@ -1,4 +1,4 @@
-#include "mcSourceLEBA.h"
+п»ї#include "mcSourceLEBA.h"
 #include "mcDefs.h"
 #include "mcSamplers.h"
 #include "mcThread.h"
@@ -15,11 +15,11 @@ void mcSourceLEBA::sample(mcParticle& p, mcThread* thread)
 {
    mcRng& rng = thread->rng();
    p.t = MCP_NEGATRON;
-   p.q = q_; // Энергия
+   p.q = q_; // Р­РЅРµСЂРіРёСЏ
    double f = 0;
    if (sptype_ == SPECTRUM_GAUSS) {
-      // Исключаем из спектра частицы, значения которых за пределами 2 сигма.
-      // Для этого линейно переносим диапазон случайных чисел с отрезка (0,1) на (thr, 1-thr).
+      // РСЃРєР»СЋС‡Р°РµРј РёР· СЃРїРµРєС‚СЂР° С‡Р°СЃС‚РёС†С‹, Р·РЅР°С‡РµРЅРёСЏ РєРѕС‚РѕСЂС‹С… Р·Р° РїСЂРµРґРµР»Р°РјРё 2 СЃРёРіРјР°.
+      // Р”Р»СЏ СЌС‚РѕРіРѕ Р»РёРЅРµР№РЅРѕ РїРµСЂРµРЅРѕСЃРёРј РґРёР°РїР°Р·РѕРЅ СЃР»СѓС‡Р°Р№РЅС‹С… С‡РёСЃРµР» СЃ РѕС‚СЂРµР·РєР° (0,1) РЅР° (thr, 1-thr).
       //const double thr = 0.005;
       //const double thscale = (1.0 - 2.0 * thr);
       //f = mcSamplers::SampleGauss(thr + rng.rnd() * thscale);
@@ -29,7 +29,7 @@ void mcSourceLEBA::sample(mcParticle& p, mcThread* thread)
    } else if (sptype_ == SPECTRUM_TRIANGLE) {
       f = mcSamplers::SampleTriangle(rng.rnd());
    }
-   p.ke = kemean_ + 0.5 * kewidth_ * f; // Радиус
+   p.ke = kemean_ + 0.5 * kewidth_ * f; // Р Р°РґРёСѓСЃ
    if (rsigma_ == 0)
       p.p.set(0, 0, z_);
    else {
@@ -44,7 +44,7 @@ void mcSourceLEBA::sample(mcParticle& p, mcThread* thread)
       double phi = rng.rnd() * TWOPI;
       p.p.set(r * cos(phi), r * sin(phi), z_);
    }
-   p.plast = p.p; // Направление по определению вдоль оси
+   p.plast = p.p; // РќР°РїСЂР°РІР»РµРЅРёРµ РїРѕ РѕРїСЂРµРґРµР»РµРЅРёСЋ РІРґРѕР»СЊ РѕСЃРё
    p.u.set(0, 0, 1);
    p.weight = 1;
    p.thread_ = thread;
@@ -90,3 +90,6 @@ void mcSourceLEBA::dumpVRML(ostream& os) const
    os << "  ]" << endl;
    os << "}" << endl;
 }
+
+
+

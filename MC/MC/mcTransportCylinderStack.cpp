@@ -1,4 +1,4 @@
-#include "mcTransportCylinderStack.h"
+п»ї#include "mcTransportCylinderStack.h"
 #include "mcGeometry.h"
 #include <float.h>
 
@@ -26,17 +26,17 @@ void mcTransportCylinderStack::setGeometry(int nc, double dr, double ds, double 
 
 double mcTransportCylinderStack::getDistanceInside(mcParticle& p) const
 {
-   // Цилиндр
+   // Р¦РёР»РёРЅРґСЂ
    double r = p.p.lengthXY();
    int ir = int(r / ds_ + MC_EPSILON);
    double r0 = ir * ds_;
    double cd1 = mcGeometry::getDistanceToInfiniteCylinderInside(p.p, p.u, r0 + dr_);
-   double cd2 = ir == 0 ? DBL_MAX : mcGeometry::getDistanceToInfiniteCylinderOutside(p.p, p.u, r0); // Плоскости
+   double cd2 = ir == 0 ? DBL_MAX : mcGeometry::getDistanceToInfiniteCylinderOutside(p.p, p.u, r0); // РџР»РѕСЃРєРѕСЃС‚Рё
    double vz = p.u.z();
    double pd = (vz < 0) ? -p.p.z() / vz : (vz > 0) ? (h_ - p.p.z()) / vz : DBL_MAX;
    double dist = MIN(MIN(cd1, cd2), fabs(pd));
    if (internalTransport_ != nullptr) {
-      // К сожалению частицу нужно переводить в систему координат объекта
+      // Рљ СЃРѕР¶Р°Р»РµРЅРёСЋ С‡Р°СЃС‚РёС†Сѓ РЅСѓР¶РЅРѕ РїРµСЂРµРІРѕРґРёС‚СЊ РІ СЃРёСЃС‚РµРјСѓ РєРѕРѕСЂРґРёРЅР°С‚ РѕР±СЉРµРєС‚Р°
       mcParticle pp(p);
       pp.p = pp.p * mtoe_;
       pp.u = p.u.transformDirection(mtoe_);
@@ -56,13 +56,13 @@ double mcTransportCylinderStack::getDistanceInside(mcParticle& p) const
 
 double mcTransportCylinderStack::getDistanceOutside(mcParticle& p) const
 {
-   p.exitSurface_ = mcParticle::temb_shit_t::External; // Удаление от секущих плоскостей
+   p.exitSurface_ = mcParticle::temb_shit_t::External; // РЈРґР°Р»РµРЅРёРµ РѕС‚ СЃРµРєСѓС‰РёС… РїР»РѕСЃРєРѕСЃС‚РµР№
    double z = p.p.z(), vz = p.u.z();
    if (z <= 0 && vz <= 0)
       return DBL_MAX;
    if (z >= h_ && vz >= 0)
-      return DBL_MAX; // Если частица за пределами торцов, то премещаем ее на ближайщий торец,
-   // чтобы определиться с задействованными цилиндрами
+      return DBL_MAX; // Р•СЃР»Рё С‡Р°СЃС‚РёС†Р° Р·Р° РїСЂРµРґРµР»Р°РјРё С‚РѕСЂС†РѕРІ, С‚Рѕ РїСЂРµРјРµС‰Р°РµРј РµРµ РЅР° Р±Р»РёР¶Р°Р№С‰РёР№ С‚РѕСЂРµС†,
+   // С‡С‚РѕР±С‹ РѕРїСЂРµРґРµР»РёС‚СЊСЃСЏ СЃ Р·Р°РґРµР№СЃС‚РІРѕРІР°РЅРЅС‹РјРё С†РёР»РёРЅРґСЂР°РјРё
    int ir;
    double r, dist = 0;
    geomVector3D pp = p.p;
@@ -72,19 +72,19 @@ double mcTransportCylinderStack::getDistanceOutside(mcParticle& p) const
       r = pp.lengthXY();
       ir = int(r / ds_ + MC_EPSILON);
       if (ir < nc_ && r < ir * ds_ + dr_)
-         return dist; // при перенесении на торец воткнулись в полнотелый цылиндр
+         return dist; // РїСЂРё РїРµСЂРµРЅРµСЃРµРЅРёРё РЅР° С‚РѕСЂРµС† РІРѕС‚РєРЅСѓР»РёСЃСЊ РІ РїРѕР»РЅРѕС‚РµР»С‹Р№ С†С‹Р»РёРЅРґСЂ
       z = pp.z();
    } else {
       r = pp.lengthXY();
       ir = int(r / ds_ + MC_EPSILON);
-   } // Определяемся с цилиндрами
+   } // РћРїСЂРµРґРµР»СЏРµРјСЃСЏ СЃ С†РёР»РёРЅРґСЂР°РјРё
    double cd1 = DBL_MAX, cd2 = cd1, cds = cd1;
    if (r > ds_ * (nc_ - 1) + dr_)
       cd1 = mcGeometry::getDistanceToInfiniteCylinderOutside(pp, p.u, ds_ * (nc_ - 1) + dr_);
    else {
       cd1 = mcGeometry::getDistanceToInfiniteCylinderInside(pp, p.u, (ir + 1) * ds_);
       cd2 = mcGeometry::getDistanceToInfiniteCylinderOutside(pp, p.u, ir * ds_ + dr_);
-   } // Теперь вопрос, что произойдет быстрее: пересечение с торцом или цилиндром?
+   } // РўРµРїРµСЂСЊ РІРѕРїСЂРѕСЃ, С‡С‚Рѕ РїСЂРѕРёР·РѕР№РґРµС‚ Р±С‹СЃС‚СЂРµРµ: РїРµСЂРµСЃРµС‡РµРЅРёРµ СЃ С‚РѕСЂС†РѕРј РёР»Рё С†РёР»РёРЅРґСЂРѕРј?
    if (vz > 0)
       cds = fabs((h_ - z) / vz);
    else if (vz < 0)
@@ -123,3 +123,6 @@ void mcTransportCylinderStack::dumpVRML(ostream& os) const
    os << "  ]" << endl;
    os << "}" << endl;
 }
+
+
+

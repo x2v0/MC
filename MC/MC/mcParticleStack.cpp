@@ -1,4 +1,4 @@
-#include "mcParticleStack.h"
+﻿#include "mcParticleStack.h"
 #include "mcParticle.h"
 #include "mcRng.h"
 #define MC_STACK_SIZE   15
@@ -23,3 +23,6 @@ mcParticleStack::~mcParticleStack(void)
    delete[] pCurParticle_;
    delete[] particleStack_;
 }
+
+
+

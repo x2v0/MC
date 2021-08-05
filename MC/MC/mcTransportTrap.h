@@ -1,14 +1,14 @@
-// Radiation Oncology Monte Carlo open source project
+п»ї// Radiation Oncology Monte Carlo open source project
 //
 // Author: [2005-2017] Gennady Gorlachev (ggorlachev@roiss.ru) 
 //---------------------------------------------------------------------------
 #pragma once
 #include "mcTransport.h"
 
-// Ловушка частиц.
-// Преобразует координаты в собственную систему и не сдвигая 
-// частицу вызывает ассоциированный скоринг.
-// Затем частица уничтожается.
+// Р›РѕРІСѓС€РєР° С‡Р°СЃС‚РёС†.
+// РџСЂРµРѕР±СЂР°Р·СѓРµС‚ РєРѕРѕСЂРґРёРЅР°С‚С‹ РІ СЃРѕР±СЃС‚РІРµРЅРЅСѓСЋ СЃРёСЃС‚РµРјСѓ Рё РЅРµ СЃРґРІРёРіР°СЏ 
+// С‡Р°СЃС‚РёС†Сѓ РІС‹Р·С‹РІР°РµС‚ Р°СЃСЃРѕС†РёРёСЂРѕРІР°РЅРЅС‹Р№ СЃРєРѕСЂРёРЅРі.
+// Р—Р°С‚РµРј С‡Р°СЃС‚РёС†Р° СѓРЅРёС‡С‚РѕР¶Р°РµС‚СЃСЏ.
 class mcTransportTrap : public mcTransport
 {
 public:
@@ -22,3 +22,6 @@ public:
 
    void dumpVRML(ostream& os) const override;
 };
+
+
+

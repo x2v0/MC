@@ -1,11 +1,11 @@
-// Radiation Oncology Monte Carlo open source project
+п»ї// Radiation Oncology Monte Carlo open source project
 //
 // Author: [2005-2017] Gennady Gorlachev (ggorlachev@roiss.ru) 
 //---------------------------------------------------------------------------
 #pragma once
 #include "mcTransport.h"
 
-// Класс транспорта в цилиндре
+// РљР»Р°СЃСЃ С‚СЂР°РЅСЃРїРѕСЂС‚Р° РІ С†РёР»РёРЅРґСЂРµ
 class mcTransportCylinder : public mcTransport
 {
 public:
@@ -40,3 +40,6 @@ protected:
    double r_;
    double h_;
 };
+
+
+

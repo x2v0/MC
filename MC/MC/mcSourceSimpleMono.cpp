@@ -1,4 +1,4 @@
-#include "mcSourceSimpleMono.h"
+﻿#include "mcSourceSimpleMono.h"
 #include "mcThread.h"
 #include "../geometry/vec3d.h"
 mcSourceSimpleMono::mcSourceSimpleMono(void) : mcSource(), type_(MCP_PHOTON), ke_(0), q_(0) {}
@@ -92,3 +92,6 @@ void mcSourceSimpleMono::dumpVRML(ostream& os) const
    os << "  ]" << endl;
    os << "}" << endl;
 }
+
+
+

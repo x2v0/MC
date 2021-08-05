@@ -1,4 +1,4 @@
-#include "mcTransportSlab.h"
+п»ї#include "mcTransportSlab.h"
 #include <float.h>
 mcTransportSlab::mcTransportSlab() : mcTransport(), h_(0) {}
 
@@ -17,7 +17,7 @@ double mcTransportSlab::getDistanceInside(mcParticle& p) const
 
 double mcTransportSlab::getDistanceOutside(mcParticle& p) const
 {
-   // Удаление от секущих плоскостей
+   // РЈРґР°Р»РµРЅРёРµ РѕС‚ СЃРµРєСѓС‰РёС… РїР»РѕСЃРєРѕСЃС‚РµР№
    double z = p.p.z(), vz = p.u.z();
    if (z <= 0 && vz <= 0)
       return DBL_MAX;
@@ -41,7 +41,7 @@ void mcTransportSlab::dump(ostream& os) const
 
 void mcTransportSlab::dumpVRML(ostream& os) const
 {
-   double a = 200; // размера бокса
+   double a = 200; // СЂР°Р·РјРµСЂР° Р±РѕРєСЃР°
    geomVector3D p = geomVector3D(0, 0, h_ * 0.5) * mttow_;
    os << "# Slab: " << this->getName() << endl;
    os << "Transform {" << endl;
@@ -59,3 +59,6 @@ void mcTransportSlab::dumpVRML(ostream& os) const
    os << "  ]" << endl;
    os << "}" << endl;
 }
+
+
+

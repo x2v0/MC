@@ -1,4 +1,4 @@
-#include "mcSourceXrayBeam.h"
+ï»¿#include "mcSourceXrayBeam.h"
 #include "mcDefs.h"
 #include "mcSamplers.h"
 #include "mcHistogramSampler.h"
@@ -45,7 +45,7 @@ mcSourceXrayBeam::~mcSourceXrayBeam(void)
 
 void mcSourceXrayBeam::sample(mcParticle& p, mcThread* thread)
 {
-   // Ñîãëàñîâàíèå ñèãìà ïî ðàäèóñó è îòäåëüíîé êîîðäèíàòå.
+   // Ð¡Ð¾Ð³Ð»Ð°ÑÐ¾Ð²Ð°Ð½Ð¸Ðµ ÑÐ¸Ð³Ð¼Ð° Ð¿Ð¾ Ñ€Ð°Ð´Ð¸ÑƒÑÑƒ Ð¸ Ð¾Ñ‚Ð´ÐµÐ»ÑŒÐ½Ð¾Ð¹ ÐºÐ¾Ð¾Ñ€Ð´Ð¸Ð½Ð°Ñ‚Ðµ.
    const double s = sqrt(0.5);
    mcRng& rng = thread->rng();
    p.t = type_;
@@ -101,3 +101,6 @@ void mcSourceXrayBeam::dumpVRML(ostream& os) const
    os << "      }" << endl;
    os << "    }" << endl;
 }
+
+
+

@@ -1,4 +1,4 @@
-// Radiation Oncology Monte Carlo open source project
+п»ї// Radiation Oncology Monte Carlo open source project
 //
 // Author: [2005-2017] Gennady Gorlachev (ggorlachev@roiss.ru) 
 //---------------------------------------------------------------------------
@@ -44,11 +44,14 @@ protected:
    double** m_intencity;
    double* m_intencity_count_all;
    double** m_intencity_count;
-   double h_;    // растояние от скоринга до плоскости источника
-   int nz_;      // количесво слоёв скоринга по оси oZ
-   double d_iz_; // расстояние между слоями скоринга
+   double h_;    // СЂР°СЃС‚РѕСЏРЅРёРµ РѕС‚ СЃРєРѕСЂРёРЅРіР° РґРѕ РїР»РѕСЃРєРѕСЃС‚Рё РёСЃС‚РѕС‡РЅРёРєР°
+   int nz_;      // РєРѕР»РёС‡РµСЃРІРѕ СЃР»РѕС‘РІ СЃРєРѕСЂРёРЅРіР° РїРѕ РѕСЃРё oZ
+   double d_iz_; // СЂР°СЃСЃС‚РѕСЏРЅРёРµ РјРµР¶РґСѓ СЃР»РѕСЏРјРё СЃРєРѕСЂРёРЅРіР°
    int m_nr_s;
    double m_rmax_s;
    double m_rstep_s;
    double*** m_intencity_s;
 };
+
+
+

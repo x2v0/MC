@@ -20,3 +20,6 @@ mcGeomWedgeTriangle::mcGeomWedgeTriangle(double x0, double y0, double x1, double
    Sides_[4] = new mcGeomTriangleSide(geomVector3D(xw_, x0_, 0), geomVector3D(0, 1, 0), geomVector3D(0, 0, 1),
                                       x1_ - x0_, y0_);
 }
+
+
+

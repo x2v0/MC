@@ -1,4 +1,4 @@
-#include "mcPhysicsCharged.h"
+﻿#include "mcPhysicsCharged.h"
 #include "mcRng.h"
 #include "mcDefs.h"
 #include <math.h>
@@ -162,3 +162,6 @@ double mcPhysicsCharged::ReducedPathLength(double stepNext, double tscat)
    double path = stepNext * (path0[iPath] + s * (path1[iPath] + s * path2[iPath]));
    return path;
 }
+
+
+

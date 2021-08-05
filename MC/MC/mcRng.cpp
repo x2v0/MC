@@ -1,4 +1,4 @@
-#include "mcRng.h"
+﻿#include "mcRng.h"
 #include <exception>
 
 mcRng::mcRng(void) : p96Gen_(nullptr), pIGen_(nullptr), pJGen_(nullptr), decrement_(0)
@@ -97,3 +97,6 @@ double mcRng::rnd()
       pJGen_ = p96Gen_;
    return rnd;
 }
+
+
+

@@ -1,4 +1,4 @@
-// Radiation Oncology Monte Carlo open source project
+п»ї// Radiation Oncology Monte Carlo open source project
 //
 // Author: [2005-2017] Gennady Gorlachev (ggorlachev@roiss.ru) 
 //---------------------------------------------------------------------------
@@ -6,7 +6,7 @@
 #include "mcscore.h"
 #include <vector>
 
-// Класс ослеживания траекторий частиц между модулями транспорта.
+// РљР»Р°СЃСЃ РѕСЃР»РµР¶РёРІР°РЅРёСЏ С‚СЂР°РµРєС‚РѕСЂРёР№ С‡Р°СЃС‚РёС† РјРµР¶РґСѓ РјРѕРґСѓР»СЏРјРё С‚СЂР°РЅСЃРїРѕСЂС‚Р°.
 class mcScoreTrack : public mcScore
 {
 public:
@@ -22,8 +22,11 @@ public:
 protected:
    vector<vector<geomVector3D>> photons_;
    vector<vector<geomVector3D>> electrons_;
-   vector<vector<geomVector3D>> positrons_; // Размеры цилиндра, ограничивающие изображение треков
-   double R_, Z1_, Z2_;                     // Минимальная энергия, ниже которой треки не показываются
-   double EMIN_;                            // Флаги изображаемых частиц
+   vector<vector<geomVector3D>> positrons_; // Р Р°Р·РјРµСЂС‹ С†РёР»РёРЅРґСЂР°, РѕРіСЂР°РЅРёС‡РёРІР°СЋС‰РёРµ РёР·РѕР±СЂР°Р¶РµРЅРёРµ С‚СЂРµРєРѕРІ
+   double R_, Z1_, Z2_;                     // РњРёРЅРёРјР°Р»СЊРЅР°СЏ СЌРЅРµСЂРіРёСЏ, РЅРёР¶Рµ РєРѕС‚РѕСЂРѕР№ С‚СЂРµРєРё РЅРµ РїРѕРєР°Р·С‹РІР°СЋС‚СЃСЏ
+   double EMIN_;                            // Р¤Р»Р°РіРё РёР·РѕР±СЂР°Р¶Р°РµРјС‹С… С‡Р°СЃС‚РёС†
    bool doPhotons_, doElectrons_, doPositrons_;
 };
+
+
+

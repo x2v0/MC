@@ -1,4 +1,4 @@
-// Radiation Oncology Monte Carlo open source project
+﻿// Radiation Oncology Monte Carlo open source project
 //
 // Author: [2005-2017] Gennady Gorlachev (ggorlachev@roiss.ru) 
 //---------------------------------------------------------------------------
@@ -86,3 +86,6 @@ private: // Types
    preamble_t preamble_; // Keep latch of the last read particle
    unsigned int latch_;
 };
+
+
+

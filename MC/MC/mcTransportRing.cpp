@@ -1,4 +1,4 @@
-#include "mcTransportRing.h"
+п»ї#include "mcTransportRing.h"
 #include "mcGeometry.h"
 #include <float.h>
 
@@ -24,9 +24,9 @@ void mcTransportRing::setGeometry(double r0, double r1, double h)
 
 double mcTransportRing::getDistanceInside(mcParticle& p) const
 {
-   // Цилиндр
+   // Р¦РёР»РёРЅРґСЂ
    double cd1 = mcGeometry::getDistanceToInfiniteCylinderInside(p.p, p.u, r1_);
-   double cd2 = mcGeometry::getDistanceToInfiniteCylinderOutside(p.p, p.u, r0_); // Плоскости
+   double cd2 = mcGeometry::getDistanceToInfiniteCylinderOutside(p.p, p.u, r0_); // РџР»РѕСЃРєРѕСЃС‚Рё
    double vz = p.u.z();
    double pd = (vz < 0) ? -p.p.z() / vz : (vz > 0) ? (h_ - p.p.z()) / vz : DBL_MAX;
    return NNEG(MIN(MIN(cd1, cd2), pd));
@@ -34,13 +34,13 @@ double mcTransportRing::getDistanceInside(mcParticle& p) const
 
 double mcTransportRing::getDistanceOutside(mcParticle& p) const
 {
-   // Удаление от секущих плоскостей
+   // РЈРґР°Р»РµРЅРёРµ РѕС‚ СЃРµРєСѓС‰РёС… РїР»РѕСЃРєРѕСЃС‚РµР№
    double z = p.p.z(), vz = p.u.z();
    if (z <= 0 && vz <= 0)
       return DBL_MAX;
    if (z >= h_ && vz >= 0)
       return DBL_MAX;
-   double r = p.p.lengthXY(); // Внутри внутреннего цилиндра
+   double r = p.p.lengthXY(); // Р’РЅСѓС‚СЂРё РІРЅСѓС‚СЂРµРЅРЅРµРіРѕ С†РёР»РёРЅРґСЂР°
    if (r < r0_) {
       double cd = mcGeometry::getDistanceToInfiniteCylinderInside(p.p, p.u, r0_);
       geomVector3D c = p.p + (p.u * cd);
@@ -58,7 +58,7 @@ double mcTransportRing::getDistanceOutside(mcParticle& p) const
       if (r > r0_ && r < r1_)
          return pd;
       return DBL_MAX;
-   } // За пределами внешнего цилиндра
+   } // Р—Р° РїСЂРµРґРµР»Р°РјРё РІРЅРµС€РЅРµРіРѕ С†РёР»РёРЅРґСЂР°
    if (r > r1_) {
       double cd = mcGeometry::getDistanceToInfiniteCylinderOutside(p.p, p.u, r1_);
       geomVector3D c = p.p + (p.u * cd);
@@ -82,7 +82,7 @@ double mcTransportRing::getDistanceOutside(mcParticle& p) const
             return DBL_MAX;
          }
       }
-   } // Между цилиндрами
+   } // РњРµР¶РґСѓ С†РёР»РёРЅРґСЂР°РјРё
    if (vz > 0) {
       double pd = -p.p.z() / vz;
       geomVector3D c = p.p + (p.u * pd);
@@ -94,7 +94,7 @@ double mcTransportRing::getDistanceOutside(mcParticle& p) const
       double cd = mcGeometry::getDistanceToInfiniteCylinderInside(c, p.u, r0_);
       c += p.u * cd;
       if (c.z() < h_)
-         return cd + pd; // проскочили в дырку
+         return cd + pd; // РїСЂРѕСЃРєРѕС‡РёР»Рё РІ РґС‹СЂРєСѓ
       return DBL_MAX;
    }
    double pd = (h_ - p.p.z()) / vz;
@@ -137,3 +137,6 @@ void mcTransportRing::dumpVRML(ostream& os) const
    os << "  ]" << endl;
    os << "}" << endl;
 }
+
+
+

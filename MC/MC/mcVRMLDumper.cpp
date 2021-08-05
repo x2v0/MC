@@ -1,4 +1,4 @@
-#include "mcVRMLDumper.h"
+ï»¿#include "mcVRMLDumper.h"
 
 void mcVRMLDumper::dumpHead(ostream& os)
 {
@@ -10,7 +10,7 @@ void mcVRMLDumper::dumpWorldAxis(ostream& os, double a)
    double fnt_size = 0.1 * a;
    os << "# World coordinate system axes" << endl;
    for (int i = 0; i < 3; i++) {
-      // Ëèíèÿ
+      // Ð›Ð¸Ð½Ð¸Ñ
       os << "Shape {" << endl;
       os << "  appearance Appearance {" << endl;
       os << "    material Material {" << endl; //os << "      emissiveColor 1 1 1" << endl;
@@ -49,7 +49,7 @@ void mcVRMLDumper::dumpWorldAxis(ostream& os, double a)
       os << "      0 1 " << endl;
       os << "    ]" << endl;
       os << "  }" << endl;
-      os << "}" << endl; // Òåêñò
+      os << "}" << endl; // Ð¢ÐµÐºÑÑ‚
       os << "Transform {" << endl;
       os << "  translation ";
       if (i == 0)
@@ -92,3 +92,6 @@ void mcVRMLDumper::dumpWorldAxis(ostream& os, double a)
       os << "}" << endl;
    }
 }
+
+
+

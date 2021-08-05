@@ -1,4 +1,4 @@
-// Radiation Oncology Monte Carlo open source project
+﻿// Radiation Oncology Monte Carlo open source project
 //
 // Author: [2017] Gennady Gorlachev (ggorlachev@roiss.ru) 
 //---------------------------------------------------------------------------
@@ -46,3 +46,6 @@ protected:
    double fsy2_;
    mcHistogramSampler* esampler_; // energy sampler from spectrum
 };
+
+
+

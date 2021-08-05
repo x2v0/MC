@@ -1,4 +1,4 @@
-#include "mcScore.h"
+﻿#include "mcScore.h"
 
 mcScore::mcScore(const char* module_name, int nThreads) : mcObj(), dconverted_(false), density_(1.0),
                                                           transport_(nullptr)
@@ -40,3 +40,6 @@ void mcScore::dumpStatistic(ostream& os) const
    os << "Etotal = " << etotal() << endl;
    os << endl;
 }
+
+
+

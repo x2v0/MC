@@ -1,4 +1,4 @@
-#include "mcSourceDistributed.h"
+ï»¿#include "mcSourceDistributed.h"
 #include "mcRng.h"
 #include "mcThread.h"
 #include "../geometry/vec3d.h"
@@ -21,13 +21,13 @@ mcSourceDistributed::mcSourceDistributed(const char* name, int nThreads, mc_part
 }
 
 void mcSourceDistributed::init(mc_particle_t type, double ke, const geomVector3D& p, const geomVector3D& v,
-                               mc_distr_t distr // òèï ðàñïðåäåëåíèÿ
+                               mc_distr_t distr // Ñ‚Ð¸Ð¿ Ñ€Ð°ÑÐ¿Ñ€ÐµÐ´ÐµÐ»ÐµÐ½Ð¸Ñ
                                , double Emitx
-                               // õ-ýìèòòàíñ, â ñì. "Íîðìàëèçîâàííûé", áåç ïè, ò.å. ïðîñòî rbeam*rbeta, rbeta = vrmax/C, C - ñêîðîñòü ñâåòà
-                               , double rbeamx     // ïîëóîñü ïî õ
-                               , double beamAnglex // óãëîâîå ðàñõîæäåíèå ïî õ (èç-çà îïòèêè, íå ñâÿçàíî ñ ýìèòòàíñîì)
+                               // Ñ…-ÑÐ¼Ð¸Ñ‚Ñ‚Ð°Ð½Ñ, Ð² ÑÐ¼. "ÐÐ¾Ñ€Ð¼Ð°Ð»Ð¸Ð·Ð¾Ð²Ð°Ð½Ð½Ñ‹Ð¹", Ð±ÐµÐ· Ð¿Ð¸, Ñ‚.Ðµ. Ð¿Ñ€Ð¾ÑÑ‚Ð¾ rbeam*rbeta, rbeta = vrmax/C, C - ÑÐºÐ¾Ñ€Ð¾ÑÑ‚ÑŒ ÑÐ²ÐµÑ‚Ð°
+                               , double rbeamx     // Ð¿Ð¾Ð»ÑƒÐ¾ÑÑŒ Ð¿Ð¾ Ñ…
+                               , double beamAnglex // ÑƒÐ³Ð»Ð¾Ð²Ð¾Ðµ Ñ€Ð°ÑÑ…Ð¾Ð¶Ð´ÐµÐ½Ð¸Ðµ Ð¿Ð¾ Ñ… (Ð¸Ð·-Ð·Ð° Ð¾Ð¿Ñ‚Ð¸ÐºÐ¸, Ð½Ðµ ÑÐ²ÑÐ·Ð°Ð½Ð¾ Ñ ÑÐ¼Ð¸Ñ‚Ñ‚Ð°Ð½ÑÐ¾Ð¼)
                                , double Emity      //
-                               , double rbeamy     //  âñå òî æå ñàìîå äëÿ y
+                               , double rbeamy     //  Ð²ÑÐµ Ñ‚Ð¾ Ð¶Ðµ ÑÐ°Ð¼Ð¾Ðµ Ð´Ð»Ñ y
                                , double beamAngley //
 )
 {
@@ -36,47 +36,47 @@ void mcSourceDistributed::init(mc_particle_t type, double ke, const geomVector3D
    p_ = p;
    v_ = v;
    q_ = type_ == MCP_PHOTON ? 0 : type_ == MCP_NEGATRON ? -1 : 1;
-   distr_ = distr; // òèï ðàñïðåäåëåíèÿ
+   distr_ = distr; // Ñ‚Ð¸Ð¿ Ñ€Ð°ÑÐ¿Ñ€ÐµÐ´ÐµÐ»ÐµÐ½Ð¸Ñ
    Emitx_ = Emitx;
-   // õ-ýìèòòàíñ, â ñì. "Íîðìàëèçîâàííûé", áåç ïè, ò.å. ïðîñòî rbeam*rbeta, rbeta = vrmax/C, C - ñêîðîñòü ñâåòà
-   rbeamx_ = rbeamx;         // ïîëóîñü ïî õ
-   beamAnglex_ = beamAnglex; // óãëîâîå ðàñõîæäåíèå ïî õ (èç-çà îïòèêè, íå ñâÿçàíî ñ ýìèòòàíñîì)
+   // Ñ…-ÑÐ¼Ð¸Ñ‚Ñ‚Ð°Ð½Ñ, Ð² ÑÐ¼. "ÐÐ¾Ñ€Ð¼Ð°Ð»Ð¸Ð·Ð¾Ð²Ð°Ð½Ð½Ñ‹Ð¹", Ð±ÐµÐ· Ð¿Ð¸, Ñ‚.Ðµ. Ð¿Ñ€Ð¾ÑÑ‚Ð¾ rbeam*rbeta, rbeta = vrmax/C, C - ÑÐºÐ¾Ñ€Ð¾ÑÑ‚ÑŒ ÑÐ²ÐµÑ‚Ð°
+   rbeamx_ = rbeamx;         // Ð¿Ð¾Ð»ÑƒÐ¾ÑÑŒ Ð¿Ð¾ Ñ…
+   beamAnglex_ = beamAnglex; // ÑƒÐ³Ð»Ð¾Ð²Ð¾Ðµ Ñ€Ð°ÑÑ…Ð¾Ð¶Ð´ÐµÐ½Ð¸Ðµ Ð¿Ð¾ Ñ… (Ð¸Ð·-Ð·Ð° Ð¾Ð¿Ñ‚Ð¸ÐºÐ¸, Ð½Ðµ ÑÐ²ÑÐ·Ð°Ð½Ð¾ Ñ ÑÐ¼Ð¸Ñ‚Ñ‚Ð°Ð½ÑÐ¾Ð¼)
    Emity_ = Emity;           //
-   rbeamy_ = rbeamy;         //  âñå òî æå ñàìîå äëÿ y
+   rbeamy_ = rbeamy;         //  Ð²ÑÐµ Ñ‚Ð¾ Ð¶Ðµ ÑÐ°Ð¼Ð¾Ðµ Ð´Ð»Ñ y
    beamAngley_ = beamAngley; //
    beta0_ = sqrt(ke_ * 1e6 / PMASS / (ke_ * 1e6 / PMASS + 1));
-   // åñëè èñòî÷íèê íå ïðîòîííûé - èñïðàâèòü ìàññó!!!!! Ïðåäïîëàãàåòñÿ, ÷òî ke_ çàäàíî â ÌýÂ-àõ
+   // ÐµÑÐ»Ð¸ Ð¸ÑÑ‚Ð¾Ñ‡Ð½Ð¸Ðº Ð½Ðµ Ð¿Ñ€Ð¾Ñ‚Ð¾Ð½Ð½Ñ‹Ð¹ - Ð¸ÑÐ¿Ñ€Ð°Ð²Ð¸Ñ‚ÑŒ Ð¼Ð°ÑÑÑƒ!!!!! ÐŸÑ€ÐµÐ´Ð¿Ð¾Ð»Ð°Ð³Ð°ÐµÑ‚ÑÑ, Ñ‡Ñ‚Ð¾ ke_ Ð·Ð°Ð´Ð°Ð½Ð¾ Ð² ÐœÑÐ’-Ð°Ñ…
    rbetax_ = Emitx_ / rbeamx_;
    rbetay_ = Emity_ / rbeamy_;
-   //  fdistr_ = NULL;  // äëÿ ïðîèçâîëüíîãî ðàñïðåäåëåíèÿ äàòü óêàçàòåëü íà âíåøíþþ ôóíêöèþ ðàñïðåäåëåíèÿ.
+   //  fdistr_ = NULL;  // Ð´Ð»Ñ Ð¿Ñ€Ð¾Ð¸Ð·Ð²Ð¾Ð»ÑŒÐ½Ð¾Ð³Ð¾ Ñ€Ð°ÑÐ¿Ñ€ÐµÐ´ÐµÐ»ÐµÐ½Ð¸Ñ Ð´Ð°Ñ‚ÑŒ ÑƒÐºÐ°Ð·Ð°Ñ‚ÐµÐ»ÑŒ Ð½Ð° Ð²Ð½ÐµÑˆÐ½ÑŽÑŽ Ñ„ÑƒÐ½ÐºÑ†Ð¸ÑŽ Ñ€Ð°ÑÐ¿Ñ€ÐµÐ´ÐµÐ»ÐµÐ½Ð¸Ñ.
 }
 
 void mcSourceDistributed::sample(mcParticle& p, mcThread* thread)
 {
-   double x = 0, y = 0, px = 0, py = 0; //êîîðäèíàòû è èìïóëüñû
-   mcRng& rng = thread->rng();          // åñëè îäíîðîäíûé ïî ïëîòíîñòè èëè ãàóññîâ - ãîòîâèì îäíîðîäíûé êðóã â x,y
+   double x = 0, y = 0, px = 0, py = 0; //ÐºÐ¾Ð¾Ñ€Ð´Ð¸Ð½Ð°Ñ‚Ñ‹ Ð¸ Ð¸Ð¼Ð¿ÑƒÐ»ÑŒÑÑ‹
+   mcRng& rng = thread->rng();          // ÐµÑÐ»Ð¸ Ð¾Ð´Ð½Ð¾Ñ€Ð¾Ð´Ð½Ñ‹Ð¹ Ð¿Ð¾ Ð¿Ð»Ð¾Ñ‚Ð½Ð¾ÑÑ‚Ð¸ Ð¸Ð»Ð¸ Ð³Ð°ÑƒÑÑÐ¾Ð² - Ð³Ð¾Ñ‚Ð¾Ð²Ð¸Ð¼ Ð¾Ð´Ð½Ð¾Ñ€Ð¾Ð´Ð½Ñ‹Ð¹ ÐºÑ€ÑƒÐ³ Ð² x,y
    if (distr_ == MCP_CONST_DENS || distr_ == MCP_GAUSSIAN) {
       double r2, rbeta2, spread;
       do {
          x = (rng.rnd() - 0.5) * rbeamx_ * 2;
          y = (rng.rnd() - 0.5) * rbeamy_ * 2;
-      } while (x * x / rbeamx_ / rbeamx_ + y * y / rbeamy_ / rbeamy_ > 1); // åñëè ãàóññîâ  - ðàñòÿãèâàåì ñîçäàííûé êðóã
-      static double width = 3.;                                            // íà ñêîëüêèõ ñèãìàõ îáðåçêà 
-      static double mult = sqrt(1 - exp(-width * width));                  // ñíà÷àëà íåìíîãî îäíîðîäíî ñæèìàåì
+      } while (x * x / rbeamx_ / rbeamx_ + y * y / rbeamy_ / rbeamy_ > 1); // ÐµÑÐ»Ð¸ Ð³Ð°ÑƒÑÑÐ¾Ð²  - Ñ€Ð°ÑÑ‚ÑÐ³Ð¸Ð²Ð°ÐµÐ¼ ÑÐ¾Ð·Ð´Ð°Ð½Ð½Ñ‹Ð¹ ÐºÑ€ÑƒÐ³
+      static double width = 3.;                                            // Ð½Ð° ÑÐºÐ¾Ð»ÑŒÐºÐ¸Ñ… ÑÐ¸Ð³Ð¼Ð°Ñ… Ð¾Ð±Ñ€ÐµÐ·ÐºÐ° 
+      static double mult = sqrt(1 - exp(-width * width));                  // ÑÐ½Ð°Ñ‡Ð°Ð»Ð° Ð½ÐµÐ¼Ð½Ð¾Ð³Ð¾ Ð¾Ð´Ð½Ð¾Ñ€Ð¾Ð´Ð½Ð¾ ÑÐ¶Ð¸Ð¼Ð°ÐµÐ¼
       if (distr_ == MCP_GAUSSIAN) {
          x *= mult;
          y *= mult;
          r2 = x * x / rbeamx_ / rbeamx_ + y * y / rbeamy_ / rbeamy_;
-         spread = sqrt(-log(1 - r2) / r2); // è ïîòîì íåîäíîðîäíî ðàñòÿãèâàåì
+         spread = sqrt(-log(1 - r2) / r2); // Ð¸ Ð¿Ð¾Ñ‚Ð¾Ð¼ Ð½ÐµÐ¾Ð´Ð½Ð¾Ñ€Ð¾Ð´Ð½Ð¾ Ñ€Ð°ÑÑ‚ÑÐ³Ð¸Ð²Ð°ÐµÐ¼
          x *= spread;
          y *= spread;
-      } //òåïåðü âñå òî æå ñàìîå ñ èìïóëüñàìè, íî ñ ó÷åòîì êâàäðàòè÷íîãî óìåíüøåíèÿ òåìïåðàòóðû îò öåíòðà ê ãðàíèöå
-      //äëÿ îäíîðîäíîé ïëîòíîñòè
+      } //Ñ‚ÐµÐ¿ÐµÑ€ÑŒ Ð²ÑÐµ Ñ‚Ð¾ Ð¶Ðµ ÑÐ°Ð¼Ð¾Ðµ Ñ Ð¸Ð¼Ð¿ÑƒÐ»ÑŒÑÐ°Ð¼Ð¸, Ð½Ð¾ Ñ ÑƒÑ‡ÐµÑ‚Ð¾Ð¼ ÐºÐ²Ð°Ð´Ñ€Ð°Ñ‚Ð¸Ñ‡Ð½Ð¾Ð³Ð¾ ÑƒÐ¼ÐµÐ½ÑŒÑˆÐµÐ½Ð¸Ñ Ñ‚ÐµÐ¼Ð¿ÐµÑ€Ð°Ñ‚ÑƒÑ€Ñ‹ Ð¾Ñ‚ Ñ†ÐµÐ½Ñ‚Ñ€Ð° Ðº Ð³Ñ€Ð°Ð½Ð¸Ñ†Ðµ
+      //Ð´Ð»Ñ Ð¾Ð´Ð½Ð¾Ñ€Ð¾Ð´Ð½Ð¾Ð¹ Ð¿Ð»Ð¾Ñ‚Ð½Ð¾ÑÑ‚Ð¸
       do {
          px = (rng.rnd() - 0.5) * 2 * rbetax_;
          py = (rng.rnd() - 0.5) * 2 * rbetay_;
       } while (px * px / rbetax_ / rbetax_ + py * py / rbetay_ / rbetay_ > (
-                  1 - x * x / rbeamx_ / rbeamx_ - y * y / rbeamy_ / rbeamy_)); //äëÿ ãàóññîâà ïó÷êà
+                  1 - x * x / rbeamx_ / rbeamx_ - y * y / rbeamy_ / rbeamy_)); //Ð´Ð»Ñ Ð³Ð°ÑƒÑÑÐ¾Ð²Ð° Ð¿ÑƒÑ‡ÐºÐ°
       if (distr_ == MCP_GAUSSIAN) {
          do {
             px = (rng.rnd() - 0.5) * 2 * rbetax_;
@@ -90,7 +90,7 @@ void mcSourceDistributed::sample(mcParticle& p, mcThread* thread)
          px *= spread;
          py *= spread;
       }
-   } // åñëè îäíîðîäíûé 4-ìåðíûé ýëëèïñîèä (îí æå waterbag, "âîäÿíîé ìåøîê")
+   } // ÐµÑÐ»Ð¸ Ð¾Ð´Ð½Ð¾Ñ€Ð¾Ð´Ð½Ñ‹Ð¹ 4-Ð¼ÐµÑ€Ð½Ñ‹Ð¹ ÑÐ»Ð»Ð¸Ð¿ÑÐ¾Ð¸Ð´ (Ð¾Ð½ Ð¶Ðµ waterbag, "Ð²Ð¾Ð´ÑÐ½Ð¾Ð¹ Ð¼ÐµÑˆÐ¾Ðº")
    if (distr_ == MCP_WATERBAG || distr_ == MCP_K_V) {
       double Rx2, Ry2;
       do {
@@ -102,10 +102,10 @@ void mcSourceDistributed::sample(mcParticle& p, mcThread* thread)
             y = (rng.rnd() - 0.5) * rbeamy_ * 2;
             py = (rng.rnd() - 0.5) * 2 * rbetay_;
          } while ((Ry2 = y * y / rbetay_ / rbetay_ + py * py / rbetay_ / rbetay_) > 1);
-      } while ((Rx2 + Ry2) > 1); // waterbag ëåãêî ïðåîáðàçóåòñÿ ê ðàñïðåäåëåíèþ Êàï÷èíñêîãî-Âëàäèìèðñêîãî
-      // ò.å. ê îäíîðîäíîé òîíêîé îáîëî÷êå 4-ìåðíîãî ýëëèïñîèäà.
-      // Â ïðîåêöèÿõ íà ôàçîâûå ïëîñêîñòè (x,px) è (y,py) ïîëó÷àþòñÿ ýëëèïñû ñ îäíîðîäíîé ïëîòíîñòüþ,
-      // äîâîëüíî ÷àñòî ïðèìåíÿåòñÿ ïðè ìîäåëèðîâàíèè
+      } while ((Rx2 + Ry2) > 1); // waterbag Ð»ÐµÐ³ÐºÐ¾ Ð¿Ñ€ÐµÐ¾Ð±Ñ€Ð°Ð·ÑƒÐµÑ‚ÑÑ Ðº Ñ€Ð°ÑÐ¿Ñ€ÐµÐ´ÐµÐ»ÐµÐ½Ð¸ÑŽ ÐšÐ°Ð¿Ñ‡Ð¸Ð½ÑÐºÐ¾Ð³Ð¾-Ð’Ð»Ð°Ð´Ð¸Ð¼Ð¸Ñ€ÑÐºÐ¾Ð³Ð¾
+      // Ñ‚.Ðµ. Ðº Ð¾Ð´Ð½Ð¾Ñ€Ð¾Ð´Ð½Ð¾Ð¹ Ñ‚Ð¾Ð½ÐºÐ¾Ð¹ Ð¾Ð±Ð¾Ð»Ð¾Ñ‡ÐºÐµ 4-Ð¼ÐµÑ€Ð½Ð¾Ð³Ð¾ ÑÐ»Ð»Ð¸Ð¿ÑÐ¾Ð¸Ð´Ð°.
+      // Ð’ Ð¿Ñ€Ð¾ÐµÐºÑ†Ð¸ÑÑ… Ð½Ð° Ñ„Ð°Ð·Ð¾Ð²Ñ‹Ðµ Ð¿Ð»Ð¾ÑÐºÐ¾ÑÑ‚Ð¸ (x,px) Ð¸ (y,py) Ð¿Ð¾Ð»ÑƒÑ‡Ð°ÑŽÑ‚ÑÑ ÑÐ»Ð»Ð¸Ð¿ÑÑ‹ Ñ Ð¾Ð´Ð½Ð¾Ñ€Ð¾Ð´Ð½Ð¾Ð¹ Ð¿Ð»Ð¾Ñ‚Ð½Ð¾ÑÑ‚ÑŒÑŽ,
+      // Ð´Ð¾Ð²Ð¾Ð»ÑŒÐ½Ð¾ Ñ‡Ð°ÑÑ‚Ð¾ Ð¿Ñ€Ð¸Ð¼ÐµÐ½ÑÐµÑ‚ÑÑ Ð¿Ñ€Ð¸ Ð¼Ð¾Ð´ÐµÐ»Ð¸Ñ€Ð¾Ð²Ð°Ð½Ð¸Ð¸
       if (distr_ == MCP_K_V) {
          double rr = sqrt(Rx2 + Ry2);
          if (rr) {
@@ -117,7 +117,7 @@ void mcSourceDistributed::sample(mcParticle& p, mcThread* thread)
       }
    }
    if (distr_ == MCP_ARBITRARY) {
-      //  ïðîèçâîëüíîå ðàñïðåäåëåíèå, ïîêà òîëüêî äåìîíñòðàöèÿ àëøîðèòìà
+      //  Ð¿Ñ€Ð¾Ð¸Ð·Ð²Ð¾Ð»ÑŒÐ½Ð¾Ðµ Ñ€Ð°ÑÐ¿Ñ€ÐµÐ´ÐµÐ»ÐµÐ½Ð¸Ðµ, Ð¿Ð¾ÐºÐ° Ñ‚Ð¾Ð»ÑŒÐºÐ¾ Ð´ÐµÐ¼Ð¾Ð½ÑÑ‚Ñ€Ð°Ñ†Ð¸Ñ Ð°Ð»ÑˆÐ¾Ñ€Ð¸Ñ‚Ð¼Ð°
       double Rx2, Ry2;
       do {
          do {
@@ -128,17 +128,17 @@ void mcSourceDistributed::sample(mcParticle& p, mcThread* thread)
             y = (rng.rnd() - 0.5) * rbeamy_ * 2;
             py = (rng.rnd() - 0.5) * 2 * rbetay_;
          } while ((Ry2 = y * y / rbetay_ / rbetay_ + py * py / rbetay_ / rbetay_) > 1);
-         //äëÿ ðàáîòû - óáðàòü êîììåíòàðèé è â init îïðåäåëèòü ññûëêó íà âíåøíþþ ôóíêöèþ *fdistr_
+         //Ð´Ð»Ñ Ñ€Ð°Ð±Ð¾Ñ‚Ñ‹ - ÑƒÐ±Ñ€Ð°Ñ‚ÑŒ ÐºÐ¾Ð¼Ð¼ÐµÐ½Ñ‚Ð°Ñ€Ð¸Ð¹ Ð¸ Ð² init Ð¾Ð¿Ñ€ÐµÐ´ÐµÐ»Ð¸Ñ‚ÑŒ ÑÑÑ‹Ð»ÐºÑƒ Ð½Ð° Ð²Ð½ÐµÑˆÐ½ÑŽÑŽ Ñ„ÑƒÐ½ÐºÑ†Ð¸ÑŽ *fdistr_
       } while ((Rx2 + Ry2) > 1 /* && rng.rnd() > fdistr_(x,y,px,py) */);
-   } // íàïîñëåäîê - ó÷åò óãëîâîãî ðàñõîæäåíèÿ ïó÷êà
+   } // Ð½Ð°Ð¿Ð¾ÑÐ»ÐµÐ´Ð¾Ðº - ÑƒÑ‡ÐµÑ‚ ÑƒÐ³Ð»Ð¾Ð²Ð¾Ð³Ð¾ Ñ€Ð°ÑÑ…Ð¾Ð¶Ð´ÐµÐ½Ð¸Ñ Ð¿ÑƒÑ‡ÐºÐ°
    px += beta0_ * beamAnglex_ / rbeamx_ * x;
-   py += beta0_ * beamAngley_ / rbeamy_ * y; // ãîòîâèì ÷àñòèöó
+   py += beta0_ * beamAngley_ / rbeamy_ * y; // Ð³Ð¾Ñ‚Ð¾Ð²Ð¸Ð¼ Ñ‡Ð°ÑÑ‚Ð¸Ñ†Ñƒ
    p.t = type_;
    p.q = q_;
    p.ke = ke_;
-   p.p = p_ + geomVector3D(x, y, 0); // óãëû ñ÷èòàåì ìàëûìè
+   p.p = p_ + geomVector3D(x, y, 0); // ÑƒÐ³Ð»Ñ‹ ÑÑ‡Ð¸Ñ‚Ð°ÐµÐ¼ Ð¼Ð°Ð»Ñ‹Ð¼Ð¸
    p.u = geomVector3D(px / beta0_, py / beta0_, sqrt(1. - (px / beta0_ * px / beta0_) - (py / beta0_ * py / beta0_)));
-   p.weight = 1; // äëÿ èîíîâ - èçìåíèòü
+   p.weight = 1; // Ð´Ð»Ñ Ð¸Ð¾Ð½Ð¾Ð² - Ð¸Ð·Ð¼ÐµÐ½Ð¸Ñ‚ÑŒ
    p.thread_ = thread;
    p.trackScore_ = trackScore_;
    etotal_[thread->id()] += ke_;
@@ -168,3 +168,6 @@ void mcSourceDistributed::dumpVRML(ostream& os) const
    os << "  }" << endl;
    os << "}" << endl;
 }
+
+
+

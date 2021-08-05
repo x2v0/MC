@@ -1,4 +1,4 @@
-#include "mcScoreBeamFluence.h"
+п»ї#include "mcScoreBeamFluence.h"
 #include "mcParticle.h"
 #include "mcThread.h"
 #include "mcTransport.h"
@@ -21,8 +21,8 @@ void mcScoreBeamFluence::ScoreFluence(const mcParticle& particle)
    int iThread = particle.thread_->id();
    double edep = particle.ke * particle.weight;
    etotal_[iThread] += edep;
-   // !!! Scoring вызывается до перемещения частицы на поверхность объекта к которому привязана частица.
-   // Нужно ее перенести здесь на поверхность.
+   // !!! Scoring РІС‹Р·С‹РІР°РµС‚СЃСЏ РґРѕ РїРµСЂРµРјРµС‰РµРЅРёСЏ С‡Р°СЃС‚РёС†С‹ РЅР° РїРѕРІРµСЂС…РЅРѕСЃС‚СЊ РѕР±СЉРµРєС‚Р° Рє РєРѕС‚РѕСЂРѕРјСѓ РїСЂРёРІСЏР·Р°РЅР° С‡Р°СЃС‚РёС†Р°.
+   // РќСѓР¶РЅРѕ РµРµ РїРµСЂРµРЅРµСЃС‚Рё Р·РґРµСЃСЊ РЅР° РїРѕРІРµСЂС…РЅРѕСЃС‚СЊ.
    geomVector3D p = particle.p + (particle.u * (-particle.p.z() / particle.u.z()));
    for (int i = 0; i < nsub_; i++)
       subsources_[i]->ScoreFluence(particle, p);
@@ -44,7 +44,7 @@ void mcScoreBeamFluence::dumpVRML(ostream& os) const
    }
    const geomMatrix3D& mttow = transport_->MT2W();
    int ir, it, count = 0;
-   int da = 15; // шаг по углу 15 градусов
+   int da = 15; // С€Р°Рі РїРѕ СѓРіР»Сѓ 15 РіСЂР°РґСѓСЃРѕРІ
    double mPi = PI / 180;
    os << "Shape {" << endl;
    os << "  appearance Appearance {" << endl;
@@ -54,7 +54,7 @@ void mcScoreBeamFluence::dumpVRML(ostream& os) const
    os << "  }" << endl;
    os << "  geometry IndexedLineSet {" << endl;
    os << "    coord Coordinate {" << endl;
-   os << "      point [" << endl; // Концентрические круги
+   os << "      point [" << endl; // РљРѕРЅС†РµРЅС‚СЂРёС‡РµСЃРєРёРµ РєСЂСѓРіРё
    for (ir = 1; ir <= nr_; ir++) {
       double r = rstep_ * ir;
       for (it = 0; it < 360; it += da) {
@@ -81,3 +81,6 @@ void mcScoreBeamFluence::dumpStatistic(ostream& os) const
    for (int i = 0; i < nsub_; i++)
       subsources_[i]->dumpStatistic(os);
 }
+
+
+

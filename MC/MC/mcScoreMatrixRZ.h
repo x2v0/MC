@@ -1,4 +1,4 @@
-// Radiation Oncology Monte Carlo open source project
+п»ї// Radiation Oncology Monte Carlo open source project
 //
 // Author: [2005-2017] Gennady Gorlachev (ggorlachev@roiss.ru) 
 //---------------------------------------------------------------------------
@@ -71,10 +71,13 @@ public:
    double Dose(int ir, int iz) const;
 
 protected:
-   int m_nr, m_nz;       // число вокселов по радиусу (m_nr) и по z (m_nz)
-   double m_rmax, m_rm2; // m_rm2 - квадрат максимального радиуса
+   int m_nr, m_nz;       // С‡РёСЃР»Рѕ РІРѕРєСЃРµР»РѕРІ РїРѕ СЂР°РґРёСѓСЃСѓ (m_nr) Рё РїРѕ z (m_nz)
+   double m_rmax, m_rm2; // m_rm2 - РєРІР°РґСЂР°С‚ РјР°РєСЃРёРјР°Р»СЊРЅРѕРіРѕ СЂР°РґРёСѓСЃР°
    double m_zmin, m_zmax;
    double m_rstep, m_zstep;
    double* m_MAll;
    double** m_M;
 };
+
+
+

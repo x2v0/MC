@@ -1,11 +1,11 @@
-// Radiation Oncology Monte Carlo open source project
+п»ї// Radiation Oncology Monte Carlo open source project
 //
 // Author: [2005-2017] Gennady Gorlachev (ggorlachev@roiss.ru) 
 //---------------------------------------------------------------------------
 #pragma once
 #include "mcsource.h"
 
-// Класс сферического источника C60 
+// РљР»Р°СЃСЃ СЃС„РµСЂРёС‡РµСЃРєРѕРіРѕ РёСЃС‚РѕС‡РЅРёРєР° C60 
 class mcSourceSphereC60 : public mcSource
 {
 public:
@@ -32,3 +32,6 @@ protected:
    geomVector3D v_;
    double r_;
 };
+
+
+

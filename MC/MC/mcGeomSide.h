@@ -18,3 +18,6 @@ public:
 
    virtual void dump(ostream& os) const = 0;
 };
+
+
+

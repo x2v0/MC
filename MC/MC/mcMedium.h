@@ -1,4 +1,4 @@
-// Radiation Oncology Monte Carlo open source project
+п»ї// Radiation Oncology Monte Carlo open source project
 //
 // Author: [2005-2017] Gennady Gorlachev (ggorlachev@roiss.ru) 
 //---------------------------------------------------------------------------
@@ -19,15 +19,18 @@ public:
 
    virtual void read(istream& is) = 0;
 
-protected: // Функция извлекает 2 слова из строки.
-   // Первое слово сравнивается с именем параметра.
-   // При несовпадении устанавливается исключение.
-   // По окончании сторка line содержит остаток строки.
+protected: // Р¤СѓРЅРєС†РёСЏ РёР·РІР»РµРєР°РµС‚ 2 СЃР»РѕРІР° РёР· СЃС‚СЂРѕРєРё.
+   // РџРµСЂРІРѕРµ СЃР»РѕРІРѕ СЃСЂР°РІРЅРёРІР°РµС‚СЃСЏ СЃ РёРјРµРЅРµРј РїР°СЂР°РјРµС‚СЂР°.
+   // РџСЂРё РЅРµСЃРѕРІРїР°РґРµРЅРёРё СѓСЃС‚Р°РЅР°РІР»РёРІР°РµС‚СЃСЏ РёСЃРєР»СЋС‡РµРЅРёРµ.
+   // РџРѕ РѕРєРѕРЅС‡Р°РЅРёРё СЃС‚РѕСЂРєР° line СЃРѕРґРµСЂР¶РёС‚ РѕСЃС‚Р°С‚РѕРє СЃС‚СЂРѕРєРё.
    string ParseLine(string& line, const char* param);
 
 public:             // General:
-   STATUS status_;  // Текущее состояние данных
+   STATUS status_;  // РўРµРєСѓС‰РµРµ СЃРѕСЃС‚РѕСЏРЅРёРµ РґР°РЅРЅС‹С…
    string name_;    // Name of medium
    double density_; // Default density of medium
    vector<mcElement> elements_;
 };
+
+
+

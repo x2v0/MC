@@ -1,4 +1,4 @@
-#include "mcsource.h"
+﻿#include "mcsource.h"
 #include "mcScoreTrack.h"
 
 mcSource::mcSource() : mcObj(), trackScore_(nullptr), nThreads_(0), etotal_(nullptr), isGamma_(false),
@@ -56,3 +56,6 @@ void mcSource::dumpVRML(ostream& os) const
    if (trackScore_)
       trackScore_->dumpVRML(os);
 }
+
+
+

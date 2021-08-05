@@ -1,11 +1,11 @@
-// Radiation Oncology Monte Carlo open source project
+п»ї// Radiation Oncology Monte Carlo open source project
 //
 // Author: [2005-2017] Gennady Gorlachev (ggorlachev@roiss.ru) 
 //---------------------------------------------------------------------------
 #pragma once
 #include "mcsource.h"
 
-// Типы распределений источников
+// РўРёРїС‹ СЂР°СЃРїСЂРµРґРµР»РµРЅРёР№ РёСЃС‚РѕС‡РЅРёРєРѕРІ
 enum mc_distr_t { MCP_CONST_DENS = 0, MCP_GAUSSIAN, MCP_WATERBAG, MCP_K_V, MCP_ARBITRARY };
 
 class mcSourceDistributed : public mcSource
@@ -17,17 +17,17 @@ public:
                        const geomVector3D& v, mc_distr_t distr, double Emitx, double rbeamx, double beamAnglex,
                        double Emity, double rbeamy, double beamAngley);
 
-   void init(mc_particle_t type      // тип частиц
-             , double ke             // кинетическая энергия
-             , const geomVector3D& p // точка рождения частиц
-             , const geomVector3D& v // направление движения (единичный вектор)
-             , mc_distr_t distr      // тип распределения
+   void init(mc_particle_t type      // С‚РёРї С‡Р°СЃС‚РёС†
+             , double ke             // РєРёРЅРµС‚РёС‡РµСЃРєР°СЏ СЌРЅРµСЂРіРёСЏ
+             , const geomVector3D& p // С‚РѕС‡РєР° СЂРѕР¶РґРµРЅРёСЏ С‡Р°СЃС‚РёС†
+             , const geomVector3D& v // РЅР°РїСЂР°РІР»РµРЅРёРµ РґРІРёР¶РµРЅРёСЏ (РµРґРёРЅРёС‡РЅС‹Р№ РІРµРєС‚РѕСЂ)
+             , mc_distr_t distr      // С‚РёРї СЂР°СЃРїСЂРµРґРµР»РµРЅРёСЏ
              , double Emitx
-             // х-эмиттанс, в см. "Нормализованный", без пи, т.е. просто rbeam*rbeta, rbeta = vrmax/C, C - скорость света
-             , double rbeamx     // полуось по х
-             , double beamAnglex // угловое расхождение по х (из-за оптики, не связано с эмиттансом)
+             // С…-СЌРјРёС‚С‚Р°РЅСЃ, РІ СЃРј. "РќРѕСЂРјР°Р»РёР·РѕРІР°РЅРЅС‹Р№", Р±РµР· РїРё, С‚.Рµ. РїСЂРѕСЃС‚Рѕ rbeam*rbeta, rbeta = vrmax/C, C - СЃРєРѕСЂРѕСЃС‚СЊ СЃРІРµС‚Р°
+             , double rbeamx     // РїРѕР»СѓРѕСЃСЊ РїРѕ С…
+             , double beamAnglex // СѓРіР»РѕРІРѕРµ СЂР°СЃС…РѕР¶РґРµРЅРёРµ РїРѕ С… (РёР·-Р·Р° РѕРїС‚РёРєРё, РЅРµ СЃРІСЏР·Р°РЅРѕ СЃ СЌРјРёС‚С‚Р°РЅСЃРѕРј)
              , double Emity      //
-             , double rbeamy     //  все то же самое для y
+             , double rbeamy     //  РІСЃРµ С‚Рѕ Р¶Рµ СЃР°РјРѕРµ РґР»СЏ y
              , double beamAngley //
    );
 
@@ -46,22 +46,25 @@ public:
    }
 
 protected:
-   mc_distr_t distr_; // тип распределения
+   mc_distr_t distr_; // С‚РёРї СЂР°СЃРїСЂРµРґРµР»РµРЅРёСЏ
    double Emitx_;
-   // х-эмиттанс, в см. "Нормализованный", без пи, т.е. просто rbeam*rbeta, rbeta = vrmax/C, C - скорость света
-   double rbeamx_;     // полуось по х
+   // С…-СЌРјРёС‚С‚Р°РЅСЃ, РІ СЃРј. "РќРѕСЂРјР°Р»РёР·РѕРІР°РЅРЅС‹Р№", Р±РµР· РїРё, С‚.Рµ. РїСЂРѕСЃС‚Рѕ rbeam*rbeta, rbeta = vrmax/C, C - СЃРєРѕСЂРѕСЃС‚СЊ СЃРІРµС‚Р°
+   double rbeamx_;     // РїРѕР»СѓРѕСЃСЊ РїРѕ С…
    double rbetax_;     // Tmitx/rbeamx
-   double beamAnglex_; // угловое расхождение по х (из-за оптики, не связано с эмиттансом)
+   double beamAnglex_; // СѓРіР»РѕРІРѕРµ СЂР°СЃС…РѕР¶РґРµРЅРёРµ РїРѕ С… (РёР·-Р·Р° РѕРїС‚РёРєРё, РЅРµ СЃРІСЏР·Р°РЅРѕ СЃ СЌРјРёС‚С‚Р°РЅСЃРѕРј)
    double Emity_;      //
-   double rbeamy_;     //  все то же самое для y
+   double rbeamy_;     //  РІСЃРµ С‚Рѕ Р¶Рµ СЃР°РјРѕРµ РґР»СЏ y
    double rbetay_;     //
    double beamAngley_; //
-   double beta0_;      // Vz/C, sqrt(ke/Ep/(ke/Ep+1)) - с учетом релятивизма
+   double beta0_;      // Vz/C, sqrt(ke/Ep/(ke/Ep+1)) - СЃ СѓС‡РµС‚РѕРј СЂРµР»СЏС‚РёРІРёР·РјР°
    mc_particle_t type_;
-   double ke_;      // в МэВ                (проверить!!!!!!!!!!!!!!!!!!!)
-   geomVector3D p_; // координаты центра источника
-   geomVector3D v_; // напрвление инжекции, пока допустимо только (0,0,1)
-   int q_;          // заряд
-   // для произвольного распределения - указатель на внешнюю функцию, возвращающую double от 0 до 1
+   double ke_;      // РІ РњСЌР’                (РїСЂРѕРІРµСЂРёС‚СЊ!!!!!!!!!!!!!!!!!!!)
+   geomVector3D p_; // РєРѕРѕСЂРґРёРЅР°С‚С‹ С†РµРЅС‚СЂР° РёСЃС‚РѕС‡РЅРёРєР°
+   geomVector3D v_; // РЅР°РїСЂРІР»РµРЅРёРµ РёРЅР¶РµРєС†РёРё, РїРѕРєР° РґРѕРїСѓСЃС‚РёРјРѕ С‚РѕР»СЊРєРѕ (0,0,1)
+   int q_;          // Р·Р°СЂСЏРґ
+   // РґР»СЏ РїСЂРѕРёР·РІРѕР»СЊРЅРѕРіРѕ СЂР°СЃРїСЂРµРґРµР»РµРЅРёСЏ - СѓРєР°Р·Р°С‚РµР»СЊ РЅР° РІРЅРµС€РЅСЋСЋ С„СѓРЅРєС†РёСЋ, РІРѕР·РІСЂР°С‰Р°СЋС‰СѓСЋ double РѕС‚ 0 РґРѕ 1
    //  double (*fdistr_)(double x,double y,double px,double py);
 };
+
+
+

@@ -1,13 +1,13 @@
-// Radiation Oncology Monte Carlo open source project
+п»ї// Radiation Oncology Monte Carlo open source project
 //
 // Author: [2005-2017] Gennady Gorlachev (ggorlachev@roiss.ru) 
 //---------------------------------------------------------------------------
 #pragma once
 #include "mctransport.h"
 
-// Класс транспорта в параллелепипеде.
-// Центр системы координат объекта находится
-// в середине грани основания (Z=const)
+// РљР»Р°СЃСЃ С‚СЂР°РЅСЃРїРѕСЂС‚Р° РІ РїР°СЂР°Р»Р»РµР»РµРїРёРїРµРґРµ.
+// Р¦РµРЅС‚СЂ СЃРёСЃС‚РµРјС‹ РєРѕРѕСЂРґРёРЅР°С‚ РѕР±СЉРµРєС‚Р° РЅР°С…РѕРґРёС‚СЃСЏ
+// РІ СЃРµСЂРµРґРёРЅРµ РіСЂР°РЅРё РѕСЃРЅРѕРІР°РЅРёСЏ (Z=const)
 class mcTransportPrism : public mcTransport
 {
 public:
@@ -51,3 +51,6 @@ protected:
    double ay_;
    double az_;
 };
+
+
+

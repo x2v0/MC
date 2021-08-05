@@ -1,4 +1,4 @@
-#include "mcMedia.h"
+п»ї#include "mcMedia.h"
 #include "mcMediumXE.h"
 #include "mcPhysicsPhoton.h"
 #include "mcPhysicsElectron.h"
@@ -51,13 +51,13 @@ void mcMedia::initXEFromStream(istream& is)
    if (!xes_.empty())
       throw std::exception("Photon and electron crossections already initialized");
    for (int i = 0; i < static_cast<int>(mnames_.size()); i++)
-      xes_.push_back(new mcMediumXE()); // Чтение данных
+      xes_.push_back(new mcMediumXE()); // Р§С‚РµРЅРёРµ РґР°РЅРЅС‹С…
    string line, s1, s2;
    getline(is, line, '\n');
    while (!is.fail()) {
       if (line.find("MEDIUM=") != string::npos) {
          GetTwoStringsFromLine(line, s1, s2);
-         GetTwoStringsFromLine(s2, line, s1); // Проверяем, нужна ли данная среда для загрузки?
+         GetTwoStringsFromLine(s2, line, s1); // РџСЂРѕРІРµСЂСЏРµРј, РЅСѓР¶РЅР° Р»Рё РґР°РЅРЅР°СЏ СЃСЂРµРґР° РґР»СЏ Р·Р°РіСЂСѓР·РєРё?
          int i;
          for (i = 0; i < static_cast<int>(mnames_.size()); i++)
             if (mnames_[i] == line)
@@ -68,7 +68,7 @@ void mcMedia::initXEFromStream(istream& is)
          }
       }
       getline(is, line, '\n');
-   } // Проверяем, все ли среды загружены
+   } // РџСЂРѕРІРµСЂСЏРµРј, РІСЃРµ Р»Рё СЃСЂРµРґС‹ Р·Р°РіСЂСѓР¶РµРЅС‹
    string errmedia;
    for (int i = 0; i < static_cast<int>(xes_.size()); i++) {
       if (xes_[i]->status_ != mcMedium::LOADED) {
@@ -101,3 +101,6 @@ const mcMedium* mcMedia::getMedium(int ptype, int idx) const
       throw std::exception("Unsupported particle type");
    return xes_[idx];
 }
+
+
+

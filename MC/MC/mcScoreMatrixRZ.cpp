@@ -1,4 +1,4 @@
-#include "mcScoreMatrixRZ.h"
+п»ї#include "mcScoreMatrixRZ.h"
 #include "mcGeometry.h"
 #include "mcTransport.h"
 #include <float.h>
@@ -51,31 +51,31 @@ void mcScoreMatrixRZ::ScorePoint(double edep, int iThread, const mcRegionReferen
 void mcScoreMatrixRZ::ScoreLine(double edep, int iThread, const mcRegionReference& region, mc_particle_t pt,
                                 const geomVector3D& p0, const geomVector3D& p1)
 {
-   double eddens = edep / (p1 - p0).length(); // Сортируем точки так, чтобы первой была точка с меньшим Z.
+   double eddens = edep / (p1 - p0).length(); // РЎРѕСЂС‚РёСЂСѓРµРј С‚РѕС‡РєРё С‚Р°Рє, С‡С‚РѕР±С‹ РїРµСЂРІРѕР№ Р±С‹Р»Р° С‚РѕС‡РєР° СЃ РјРµРЅСЊС€РёРј Z.
    bool doChange = p0.z() > p1.z();
    geomVector3D vz1(doChange ? p1 : p0);
    geomVector3D vz2(doChange ? p0 : p1);
    geomVector3D v = vz2 - vz1;
-   v.normalize(); // Вектор направления, длина которого по Z равна 1.
+   v.normalize(); // Р’РµРєС‚РѕСЂ РЅР°РїСЂР°РІР»РµРЅРёСЏ, РґР»РёРЅР° РєРѕС‚РѕСЂРѕРіРѕ РїРѕ Z СЂР°РІРЅР° 1.
    bool isOrto = fabs(v.z()) <= DBL_EPSILON;
-   geomVector3D uz = isOrto ? geomVector3D() : v * (1. / v.z()); // Обрезаем трек плоскостями торцов цилиндра.
+   geomVector3D uz = isOrto ? geomVector3D() : v * (1. / v.z()); // РћР±СЂРµР·Р°РµРј С‚СЂРµРє РїР»РѕСЃРєРѕСЃС‚СЏРјРё С‚РѕСЂС†РѕРІ С†РёР»РёРЅРґСЂР°.
    int iz1 = (vz1.z() < m_zmin) ? -1 : int((vz1.z() - m_zmin) / m_zstep);
    int iz2 = (vz2.z() < m_zmin) ? -1 : int((vz2.z() - m_zmin) / m_zstep);
-   // Scoring может находиться внутри большого объекта и может потребоваться 
-   // отсекать частицы в принципе не попадающие в область интереса.
+   // Scoring РјРѕР¶РµС‚ РЅР°С…РѕРґРёС‚СЊСЃСЏ РІРЅСѓС‚СЂРё Р±РѕР»СЊС€РѕРіРѕ РѕР±СЉРµРєС‚Р° Рё РјРѕР¶РµС‚ РїРѕС‚СЂРµР±РѕРІР°С‚СЊСЃСЏ 
+   // РѕС‚СЃРµРєР°С‚СЊ С‡Р°СЃС‚РёС†С‹ РІ РїСЂРёРЅС†РёРїРµ РЅРµ РїРѕРїР°РґР°СЋС‰РёРµ РІ РѕР±Р»Р°СЃС‚СЊ РёРЅС‚РµСЂРµСЃР°.
    if (iz2 < 0 || iz1 >= m_nz)
       return;
    if (iz1 < 0)
       vz1 += (vz2 - vz1) * ((m_zmin - vz1.z()) / (vz2.z() - vz1.z()) + DBL_EPSILON);
    if (iz2 >= m_nz)
       vz2 += (vz1 - vz2) * ((vz2.z() - m_zmax) / (vz1.z() - vz2.z()) + DBL_EPSILON);
-   // Поскольку расчет пересечения с цилиндром задача более трудоемкая
-   // и на практике пересечений цилиндров меньше пересечений плоскостей Z
-   // (так как частицы преимущественно движутся вдоль Z),
-   // то сначала определяем пересечения по радиусу.
-   // Интересно! Был прецендент, когда частица находилась в бесконечном слое так далеко,
-   // что произошло переполнение числа int.
-   // Поэтому положение по радиусу отсекаеи не по индексам, а по положению в пространстве.
+   // РџРѕСЃРєРѕР»СЊРєСѓ СЂР°СЃС‡РµС‚ РїРµСЂРµСЃРµС‡РµРЅРёСЏ СЃ С†РёР»РёРЅРґСЂРѕРј Р·Р°РґР°С‡Р° Р±РѕР»РµРµ С‚СЂСѓРґРѕРµРјРєР°СЏ
+   // Рё РЅР° РїСЂР°РєС‚РёРєРµ РїРµСЂРµСЃРµС‡РµРЅРёР№ С†РёР»РёРЅРґСЂРѕРІ РјРµРЅСЊС€Рµ РїРµСЂРµСЃРµС‡РµРЅРёР№ РїР»РѕСЃРєРѕСЃС‚РµР№ Z
+   // (С‚Р°Рє РєР°Рє С‡Р°СЃС‚РёС†С‹ РїСЂРµРёРјСѓС‰РµСЃС‚РІРµРЅРЅРѕ РґРІРёР¶СѓС‚СЃСЏ РІРґРѕР»СЊ Z),
+   // С‚Рѕ СЃРЅР°С‡Р°Р»Р° РѕРїСЂРµРґРµР»СЏРµРј РїРµСЂРµСЃРµС‡РµРЅРёСЏ РїРѕ СЂР°РґРёСѓСЃСѓ.
+   // РРЅС‚РµСЂРµСЃРЅРѕ! Р‘С‹Р» РїСЂРµС†РµРЅРґРµРЅС‚, РєРѕРіРґР° С‡Р°СЃС‚РёС†Р° РЅР°С…РѕРґРёР»Р°СЃСЊ РІ Р±РµСЃРєРѕРЅРµС‡РЅРѕРј СЃР»РѕРµ С‚Р°Рє РґР°Р»РµРєРѕ,
+   // С‡С‚Рѕ РїСЂРѕРёР·РѕС€Р»Рѕ РїРµСЂРµРїРѕР»РЅРµРЅРёРµ С‡РёСЃР»Р° int.
+   // РџРѕСЌС‚РѕРјСѓ РїРѕР»РѕР¶РµРЅРёРµ РїРѕ СЂР°РґРёСѓСЃСѓ РѕС‚СЃРµРєР°РµРё РЅРµ РїРѕ РёРЅРґРµРєСЃР°Рј, Р° РїРѕ РїРѕР»РѕР¶РµРЅРёСЋ РІ РїСЂРѕСЃС‚СЂР°РЅСЃС‚РІРµ.
    double rr = vz1.lengthXY();
    if (rr >= m_rmax) {
       if (vz2.lengthXY() >= m_rmax)
@@ -87,13 +87,13 @@ void mcScoreMatrixRZ::ScoreLine(double edep, int iThread, const mcRegionReferenc
    while ((vz2 - vz1) * v > DBL_EPSILON) {
       double r = ir * m_rstep;
       double d;
-      bool toCenter;             // Определяем направление движения к центру или от него
-      if (ir > 0 && vz1 * v < 0) // к центру
+      bool toCenter;             // РћРїСЂРµРґРµР»СЏРµРј РЅР°РїСЂР°РІР»РµРЅРёРµ РґРІРёР¶РµРЅРёСЏ Рє С†РµРЅС‚СЂСѓ РёР»Рё РѕС‚ РЅРµРіРѕ
+      if (ir > 0 && vz1 * v < 0) // Рє С†РµРЅС‚СЂСѓ
       {
          d = mcGeometry::getDistanceToInfiniteCylinderOutside(vz1, v, r);
          toCenter = true;
          if (d == DBL_MAX) {
-            // мимо внутреннего цилиндра
+            // РјРёРјРѕ РІРЅСѓС‚СЂРµРЅРЅРµРіРѕ С†РёР»РёРЅРґСЂР°
             if (ir >= m_nr)
                return;
             d = mcGeometry::getDistanceToInfiniteCylinderInside(vz1, v, r + m_rstep);
@@ -110,10 +110,10 @@ void mcScoreMatrixRZ::ScoreLine(double edep, int iThread, const mcRegionReferenc
             return;
          d = mcGeometry::getDistanceToInfiniteCylinderInside(vz1, v, r + m_rstep);
          toCenter = false;
-      }                                  // Конец трека в цилиндрическом кольце
-      geomVector3D vz12 = vz1 + (v * d); // Проверяем не прошли ли мы дальнюю точку глобального трека.
+      }                                  // РљРѕРЅРµС† С‚СЂРµРєР° РІ С†РёР»РёРЅРґСЂРёС‡РµСЃРєРѕРј РєРѕР»СЊС†Рµ
+      geomVector3D vz12 = vz1 + (v * d); // РџСЂРѕРІРµСЂСЏРµРј РЅРµ РїСЂРѕС€Р»Рё Р»Рё РјС‹ РґР°Р»СЊРЅСЋСЋ С‚РѕС‡РєСѓ РіР»РѕР±Р°Р»СЊРЅРѕРіРѕ С‚СЂРµРєР°.
       if ((vz12 - vz2) * v > 0)
-         vz12 = vz2; // Перебираем слои по Z
+         vz12 = vz2; // РџРµСЂРµР±РёСЂР°РµРј СЃР»РѕРё РїРѕ Z
       geomVector3D pz1 = vz1;
       int iz = int((pz1.z() - m_zmin) / m_zstep);
       while ((vz12 - pz1) * v > DBL_EPSILON) {
@@ -124,8 +124,8 @@ void mcScoreMatrixRZ::ScoreLine(double edep, int iThread, const mcRegionReferenc
          }
          geomVector3D pz2 = vz1 + (uz * (m_zmin + m_zstep * (iz + 1) - vz1.z()));
          if ((pz2 - vz12) * v > 0)
-            pz2 = vz12; // Вычисляем индекс кольца более надежным способом.
-         // Из-за проблемы округления на границе в противном случае возникают сбои индексов.
+            pz2 = vz12; // Р’С‹С‡РёСЃР»СЏРµРј РёРЅРґРµРєСЃ РєРѕР»СЊС†Р° Р±РѕР»РµРµ РЅР°РґРµР¶РЅС‹Рј СЃРїРѕСЃРѕР±РѕРј.
+         // РР·-Р·Р° РїСЂРѕР±Р»РµРјС‹ РѕРєСЂСѓРіР»РµРЅРёСЏ РЅР° РіСЂР°РЅРёС†Рµ РІ РїСЂРѕС‚РёРІРЅРѕРј СЃР»СѓС‡Р°Рµ РІРѕР·РЅРёРєР°СЋС‚ СЃР±РѕРё РёРЅРґРµРєСЃРѕРІ.
          ir = int(((pz2 + pz1) * 0.5).lengthXY() / m_rstep);
          scoreEnergyInVoxel(iThread, ir, iz, eddens * (pz2 - pz1).length());
          pz1 = pz2;
@@ -193,7 +193,7 @@ void mcScoreMatrixRZ::dumpVRML(ostream& os) const
    }
    const geomMatrix3D& mttow = transport_->MT2W();
    int ir, iz, it, count = 0;
-   int da = 15; // шаг по углу 15 градусов
+   int da = 15; // С€Р°Рі РїРѕ СѓРіР»Сѓ 15 РіСЂР°РґСѓСЃРѕРІ
    double mPi = PI / 180;
    os << "# mcScoreMatrixRZ Score: " << name_ << endl;
    os << "Shape {" << endl;
@@ -206,7 +206,7 @@ void mcScoreMatrixRZ::dumpVRML(ostream& os) const
    os << "    coord Coordinate {" << endl;
    os << "      point [" << endl;
    for (iz = 0; iz <= m_nz; iz++) {
-      double z = m_zmin + iz * m_zstep; // Концентрические круги
+      double z = m_zmin + iz * m_zstep; // РљРѕРЅС†РµРЅС‚СЂРёС‡РµСЃРєРёРµ РєСЂСѓРіРё
       for (ir = 1; ir <= m_nr; ir++) {
          double r = m_rstep * ir;
          for (it = 0; it < 360; it += da) {
@@ -216,7 +216,7 @@ void mcScoreMatrixRZ::dumpVRML(ostream& os) const
             os << "        " << p.x() << ' ' << p.y() << ' ' << p.z() << endl;
             count++;
          }
-      } //// Радиусы
+      } //// Р Р°РґРёСѓСЃС‹
       //for(it=0; it<360; it+=da) {
       //  geomVector3D p = geomVector3D(0, 0, z) * mttow;
       //  os << "        " << p.x() << ' ' << p.y() << ' ' << p.z() << endl;
@@ -224,7 +224,7 @@ void mcScoreMatrixRZ::dumpVRML(ostream& os) const
       //  os << "        " << p.x() << ' ' << p.y() << ' ' << p.z() << endl;
       //  count++;
       //}
-   } //// Линии вдоль оси цилиндра
+   } //// Р›РёРЅРёРё РІРґРѕР»СЊ РѕСЃРё С†РёР»РёРЅРґСЂР°
    //for(ir=1; ir<=m_nr; ir++) {
    //  double r = m_rstep * ir;
    //  for(it=0; it<360; it+=da) {
@@ -282,3 +282,6 @@ void mcScoreMatrixRZ::dumpStatistic(ostream& os) const
       os << endl;
    }
 }
+
+
+

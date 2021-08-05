@@ -1,4 +1,4 @@
-#include "mcSourceCylindricalC60.h"
+п»ї#include "mcSourceCylindricalC60.h"
 #include "mcThread.h"
 #include "../geometry/vec3d.h"
 #include "mcPhysics.h"
@@ -33,8 +33,8 @@ void mcSourceCylindricalC60::sample(mcParticle& p, mcThread* thread)
 
 void mcSourceCylindricalC60::dumpVRML(ostream& os) const
 {
-   mcSource::dumpVRML(os); // Источник задается в абсолютных координатах.
-   // Поэтому ему не нужна матрица преобразования координат.
+   mcSource::dumpVRML(os); // РСЃС‚РѕС‡РЅРёРє Р·Р°РґР°РµС‚СЃСЏ РІ Р°Р±СЃРѕР»СЋС‚РЅС‹С… РєРѕРѕСЂРґРёРЅР°С‚Р°С….
+   // РџРѕСЌС‚РѕРјСѓ РµРјСѓ РЅРµ РЅСѓР¶РЅР° РјР°С‚СЂРёС†Р° РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёСЏ РєРѕРѕСЂРґРёРЅР°С‚.
    os << "# Source: " << name_ << endl;
    os << "Transform {" << endl;
    os << "  translation " << p_.x() << ' ' << p_.y() << ' ' << p_.z() + h_ / 2 << endl;
@@ -55,3 +55,6 @@ void mcSourceCylindricalC60::dumpVRML(ostream& os) const
    os << "  ]" << endl;
    os << "}" << endl;
 }
+
+
+

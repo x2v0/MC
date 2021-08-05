@@ -41,3 +41,6 @@ enum mcas_type_e { MCA_CO60, MCA_PHOTON, MCA_ELECTRON, MCA_XRAY }; // Note: The 
 #define	NAVOGADRO         (6.0221415E+23)
 // —корость света (м/с)
 #define	LIGHT_SPEED			299792458
+
+
+

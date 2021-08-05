@@ -1,4 +1,4 @@
-#include "mcScoreSpectraFluence.h"
+п»ї#include "mcScoreSpectraFluence.h"
 #include "mcThread.h"
 #include "mcTransport.h"
 
@@ -31,18 +31,18 @@ void mcScoreSpectraFluence::ScoreFluence(const mcParticle& particle)
       int iThread = particle.thread_->id();
       double edep = particle.ke * particle.weight;
       etotal_[iThread] += edep;
-      // !!! Scoring вызывается до перемещения частицы на поверхность объекта к которому привязана частица.
-      // Нужно ее перенести здесь на поверхность.
+      // !!! Scoring РІС‹Р·С‹РІР°РµС‚СЃСЏ РґРѕ РїРµСЂРµРјРµС‰РµРЅРёСЏ С‡Р°СЃС‚РёС†С‹ РЅР° РїРѕРІРµСЂС…РЅРѕСЃС‚СЊ РѕР±СЉРµРєС‚Р° Рє РєРѕС‚РѕСЂРѕРјСѓ РїСЂРёРІСЏР·Р°РЅР° С‡Р°СЃС‚РёС†Р°.
+      // РќСѓР¶РЅРѕ РµРµ РїРµСЂРµРЅРµСЃС‚Рё Р·РґРµСЃСЊ РЅР° РїРѕРІРµСЂС…РЅРѕСЃС‚СЊ.
       geomVector3D p = particle.p + (particle.u * (-particle.p.z() / particle.u.z()));
       double r = p.lengthXY();
       int ridx = int(r / rstep_);
       if (ridx >= nr_ || ridx < 0)
-         return;                              // Поток энергии
-      energy_fluence_[iThread][ridx] += edep; // Спектр по количеству частиц
+         return;                              // РџРѕС‚РѕРє СЌРЅРµСЂРіРёРё
+      energy_fluence_[iThread][ridx] += edep; // РЎРїРµРєС‚СЂ РїРѕ РєРѕР»РёС‡РµСЃС‚РІСѓ С‡Р°СЃС‚РёС†
       int eidx = int(particle.ke / estep_);
       if (eidx >= ne_)
          return;
-      number_spectra_[iThread][ridx][eidx] += particle.weight; // Спектр по энергии
+      number_spectra_[iThread][ridx][eidx] += particle.weight; // РЎРїРµРєС‚СЂ РїРѕ СЌРЅРµСЂРіРёРё
       energy_spectra_[iThread][ridx][eidx] += edep;
    }
 }
@@ -56,7 +56,7 @@ void mcScoreSpectraFluence::dumpVRML(ostream& os) const
    }
    const geomMatrix3D& mttow = transport_->MT2W();
    int it, count = 0;
-   int da = 15; // шаг по углу 15 градусов
+   int da = 15; // С€Р°Рі РїРѕ СѓРіР»Сѓ 15 РіСЂР°РґСѓСЃРѕРІ
    double mPi = PI / 180;
    double r = rmax_;
    os << "Shape {" << endl;
@@ -67,7 +67,7 @@ void mcScoreSpectraFluence::dumpVRML(ostream& os) const
    os << "  }" << endl;
    os << "  geometry IndexedLineSet {" << endl;
    os << "    coord Coordinate {" << endl;
-   os << "      point [" << endl; // Концентрические круги
+   os << "      point [" << endl; // РљРѕРЅС†РµРЅС‚СЂРёС‡РµСЃРєРёРµ РєСЂСѓРіРё
    for (int ir = 1; ir <= nr_; ir++) {
       double r = rstep_ * ir;
       for (it = 0; it < 360; it += da) {
@@ -93,7 +93,7 @@ void mcScoreSpectraFluence::dumpStatistic(ostream& os) const
    mcScore::dumpStatistic(os);
    int ir, ie;
    double sf = 1 / (2 * PI * rstep_ * rstep_);
-   os << endl << "Радиально симметричный профиль потока энергии";
+   os << endl << "Р Р°РґРёР°Р»СЊРЅРѕ СЃРёРјРјРµС‚СЂРёС‡РЅС‹Р№ РїСЂРѕС„РёР»СЊ РїРѕС‚РѕРєР° СЌРЅРµСЂРіРёРё";
    os << endl << "---------------------------------------------" << endl;
    for (ir = -nr_ + 1; ir <= 0; ir++)
       os << (ir - 0.5) * rstep_ << "\t";
@@ -105,7 +105,7 @@ void mcScoreSpectraFluence::dumpStatistic(ostream& os) const
    for (ir = 0; ir < nr_; ir++)
       os << (eFluenceBin(ir) * sf / (2 * ir + 1)) << "\t";
    os << endl;
-   os << endl << "Радиальные спектры по количеству частиц";
+   os << endl << "Р Р°РґРёР°Р»СЊРЅС‹Рµ СЃРїРµРєС‚СЂС‹ РїРѕ РєРѕР»РёС‡РµСЃС‚РІСѓ С‡Р°СЃС‚РёС†";
    os << endl << "---------------------------------------" << endl;
    for (ie = 0; ie < ne_; ie++)
       os << "\t" << (ie + 0.5) * estep_;
@@ -116,7 +116,7 @@ void mcScoreSpectraFluence::dumpStatistic(ostream& os) const
          os << "\t" << (nSpectrumBin(ir, ie) * sf / (2 * ir + 1));
       os << endl;
    }
-   os << endl << "Радиальные спектры по энергии частиц";
+   os << endl << "Р Р°РґРёР°Р»СЊРЅС‹Рµ СЃРїРµРєС‚СЂС‹ РїРѕ СЌРЅРµСЂРіРёРё С‡Р°СЃС‚РёС†";
    os << endl << "------------------------------------" << endl;
    for (ie = 0; ie < ne_; ie++)
       os << "\t" << (ie + 0.5) * estep_;
@@ -152,3 +152,6 @@ double mcScoreSpectraFluence::eSpectrumBin(int ir, int ie) const
       f += energy_spectra_[i][ir][ie];
    return f;
 }
+
+
+

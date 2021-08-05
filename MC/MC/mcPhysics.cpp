@@ -1,4 +1,4 @@
-#include "mcPhysics.h"
+﻿#include "mcPhysics.h"
 #include "mcDefs.h"
 #include "mcParticle.h"
 #include "mcThread.h"
@@ -77,3 +77,6 @@ void mcPhysics::DiscardParticle(mcParticle* p)
 {
    p->thread_->RemoveParticle();
 }
+
+
+

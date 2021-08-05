@@ -1,4 +1,4 @@
-#include "mcTransportRectangleTrap.h"
+ï»¿#include "mcTransportRectangleTrap.h"
 
 mcTransportRectangleTrap::mcTransportRectangleTrap(const geomVector3D& orgn, const geomVector3D& z,
                                                    const geomVector3D& x) : mcTransport(orgn, z, x), fsx1_(0), fsx2_(0),
@@ -9,7 +9,7 @@ mcTransportRectangleTrap::~mcTransportRectangleTrap(void) {}
 void mcTransportRectangleTrap::beginTransport(mcParticle& p)
 {
    if (p.u.z() <= 0)
-      return; // Äîòàëêèâàåì ÷àñòèöó äî ïëîñêîñòè
+      return; // Ð”Ð¾Ñ‚Ð°Ð»ÐºÐ¸Ð²Ð°ÐµÐ¼ Ñ‡Ð°ÑÑ‚Ð¸Ñ†Ñƒ Ð´Ð¾ Ð¿Ð»Ð¾ÑÐºÐ¾ÑÑ‚Ð¸
    geomVector3D pp = p.p * mwtot_;
    geomVector3D uu = (p.p + p.u) * mwtot_;
    uu = uu - pp;
@@ -35,7 +35,7 @@ void mcTransportRectangleTrap::SetFieldSize(double x1, double x2, double y1, dou
 void mcTransportRectangleTrap::dumpVRML(ostream& os) const
 {
    int i = 0;
-   double r = 15; // ðàçìåðà áîêñà
+   double r = 15; // Ñ€Ð°Ð·Ð¼ÐµÑ€Ð° Ð±Ð¾ÐºÑÐ°
    geomVector3D p[8];
    p[i++] = geomVector3D(-r, -r, 0) * mttow_;
    p[i++] = geomVector3D(-r, r, 0) * mttow_;
@@ -74,3 +74,6 @@ void mcTransportRectangleTrap::dumpVRML(ostream& os) const
    os << "      }" << endl;
    os << "    }" << endl;
 }
+
+
+

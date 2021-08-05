@@ -1,4 +1,4 @@
-#include "mcScoreBeamFluence2.h"
+п»ї#include "mcScoreBeamFluence2.h"
 #include "mcParticle.h"
 #include "mcThread.h"
 #include "mcTransport.h"
@@ -25,7 +25,7 @@ mcScoreBeamFluence2::mcScoreBeamFluence2(const char* module_name, int nThreads, 
    }
    m_nr_s = nr_s;
    m_rmax_s = rmax_s;
-   m_rstep_s = m_rmax_s / m_nr_s; // Трехмерный массив скоринга фотографии источника на серии уровней
+   m_rstep_s = m_rmax_s / m_nr_s; // РўСЂРµС…РјРµСЂРЅС‹Р№ РјР°СЃСЃРёРІ СЃРєРѕСЂРёРЅРіР° С„РѕС‚РѕРіСЂР°С„РёРё РёСЃС‚РѕС‡РЅРёРєР° РЅР° СЃРµСЂРёРё СѓСЂРѕРІРЅРµР№
    m_intencity_s = new double**[nThreads];
    m_intencity_s[0] = new double*[nThreads * nz_];
    int len_s = nThreads * nz_ * m_nr_s;
@@ -68,8 +68,8 @@ void mcScoreBeamFluence2::ScoreFluence(const mcParticle& particle)
    double edep = particle.ke * particle.weight;
    etotal_[iThread] += edep; // HACK !!!	GG 20140703
    if (particle.t != MCP_PHOTON)
-      return; // !!! Scoring вызывается до перемещения частицы на поверхность объекта к которому привязана частица.
-   // Нужно ее перенести здесь на поверхность.
+      return; // !!! Scoring РІС‹Р·С‹РІР°РµС‚СЃСЏ РґРѕ РїРµСЂРµРјРµС‰РµРЅРёСЏ С‡Р°СЃС‚РёС†С‹ РЅР° РїРѕРІРµСЂС…РЅРѕСЃС‚СЊ РѕР±СЉРµРєС‚Р° Рє РєРѕС‚РѕСЂРѕРјСѓ РїСЂРёРІСЏР·Р°РЅР° С‡Р°СЃС‚РёС†Р°.
+   // РќСѓР¶РЅРѕ РµРµ РїРµСЂРµРЅРµСЃС‚Рё Р·РґРµСЃСЊ РЅР° РїРѕРІРµСЂС…РЅРѕСЃС‚СЊ.
    geomVector3D p = particle.p + (particle.u * (-particle.p.z() / particle.u.z()));
    double r = p.lengthXY();
    if (r >= m_rmax)
@@ -78,7 +78,7 @@ void mcScoreBeamFluence2::ScoreFluence(const mcParticle& particle)
    if (ir < m_nr) {
       m_intencity[iThread][ir] += edep;
       m_intencity_count[iThread][ir] += particle.weight;
-   } // Проектируем частицу на плоскость источника
+   } // РџСЂРѕРµРєС‚РёСЂСѓРµРј С‡Р°СЃС‚РёС†Сѓ РЅР° РїР»РѕСЃРєРѕСЃС‚СЊ РёСЃС‚РѕС‡РЅРёРєР°
    for (int iz = 0; iz < nz_; iz++) {
       geomVector3D pc = p + (particle.u * ((-h_ + iz * d_iz_) / particle.u.z()));
       r = pc.lengthXY();
@@ -170,7 +170,7 @@ void mcScoreBeamFluence2::dumpVRML(ostream& os) const
    }
    const geomMatrix3D& mttow = transport_->MT2W();
    int ir, it, count = 0;
-   int da = 15; // шаг по углу 15 градусов
+   int da = 15; // С€Р°Рі РїРѕ СѓРіР»Сѓ 15 РіСЂР°РґСѓСЃРѕРІ
    double mPi = PI / 180;
    os << "Shape {" << endl;
    os << "  appearance Appearance {" << endl;
@@ -180,7 +180,7 @@ void mcScoreBeamFluence2::dumpVRML(ostream& os) const
    os << "  }" << endl;
    os << "  geometry IndexedLineSet {" << endl;
    os << "    coord Coordinate {" << endl;
-   os << "      point [" << endl; // Концентрические круги
+   os << "      point [" << endl; // РљРѕРЅС†РµРЅС‚СЂРёС‡РµСЃРєРёРµ РєСЂСѓРіРё
    for (ir = 1; ir <= m_nr; ir++) {
       double r = m_rstep * ir;
       for (it = 0; it < 360; it += da) {
@@ -255,3 +255,6 @@ void mcScoreBeamFluence2::dumpStatistic(ostream& os) const
       os << endl;
    }
 }
+
+
+

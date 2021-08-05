@@ -341,3 +341,6 @@ void mcPhysicsElectron::SetUpBremsPhoton(mcParticle* pPhoton, const mcMediumXE* 
    ChangeDirection(cosTheta, sinTheta, cosPhi, sinPhi, pPhoton->u);
    return;
 }
+
+
+

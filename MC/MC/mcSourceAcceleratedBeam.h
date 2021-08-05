@@ -1,4 +1,4 @@
-// Radiation Oncology Monte Carlo open source project
+п»ї// Radiation Oncology Monte Carlo open source project
 //
 // Author: [2017] Gennady Gorlachev (ggorlachev@roiss.ru) 
 //---------------------------------------------------------------------------
@@ -6,8 +6,8 @@
 #include "mcsource.h"
 #include <vector>
 
-// Источник в виде электронного пучка на выходе ускорителя.
-// Файл частиц должен удовлетворять простому текстовому формату:
+// РСЃС‚РѕС‡РЅРёРє РІ РІРёРґРµ СЌР»РµРєС‚СЂРѕРЅРЅРѕРіРѕ РїСѓС‡РєР° РЅР° РІС‹С…РѕРґРµ СѓСЃРєРѕСЂРёС‚РµР»СЏ.
+// Р¤Р°Р№Р» С‡Р°СЃС‚РёС† РґРѕР»Р¶РµРЅ СѓРґРѕРІР»РµС‚РІРѕСЂСЏС‚СЊ РїСЂРѕСЃС‚РѕРјСѓ С‚РµРєСЃС‚РѕРІРѕРјСѓ С„РѕСЂРјР°С‚Сѓ:
 // X Y Z Vx Vy Vz E(MeV) Weight
 class mcSourceAcceleratedBeam : public mcSource
 {
@@ -20,9 +20,12 @@ public:
 
    void dumpVRML(ostream& os) const override;
 
-protected: // Смещение источника (содержащего частицы в собственной системе координат) по оси Z
+protected: // РЎРјРµС‰РµРЅРёРµ РёСЃС‚РѕС‡РЅРёРєР° (СЃРѕРґРµСЂР¶Р°С‰РµРіРѕ С‡Р°СЃС‚РёС†С‹ РІ СЃРѕР±СЃС‚РІРµРЅРЅРѕР№ СЃРёСЃС‚РµРјРµ РєРѕРѕСЂРґРёРЅР°С‚) РїРѕ РѕСЃРё Z
    double z_;
    int nparticles_;
    std::vector<int> idx_;
    std::vector<mcParticle> particles_;
 };
+
+
+

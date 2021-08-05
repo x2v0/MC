@@ -1,4 +1,4 @@
-#include "mcScoreSphereMatrix.h"
+п»ї#include "mcScoreSphereMatrix.h"
 #include "mcTransport.h"
 
 mcScoreSphereMatrix::mcScoreSphereMatrix(const char* module_name, int nThreads, int np, int nm, double rmin,
@@ -14,7 +14,7 @@ mcScoreSphereMatrix::mcScoreSphereMatrix(const char* module_name, int nThreads, 
       M_[i] = M_[i - 1] + np_ * nm_;
    r2min_ = rmin_ * rmin_;
    r2max_ = rmax_ * rmax_;
-   pstep_ = 2. / np_; // мы разбиваем косину (p.z()) на равные интервалы
+   pstep_ = 2. / np_; // РјС‹ СЂР°Р·Р±РёРІР°РµРј РєРѕСЃРёРЅСѓ (p.z()) РЅР° СЂР°РІРЅС‹Рµ РёРЅС‚РµСЂРІР°Р»С‹
    mstep_ = 2. * PI / nm_;
 }
 
@@ -39,7 +39,7 @@ void mcScoreSphereMatrix::ScorePoint(double edep, int iThread, const mcRegionRef
       return;
    double xy = p.lengthXY();
    if (xy == 0)
-      return; // сверхмаловероятно, просто защищаем код
+      return; // СЃРІРµСЂС…РјР°Р»РѕРІРµСЂРѕСЏС‚РЅРѕ, РїСЂРѕСЃС‚Рѕ Р·Р°С‰РёС‰Р°РµРј РєРѕРґ
    int im = int(acos(p.x() / xy) / mstep_);
    if (p.y() < 0)
       im = nm_ - im - 1;
@@ -51,38 +51,38 @@ void mcScoreSphereMatrix::ScorePoint(double edep, int iThread, const mcRegionRef
 void mcScoreSphereMatrix::ScoreLine(double edep, int iThread, const mcRegionReference& region, mc_particle_t pt,
                                     const geomVector3D& p0, const geomVector3D& p1)
 {
-   // Если обе точки внутри внутренней сферы, то нет контакта с детектором.
+   // Р•СЃР»Рё РѕР±Рµ С‚РѕС‡РєРё РІРЅСѓС‚СЂРё РІРЅСѓС‚СЂРµРЅРЅРµР№ СЃС„РµСЂС‹, С‚Рѕ РЅРµС‚ РєРѕРЅС‚Р°РєС‚Р° СЃ РґРµС‚РµРєС‚РѕСЂРѕРј.
    double r0 = p0.length();
    double r1 = p1.length();
    if (r0 <= rmin_ && r1 <= rmin_)
       return;
    double length = (p1 - p0).length();
    double eddens = edep / length;
-   // Возможна ситуация, когда два отрезка данного отрезка лежат внутри сферического кольца.
-   // Такую ситуацию можно идентифицировать по расстоянию до ближайшей точки отрезка.
-   // В случае двоения формируем два отрезка и вызываем эту функцию для каждого рекурентно.
-   // Сортируем точки по возрастанию радиуса
-   geomVector3D ps0(p0), ps1(p1); // отсортированные точки
+   // Р’РѕР·РјРѕР¶РЅР° СЃРёС‚СѓР°С†РёСЏ, РєРѕРіРґР° РґРІР° РѕС‚СЂРµР·РєР° РґР°РЅРЅРѕРіРѕ РѕС‚СЂРµР·РєР° Р»РµР¶Р°С‚ РІРЅСѓС‚СЂРё СЃС„РµСЂРёС‡РµСЃРєРѕРіРѕ РєРѕР»СЊС†Р°.
+   // РўР°РєСѓСЋ СЃРёС‚СѓР°С†РёСЋ РјРѕР¶РЅРѕ РёРґРµРЅС‚РёС„РёС†РёСЂРѕРІР°С‚СЊ РїРѕ СЂР°СЃСЃС‚РѕСЏРЅРёСЋ РґРѕ Р±Р»РёР¶Р°Р№С€РµР№ С‚РѕС‡РєРё РѕС‚СЂРµР·РєР°.
+   // Р’ СЃР»СѓС‡Р°Рµ РґРІРѕРµРЅРёСЏ С„РѕСЂРјРёСЂСѓРµРј РґРІР° РѕС‚СЂРµР·РєР° Рё РІС‹Р·С‹РІР°РµРј СЌС‚Сѓ С„СѓРЅРєС†РёСЋ РґР»СЏ РєР°Р¶РґРѕРіРѕ СЂРµРєСѓСЂРµРЅС‚РЅРѕ.
+   // РЎРѕСЂС‚РёСЂСѓРµРј С‚РѕС‡РєРё РїРѕ РІРѕР·СЂР°СЃС‚Р°РЅРёСЋ СЂР°РґРёСѓСЃР°
+   geomVector3D ps0(p0), ps1(p1); // РѕС‚СЃРѕСЂС‚РёСЂРѕРІР°РЅРЅС‹Рµ С‚РѕС‡РєРё
    if (r0 > r1) {
       ps0 = p1;
       ps1 = p0;
       double f = r1;
       r1 = r0;
       r0 = f;
-   } // Q: Как определить минимальное расстояние от центра координат до отрезка в пространстве?
-   // Строим вектор нормали из центра к прямой линии
+   } // Q: РљР°Рє РѕРїСЂРµРґРµР»РёС‚СЊ РјРёРЅРёРјР°Р»СЊРЅРѕРµ СЂР°СЃСЃС‚РѕСЏРЅРёРµ РѕС‚ С†РµРЅС‚СЂР° РєРѕРѕСЂРґРёРЅР°С‚ РґРѕ РѕС‚СЂРµР·РєР° РІ РїСЂРѕСЃС‚СЂР°РЅСЃС‚РІРµ?
+   // РЎС‚СЂРѕРёРј РІРµРєС‚РѕСЂ РЅРѕСЂРјР°Р»Рё РёР· С†РµРЅС‚СЂР° Рє РїСЂСЏРјРѕР№ Р»РёРЅРёРё
    geomVector3D p3 = ps0 ^ (ps1 - ps0);
    geomVector3D n = (ps1 - ps0) ^ p3;
    n.normalize();
    double h = ps0 * n;
    if (h >= rmax_)
-      return; // Единичный вектор направления отрезка
+      return; // Р•РґРёРЅРёС‡РЅС‹Р№ РІРµРєС‚РѕСЂ РЅР°РїСЂР°РІР»РµРЅРёСЏ РѕС‚СЂРµР·РєР°
    geomVector3D p01 = ps1 - ps0;
-   p01.normalize(); // Если высота между радиусами до точек отрезка, то деление возможно
+   p01.normalize(); // Р•СЃР»Рё РІС‹СЃРѕС‚Р° РјРµР¶РґСѓ СЂР°РґРёСѓСЃР°РјРё РґРѕ С‚РѕС‡РµРє РѕС‚СЂРµР·РєР°, С‚Рѕ РґРµР»РµРЅРёРµ РІРѕР·РјРѕР¶РЅРѕ
    //if (h > r0 && h < r1)
    if ((p01 * ps0) * (p01 * ps1) < 0) {
-      // Деление внешним радиусом. Остается один отрезок, но короче.
-      // Обрезаем и продолжаем распределение.
+      // Р”РµР»РµРЅРёРµ РІРЅРµС€РЅРёРј СЂР°РґРёСѓСЃРѕРј. РћСЃС‚Р°РµС‚СЃСЏ РѕРґРёРЅ РѕС‚СЂРµР·РѕРє, РЅРѕ РєРѕСЂРѕС‡Рµ.
+      // РћР±СЂРµР·Р°РµРј Рё РїСЂРѕРґРѕР»Р¶Р°РµРј СЂР°СЃРїСЂРµРґРµР»РµРЅРёРµ.
       if (r0 > rmax_ && r1 > rmax_) {
          double hp = sqrt(r2max_ - h * h);
          double x = sqrt(r0 * r0 - h * h) - hp;
@@ -92,7 +92,7 @@ void mcScoreSphereMatrix::ScoreLine(double edep, int iThread, const mcRegionRefe
          length += x;
          ps1 += p01 * x;
          r0 = r1 = rmax_;
-      } // Деление внутренним радиусом
+      } // Р”РµР»РµРЅРёРµ РІРЅСѓС‚СЂРµРЅРЅРёРј СЂР°РґРёСѓСЃРѕРј
       if (h < rmin_ && r0 > rmin_ && r1 > rmin_) {
          double hp = sqrt(r2min_ - h * h);
          double x = sqrt(r0 * r0 - h * h) - hp;
@@ -105,8 +105,8 @@ void mcScoreSphereMatrix::ScoreLine(double edep, int iThread, const mcRegionRefe
       }
    }
    if (r0 > rmax_)
-      return; // Проверяем и при необходимости обрезаем в случае однократного пересечения	какой либо сферы.
-   // Мы точно знаем, что радиусы отсортированы по возрастанию и возможно не более одного пересечения.
+      return; // РџСЂРѕРІРµСЂСЏРµРј Рё РїСЂРё РЅРµРѕР±С…РѕРґРёРјРѕСЃС‚Рё РѕР±СЂРµР·Р°РµРј РІ СЃР»СѓС‡Р°Рµ РѕРґРЅРѕРєСЂР°С‚РЅРѕРіРѕ РїРµСЂРµСЃРµС‡РµРЅРёСЏ	РєР°РєРѕР№ Р»РёР±Рѕ СЃС„РµСЂС‹.
+   // РњС‹ С‚РѕС‡РЅРѕ Р·РЅР°РµРј, С‡С‚Рѕ СЂР°РґРёСѓСЃС‹ РѕС‚СЃРѕСЂС‚РёСЂРѕРІР°РЅС‹ РїРѕ РІРѕР·СЂР°СЃС‚Р°РЅРёСЋ Рё РІРѕР·РјРѕР¶РЅРѕ РЅРµ Р±РѕР»РµРµ РѕРґРЅРѕРіРѕ РїРµСЂРµСЃРµС‡РµРЅРёСЏ.
    if (r1 > rmax_) {
       double hp = sqrt(r2max_ - h * h);
       double x = hp - sqrt(r1 * r1 - h * h);
@@ -120,32 +120,32 @@ void mcScoreSphereMatrix::ScoreLine(double edep, int iThread, const mcRegionRefe
       length += x;
       ps0 += p01 * x;
       r0 = rmin_;
-   } // Теперь мы гарантированно имеем отрезок между ограничивающими сферами.
-   // Приступаем к распределению между ячейками двумерной матрицы.
-   // Индексы начала
+   } // РўРµРїРµСЂСЊ РјС‹ РіР°СЂР°РЅС‚РёСЂРѕРІР°РЅРЅРѕ РёРјРµРµРј РѕС‚СЂРµР·РѕРє РјРµР¶РґСѓ РѕРіСЂР°РЅРёС‡РёРІР°СЋС‰РёРјРё СЃС„РµСЂР°РјРё.
+   // РџСЂРёСЃС‚СѓРїР°РµРј Рє СЂР°СЃРїСЂРµРґРµР»РµРЅРёСЋ РјРµР¶РґСѓ СЏС‡РµР№РєР°РјРё РґРІСѓРјРµСЂРЅРѕР№ РјР°С‚СЂРёС†С‹.
+   // РРЅРґРµРєСЃС‹ РЅР°С‡Р°Р»Р°
    geomVector3D pps0(ps0);
    pps0.normalize();
    int ip0 = int((1.0 - pps0.z()) / pstep_);
    if (ip0 < 0 || ip0 >= np_)
-      return; // Hack!! Возможная защита кода
+      return; // Hack!! Р’РѕР·РјРѕР¶РЅР°СЏ Р·Р°С‰РёС‚Р° РєРѕРґР°
    double xy = ps0.lengthXY();
    if (xy == 0)
-      return; // сверхмаловероятно, просто защищаем код
+      return; // СЃРІРµСЂС…РјР°Р»РѕРІРµСЂРѕСЏС‚РЅРѕ, РїСЂРѕСЃС‚Рѕ Р·Р°С‰РёС‰Р°РµРј РєРѕРґ
    int im0 = int(acos(ps0.x() / xy) / mstep_);
    if (ps0.y() < 0)
       im0 = nm_ - im0 - 1;
    if (im0 < 0 || im0 >= nm_)
       return;
-   bool isMPositive = (ps0 ^ ps1).z() > 0; // направление отрезка по меридианам
+   bool isMPositive = (ps0 ^ ps1).z() > 0; // РЅР°РїСЂР°РІР»РµРЅРёРµ РѕС‚СЂРµР·РєР° РїРѕ РјРµСЂРёРґРёР°РЅР°Рј
    bool isPPositive = false;
    bool willParallelCross = true;
    bool willMeridianCross = true;
    bool needParallelCross = true;
    bool needMeridianCross = true;
-   double dp = 0, dm = 0; // Идем по отрезку отслеживая границы вокселей
+   double dp = 0, dm = 0; // РРґРµРј РїРѕ РѕС‚СЂРµР·РєСѓ РѕС‚СЃР»РµР¶РёРІР°СЏ РіСЂР°РЅРёС†С‹ РІРѕРєСЃРµР»РµР№
    while (true) {
       if (willParallelCross && needParallelCross) {
-         double dp1, dp2; // Индикатор в каком полушарии находимся
+         double dp1, dp2; // РРЅРґРёРєР°С‚РѕСЂ РІ РєР°РєРѕРј РїРѕР»СѓС€Р°СЂРёРё РЅР°С…РѕРґРёРјСЃСЏ
          double cosz = 1. - (ip0 + 1) * pstep_;
          if (cosz >= 0) {
             dp1 = distanceToParallel(ps0, p01, ip0, true);
@@ -166,7 +166,7 @@ void mcScoreSphereMatrix::ScoreLine(double edep, int iThread, const mcRegionRefe
          if (dm >= length)
             willMeridianCross = false;
       } else
-         needMeridianCross = false; // Не дотягиваем ни до одной границы
+         needMeridianCross = false; // РќРµ РґРѕС‚СЏРіРёРІР°РµРј РЅРё РґРѕ РѕРґРЅРѕР№ РіСЂР°РЅРёС†С‹
       if (!willParallelCross && !willMeridianCross) {
          scoreEnergyInVoxel(iThread, ip0, im0, eddens * length);
          break;
@@ -191,24 +191,24 @@ void mcScoreSphereMatrix::ScoreLine(double edep, int iThread, const mcRegionRefe
 
 double mcScoreSphereMatrix::distanceToParallel(const geomVector3D& p, const geomVector3D& v, int ip, bool isPOutside)
 {
-   // Полюса, с которыми нельзя столкнуться
+   // РџРѕР»СЋСЃР°, СЃ РєРѕС‚РѕСЂС‹РјРё РЅРµР»СЊР·СЏ СЃС‚РѕР»РєРЅСѓС‚СЊСЃСЏ
    if (ip <= 0 || ip >= np_)
-      return DBL_MAX; // Определение наклона конуса и полушария
+      return DBL_MAX; // РћРїСЂРµРґРµР»РµРЅРёРµ РЅР°РєР»РѕРЅР° РєРѕРЅСѓСЃР° Рё РїРѕР»СѓС€Р°СЂРёСЏ
    double cosz = 1. - ip * pstep_;
-   double cos2z = cosz * cosz; // Решение квадратного уравнения (ad^2 + 2bd + c = 0).
-   // Коэффициенты уравнения не зависят от того, откуда летит частица,
-   // но правильное решение зависит от множества условий.
+   double cos2z = cosz * cosz; // Р РµС€РµРЅРёРµ РєРІР°РґСЂР°С‚РЅРѕРіРѕ СѓСЂР°РІРЅРµРЅРёСЏ (ad^2 + 2bd + c = 0).
+   // РљРѕСЌС„С„РёС†РёРµРЅС‚С‹ СѓСЂР°РІРЅРµРЅРёСЏ РЅРµ Р·Р°РІРёСЃСЏС‚ РѕС‚ С‚РѕРіРѕ, РѕС‚РєСѓРґР° Р»РµС‚РёС‚ С‡Р°СЃС‚РёС†Р°,
+   // РЅРѕ РїСЂР°РІРёР»СЊРЅРѕРµ СЂРµС€РµРЅРёРµ Р·Р°РІРёСЃРёС‚ РѕС‚ РјРЅРѕР¶РµСЃС‚РІР° СѓСЃР»РѕРІРёР№.
    double vx = v.x(), vy = v.y(), vz = v.z();
    double px = p.x(), py = p.y(), pz = p.z();
    double a = vz * vz - cos2z;
    double b = vz * pz - cos2z * (vx * px + vy * py + vz * pz);
    double c = pz * pz - cos2z * (px * px + py * py + pz * pz);
    double det = b * b - a * c;
-   if (det < 0) // летим мимо
+   if (det < 0) // Р»РµС‚РёРј РјРёРјРѕ
       return DBL_MAX;
    if (isPOutside) {
-      // Если пересечений нет вообще, то ситуация обработана выше через детерминант.
-      // Возможно одно пересечение
+      // Р•СЃР»Рё РїРµСЂРµСЃРµС‡РµРЅРёР№ РЅРµС‚ РІРѕРѕР±С‰Рµ, С‚Рѕ СЃРёС‚СѓР°С†РёСЏ РѕР±СЂР°Р±РѕС‚Р°РЅР° РІС‹С€Рµ С‡РµСЂРµР· РґРµС‚РµСЂРјРёРЅР°РЅС‚.
+      // Р’РѕР·РјРѕР¶РЅРѕ РѕРґРЅРѕ РїРµСЂРµСЃРµС‡РµРЅРёРµ
       if (fabs(a) <= FLT_EPSILON) {
          if (b == 0)
             return DBL_MAX;
@@ -222,7 +222,7 @@ double mcScoreSphereMatrix::distanceToParallel(const geomVector3D& p, const geom
       if (d1 <= 0 && d2 <= 0)
          return DBL_MAX;
       double d = (d1 > 0 && d2 > 0) ? fmin(d1, d2) : d1 > 0 ? d1 : d2;
-      // Последний фильтр - проверка  на пересечение правильного полушария
+      // РџРѕСЃР»РµРґРЅРёР№ С„РёР»СЊС‚СЂ - РїСЂРѕРІРµСЂРєР°  РЅР° РїРµСЂРµСЃРµС‡РµРЅРёРµ РїСЂР°РІРёР»СЊРЅРѕРіРѕ РїРѕР»СѓС€Р°СЂРёСЏ
       double f = (p + v * d).z();
       if (f * cosz > 0)
          return d;
@@ -230,13 +230,13 @@ double mcScoreSphereMatrix::distanceToParallel(const geomVector3D& p, const geom
    }
    double d = a == 0 ? (b == 0 ? -1 : -0.5 * c / b) : (-b - sqrt(det)) / a;
    if (d <= 0)
-      return DBL_MAX; // решение есть, но оно не в той стороне куда летим
+      return DBL_MAX; // СЂРµС€РµРЅРёРµ РµСЃС‚СЊ, РЅРѕ РѕРЅРѕ РЅРµ РІ С‚РѕР№ СЃС‚РѕСЂРѕРЅРµ РєСѓРґР° Р»РµС‚РёРј
    return d;
 }
 
 double mcScoreSphereMatrix::distanceToMeridian(const geomVector3D& p0, const geomVector3D& v, int im, bool isMPositive)
 {
-   // Нормаль к плоскости меридиана
+   // РќРѕСЂРјР°Р»СЊ Рє РїР»РѕСЃРєРѕСЃС‚Рё РјРµСЂРёРґРёР°РЅР°
    geomVector3D n(-sin(im * mstep_), cos(im * mstep_), 0);
    double f = n * v;
    if ((isMPositive && f <= 0) || (!isMPositive && f >= 0))
@@ -369,3 +369,6 @@ void mcScoreSphereMatrix::dumpStatistic(ostream& os) const
    }
    os << endl;
 }
+
+
+

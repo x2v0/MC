@@ -1,4 +1,4 @@
-#include "mcTransportAxialSymmetricSplitter.h"
+п»ї#include "mcTransportAxialSymmetricSplitter.h"
 
 mcTransportAxialSymmetricSplitter::mcTransportAxialSymmetricSplitter(const geomVector3D& orgn, const geomVector3D& z,
                                                                      const geomVector3D& x, mc_particle_t ptype,
@@ -9,7 +9,7 @@ mcTransportAxialSymmetricSplitter::~mcTransportAxialSymmetricSplitter(void) {}
 
 void mcTransportAxialSymmetricSplitter::beginTransport(mcParticle& p)
 {
-   //// Test. Отсечка заряженных частиц для проверки гипотез
+   //// Test. РћС‚СЃРµС‡РєР° Р·Р°СЂСЏР¶РµРЅРЅС‹С… С‡Р°СЃС‚РёС† РґР»СЏ РїСЂРѕРІРµСЂРєРё РіРёРїРѕС‚РµР·
    //if (p.t != mc_particle_t::MCP_PHOTON)
    //{
    //	return;
@@ -38,7 +38,7 @@ void mcTransportAxialSymmetricSplitter::beginTransport(mcParticle& p)
 
 void mcTransportAxialSymmetricSplitter::dumpVRML(ostream& os) const
 {
-   double r = 10; // размера бокса
+   double r = 10; // СЂР°Р·РјРµСЂР° Р±РѕРєСЃР°
    geomVector3D p = geomVector3D(0, 0, 0.005) * mttow_;
    os << "# Axial splitter: " << this->getName() << endl;
    os << "Transform {" << endl;
@@ -60,3 +60,6 @@ void mcTransportAxialSymmetricSplitter::dumpVRML(ostream& os) const
    os << "  ]" << endl;
    os << "}" << endl;
 }
+
+
+

@@ -1,4 +1,4 @@
-#include "mcScoreBeamFluenceSubsource.h"
+п»ї#include "mcScoreBeamFluenceSubsource.h"
 #include "mcThread.h"
 
 mcScoreBeamFluenceSubsource::mcScoreBeamFluenceSubsource(const char* name, int nThreads, enum mc_particle_t ptype,
@@ -65,14 +65,14 @@ void mcScoreBeamFluenceSubsource::ScoreFluence(const mcParticle& particle, const
    if (particle.t != ptype_ || particle.plast.z() < zmin_ || particle.plast.z() > zmax_)
       return;
    int iThread = particle.thread_->id();
-   double edep = particle.ke * particle.weight; // Профиль потока энергии
+   double edep = particle.ke * particle.weight; // РџСЂРѕС„РёР»СЊ РїРѕС‚РѕРєР° СЌРЅРµСЂРіРёРё
    int ir = int(p.lengthXY() / rstep_);
    if (ir >= nr_)
       return;
-   intencity_[iThread][ir] += edep; // Спектры в зависимости от радиуса
+   intencity_[iThread][ir] += edep; // РЎРїРµРєС‚СЂС‹ РІ Р·Р°РІРёСЃРёРјРѕСЃС‚Рё РѕС‚ СЂР°РґРёСѓСЃР°
    int ie = int(particle.ke / estep_);
    if (ie < ne_)
-      spectra_[iThread][ir * ne_ + ie] += edep; // Угловые разбросы в зависимости от радиуса
+      spectra_[iThread][ir * ne_ + ie] += edep; // РЈРіР»РѕРІС‹Рµ СЂР°Р·Р±СЂРѕСЃС‹ РІ Р·Р°РІРёСЃРёРјРѕСЃС‚Рё РѕС‚ СЂР°РґРёСѓСЃР°
    geomVector3D vr(p.x(), p.y(), focus_);
    vr.normalize();
    double a = acos(vr * particle.u) * 180 / PI;
@@ -195,7 +195,7 @@ void mcScoreBeamFluenceSubsource::dumpStatistic(ostream& os) const
    os << endl;
    double ett = 0;
    for (ir = 0; ir < nr_; ir++) {
-      // Нормируем спектры таким образом, что суммарное кол-во частиц равно 1.
+      // РќРѕСЂРјРёСЂСѓРµРј СЃРїРµРєС‚СЂС‹ С‚Р°РєРёРј РѕР±СЂР°Р·РѕРј, С‡С‚Рѕ СЃСѓРјРјР°СЂРЅРѕРµ РєРѕР»-РІРѕ С‡Р°СЃС‚РёС† СЂР°РІРЅРѕ 1.
       os << (double(ir) + 0.5) * rstep_;
       double et = 0;
       for (ie = 0; ie < ne_; ie++) {
@@ -219,9 +219,9 @@ void mcScoreBeamFluenceSubsource::dumpStatistic(ostream& os) const
             os << '\t' << SpectrumSigma(ir, ie) / et;
       }
       os << endl;
-   } // Суммарный спектр
+   } // РЎСѓРјРјР°СЂРЅС‹Р№ СЃРїРµРєС‚СЂ
    os << endl;
-   os << "Суммарный спектр" << endl;
+   os << "РЎСѓРјРјР°СЂРЅС‹Р№ СЃРїРµРєС‚СЂ" << endl;
    os << endl;
    for (ie = 0; ie < ne_; ie++)
       os << '\t' << (double(ie) + 0.5) * estep_;
@@ -273,9 +273,9 @@ void mcScoreBeamFluenceSubsource::dumpStatistic(ostream& os) const
             os << '\t' << AngleSigma(ir, ia) / ((cos(double(ia + 1) * PI / 180) - cos(double(ia) * PI / 180)) * at);
       }
       os << endl;
-   } // Суммарное угловое распределение
+   } // РЎСѓРјРјР°СЂРЅРѕРµ СѓРіР»РѕРІРѕРµ СЂР°СЃРїСЂРµРґРµР»РµРЅРёРµ
    os << endl;
-   os << "Суммарное угловое распределение" << endl;
+   os << "РЎСѓРјРјР°СЂРЅРѕРµ СѓРіР»РѕРІРѕРµ СЂР°СЃРїСЂРµРґРµР»РµРЅРёРµ" << endl;
    os << endl;
    for (ia = 0; ia < na_; ia++)
       os << '\t' << (double(ia) + 0.5) * astep_;
@@ -290,3 +290,6 @@ void mcScoreBeamFluenceSubsource::dumpStatistic(ostream& os) const
    delete[] ang_tot;
    delete[] ang_sigma_tot;
 }
+
+
+

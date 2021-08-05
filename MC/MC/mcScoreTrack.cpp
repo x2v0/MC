@@ -1,4 +1,4 @@
-#include "mcScoreTrack.h"
+﻿#include "mcScoreTrack.h"
 #include "mcGeometry.h"
 
 mcScoreTrack::mcScoreTrack(int nThreads, double R, double Z1, double Z2, double EMIN, bool doPhotons, bool doElectrons,
@@ -135,3 +135,6 @@ void mcScoreTrack::dumpVRML(ostream& os) const
    os << "  ]" << endl;
    os << "}" << endl;
 }
+
+
+

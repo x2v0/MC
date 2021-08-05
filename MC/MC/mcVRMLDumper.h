@@ -1,4 +1,4 @@
-// Radiation Oncology Monte Carlo open source project
+п»ї// Radiation Oncology Monte Carlo open source project
 //
 // Author: [2005-2017] Gennady Gorlachev (ggorlachev@roiss.ru) 
 //---------------------------------------------------------------------------
@@ -10,7 +10,10 @@ class mcVRMLDumper
 {
 public:
    mcVRMLDumper() { }
-   ~mcVRMLDumper(void) { }            // Заголовок VRML файла. Выводится один раз в качестве первой записи файла.
-   static void dumpHead(ostream& os); // оси координат мировой системы, a - длина осей (50 см по умолчанию)
+   ~mcVRMLDumper(void) { }            // Р—Р°РіРѕР»РѕРІРѕРє VRML С„Р°Р№Р»Р°. Р’С‹РІРѕРґРёС‚СЃСЏ РѕРґРёРЅ СЂР°Р· РІ РєР°С‡РµСЃС‚РІРµ РїРµСЂРІРѕР№ Р·Р°РїРёСЃРё С„Р°Р№Р»Р°.
+   static void dumpHead(ostream& os); // РѕСЃРё РєРѕРѕСЂРґРёРЅР°С‚ РјРёСЂРѕРІРѕР№ СЃРёСЃС‚РµРјС‹, a - РґР»РёРЅР° РѕСЃРµР№ (50 СЃРј РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ)
    static void dumpWorldAxis(ostream& os, double a = 50.);
 };
+
+
+

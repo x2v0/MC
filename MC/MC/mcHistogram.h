@@ -118,3 +118,6 @@ protected:
    double sum2_;
    std::vector<double> d_;
 };
+
+
+

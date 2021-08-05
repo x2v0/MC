@@ -1,4 +1,4 @@
-#include "mcTransportCylinder.h"
+п»ї#include "mcTransportCylinder.h"
 #include "mcGeometry.h"
 
 mcTransportCylinder::mcTransportCylinder() : mcTransport()
@@ -24,7 +24,7 @@ double mcTransportCylinder::getDistanceInside(mcParticle& p) const
 {
    double dist = mcGeometry::getDistanceToCylinderInside(p.p, p.u, r_, h_);
    if (internalTransport_ != nullptr) {
-      // К сожалению частицу нужно переводить в систему координат объекта
+      // Рљ СЃРѕР¶Р°Р»РµРЅРёСЋ С‡Р°СЃС‚РёС†Сѓ РЅСѓР¶РЅРѕ РїРµСЂРµРІРѕРґРёС‚СЊ РІ СЃРёСЃС‚РµРјСѓ РєРѕРѕСЂРґРёРЅР°С‚ РѕР±СЉРµРєС‚Р°
       mcParticle pp(p);
       pp.p = pp.p * mtoe_;
       pp.u = p.u.transformDirection(mtoe_);
@@ -84,3 +84,6 @@ void mcTransportCylinder::dumpVRML(ostream& os) const
    //os << "  ]" << endl;
    //os << "}" << endl;
 }
+
+
+

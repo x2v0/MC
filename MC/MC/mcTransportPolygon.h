@@ -1,4 +1,4 @@
-// Radiation Oncology Monte Carlo open source project
+п»ї// Radiation Oncology Monte Carlo open source project
 //
 // Author: [2005-2017] Gennady Gorlachev (ggorlachev@roiss.ru) 
 //---------------------------------------------------------------------------
@@ -6,12 +6,12 @@
 #include "mctransport.h"
 #include <iostream>
 #include "../geometry/vec2d.h"
-using namespace std; //Класс транстпорта в произвольном выпуклом полигоне
-//полигон задаётся в виде массива двухмерный векторов (z, r)
+using namespace std; //РљР»Р°СЃСЃ С‚СЂР°РЅСЃС‚РїРѕСЂС‚Р° РІ РїСЂРѕРёР·РІРѕР»СЊРЅРѕРј РІС‹РїСѓРєР»РѕРј РїРѕР»РёРіРѕРЅРµ
+//РїРѕР»РёРіРѕРЅ Р·Р°РґР°С‘С‚СЃСЏ РІ РІРёРґРµ РјР°СЃСЃРёРІР° РґРІСѓС…РјРµСЂРЅС‹Р№ РІРµРєС‚РѕСЂРѕРІ (z, r)
 class mcTransportPolygon : public mcTransport
 {
 public:
-   mcTransportPolygon(void); //np - число точек(векторов), задающих полигон
+   mcTransportPolygon(void); //np - С‡РёСЃР»Рѕ С‚РѕС‡РµРє(РІРµРєС‚РѕСЂРѕРІ), Р·Р°РґР°СЋС‰РёС… РїРѕР»РёРіРѕРЅ
    mcTransportPolygon(const geomVector3D& orgn, const geomVector3D& z, const geomVector3D& x, int np, double h,
                       double r);
 
@@ -28,7 +28,10 @@ protected:
 
 protected:
    geomVector2D* _ptr;
-   int _np;   //количество точек,задающих полигон
-   double _r; //радиус основания полигона
-   double _h; //высота полигона
+   int _np;   //РєРѕР»РёС‡РµСЃС‚РІРѕ С‚РѕС‡РµРє,Р·Р°РґР°СЋС‰РёС… РїРѕР»РёРіРѕРЅ
+   double _r; //СЂР°РґРёСѓСЃ РѕСЃРЅРѕРІР°РЅРёСЏ РїРѕР»РёРіРѕРЅР°
+   double _h; //РІС‹СЃРѕС‚Р° РїРѕР»РёРіРѕРЅР°
 };
+
+
+

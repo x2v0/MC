@@ -1,4 +1,4 @@
-#include "mcScoreSphereFluence.h"
+﻿#include "mcScoreSphereFluence.h"
 #include "mcThread.h"
 
 mcScoreSphereFluence::mcScoreSphereFluence(const char* module_name, int nThreads) : mcScore(module_name, nThreads)
@@ -72,3 +72,6 @@ void mcScoreSphereFluence::dumpStatistic(ostream& os) const
    }
    os << endl;
 }
+
+
+

@@ -1,4 +1,4 @@
-#include "mcTransportConicalRing.h"
+п»ї#include "mcTransportConicalRing.h"
 #include "mcGeometry.h"
 #include <float.h>
 
@@ -32,9 +32,9 @@ void mcTransportConicalRing::setGeometry(double r0, double r1, double h, double 
 
 double mcTransportConicalRing::getDistanceInside(mcParticle& p) const
 {
-   // Цилиндр
+   // Р¦РёР»РёРЅРґСЂ
    double cd1 = mcGeometry::getDistanceToConeInside(p.p, p.u, r1_, f_);
-   double cd2 = mcGeometry::getDistanceToConeOutside(p.p, p.u, r0_, f_); // Плоскости
+   double cd2 = mcGeometry::getDistanceToConeOutside(p.p, p.u, r0_, f_); // РџР»РѕСЃРєРѕСЃС‚Рё
    double vz = p.u.z();
    double pd = (vz < 0) ? -p.p.z() / vz : (vz > 0) ? (h_ - p.p.z()) / vz : DBL_MAX;
    return NNEG(MIN(MIN(cd1, cd2), pd));
@@ -44,17 +44,17 @@ double mcTransportConicalRing::getDistanceOutside(mcParticle& p) const
 {
    double z = p.p.z(), vz = p.u.z();
    double cd = 0;
-   double rr;           // проекция из фокуса на основание
-   geomVector3D c(p.p); // Частица за объектом
+   double rr;           // РїСЂРѕРµРєС†РёСЏ РёР· С„РѕРєСѓСЃР° РЅР° РѕСЃРЅРѕРІР°РЅРёРµ
+   geomVector3D c(p.p); // Р§Р°СЃС‚РёС†Р° Р·Р° РѕР±СЉРµРєС‚РѕРј
    if (z <= 0) {
       if (vz <= 0)
-         return DBL_MAX; // Доводим частицу до ближайшей плоскости объекта
+         return DBL_MAX; // Р”РѕРІРѕРґРёРј С‡Р°СЃС‚РёС†Сѓ РґРѕ Р±Р»РёР¶Р°Р№С€РµР№ РїР»РѕСЃРєРѕСЃС‚Рё РѕР±СЉРµРєС‚Р°
       cd = -p.p.z() / vz;
       c = p.p + (p.u * cd);
       rr = c.lengthXY();
       if (rr < r1_ && rr > r0_)
          return cd;
-   } // Частица перед объектом
+   } // Р§Р°СЃС‚РёС†Р° РїРµСЂРµРґ РѕР±СЉРµРєС‚РѕРј
    else if (z >= h_) {
       if (vz >= 0)
          return DBL_MAX;
@@ -64,7 +64,7 @@ double mcTransportConicalRing::getDistanceOutside(mcParticle& p) const
       if (rr < r1_ && rr > r0_)
          return cd;
    } else
-      rr = c.lengthXY() * f_ / (f_ - z); // Частица на уровне объекта и она либо в дырке, либо за пределами кольца
+      rr = c.lengthXY() * f_ / (f_ - z); // Р§Р°СЃС‚РёС†Р° РЅР° СѓСЂРѕРІРЅРµ РѕР±СЉРµРєС‚Р° Рё РѕРЅР° Р»РёР±Рѕ РІ РґС‹СЂРєРµ, Р»РёР±Рѕ Р·Р° РїСЂРµРґРµР»Р°РјРё РєРѕР»СЊС†Р°
    double dd = rr <= r0_
                   ? mcGeometry::getDistanceToConeInside(p.p, p.u, r0_, f_)
                   : rr >= r1_
@@ -107,3 +107,6 @@ void mcTransportConicalRing::dumpVRML(ostream& os) const
    os << "  ]" << endl;
    os << "}" << endl;
 }
+
+
+

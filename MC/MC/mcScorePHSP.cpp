@@ -1,9 +1,9 @@
-#include "mcScorePHSP.h"
+ï»¿#include "mcScorePHSP.h"
 #include "mcPhaseSpaceIO.h"
 
 mcScorePHSP::mcScorePHSP(const char* module_name, const char* fname) : mcScore(module_name, 1)
 {
-   // Îòêðûòü ôàéë äëÿ çàïèñè
+   // ÐžÑ‚ÐºÑ€Ñ‹Ñ‚ÑŒ Ñ„Ð°Ð¹Ð» Ð´Ð»Ñ Ð·Ð°Ð¿Ð¸ÑÐ¸
    phsp_ = new mcPhaseSpaceIO();
    phsp_->open(fname, mcPhaseSpaceIO::WRITING);
 }
@@ -28,3 +28,6 @@ void mcScorePHSP::dumpStatistic(ostream& os) const
 {
    mcScore::dumpStatistic(os);
 }
+
+
+

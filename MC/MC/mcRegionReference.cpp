@@ -1,4 +1,4 @@
-#include "mcRegionReference.h"
+﻿#include "mcRegionReference.h"
 
 mcRegionReference::mcRegionReference(void) : type_(MCRT_LIN_IDX), medidx_(0), idx_(0)
 {
@@ -8,3 +8,6 @@ mcRegionReference::mcRegionReference(void) : type_(MCRT_LIN_IDX), medidx_(0), id
 }
 
 mcRegionReference::~mcRegionReference(void) {}
+
+
+

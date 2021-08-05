@@ -1,4 +1,4 @@
-// Radiation Oncology Monte Carlo open source project
+п»ї// Radiation Oncology Monte Carlo open source project
 //
 // Author: [2005-2017] Gennady Gorlachev (ggorlachev@roiss.ru) 
 //---------------------------------------------------------------------------
@@ -6,8 +6,8 @@
 #include "mcscore.h"
 #include <vector>
 
-// Класс сбора статистики потока излучения в плоскости.
-// Регистрируются координаты точки пересечения плоскости, радиус в плоскости XY и угол по отношению к оси Z.
+// РљР»Р°СЃСЃ СЃР±РѕСЂР° СЃС‚Р°С‚РёСЃС‚РёРєРё РїРѕС‚РѕРєР° РёР·Р»СѓС‡РµРЅРёСЏ РІ РїР»РѕСЃРєРѕСЃС‚Рё.
+// Р РµРіРёСЃС‚СЂРёСЂСѓСЋС‚СЃСЏ РєРѕРѕСЂРґРёРЅР°С‚С‹ С‚РѕС‡РєРё РїРµСЂРµСЃРµС‡РµРЅРёСЏ РїР»РѕСЃРєРѕСЃС‚Рё, СЂР°РґРёСѓСЃ РІ РїР»РѕСЃРєРѕСЃС‚Рё XY Рё СѓРіРѕР» РїРѕ РѕС‚РЅРѕС€РµРЅРёСЋ Рє РѕСЃРё Z.
 class mcScoreParticleContainer : public mcScore
 {
 public:
@@ -49,3 +49,6 @@ protected:
 
    std::vector<std::vector<PlaneParticleRecord>> particles_;
 };
+
+
+

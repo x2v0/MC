@@ -1,4 +1,4 @@
-#include "mcMedium.h"
+﻿#include "mcMedium.h"
 #include "../geometry/text.h"
 mcMedium::mcMedium(void) : status_(EMPTY), density_(0) {}
 mcMedium::~mcMedium(void) {}
@@ -12,3 +12,6 @@ string mcMedium::ParseLine(string& line, const char* param)
    GetTwoStringsFromLine(s2, s1, line);
    return s1;
 }
+
+
+

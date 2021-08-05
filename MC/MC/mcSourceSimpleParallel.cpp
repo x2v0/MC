@@ -1,4 +1,4 @@
-#include "mcSourceSimpleParallel.h"
+п»ї#include "mcSourceSimpleParallel.h"
 #include "../geometry/vec3d.h"
 #include "mcPhysicsCommon.h"
 #include "mcThread.h"
@@ -18,10 +18,10 @@ mcSourceSimpleParallel::mcSourceSimpleParallel(const char* name, int nThreads, m
 mcSourceSimpleParallel::~mcSourceSimpleParallel(void) {}
 
 void mcSourceSimpleParallel::init(mc_particle_t type, double ke, const geomVector3D& p, const geomVector3D& v,
-                                  double rx        // x-радиус элипса источника
-                                  , double ry      // y-радиус элипса источника
-                                  , double sigmaKE //= 0.0			// сигма гауссиана энергий
-)                                                  // направление движения (единичный вектор)
+                                  double rx        // x-СЂР°РґРёСѓСЃ СЌР»РёРїСЃР° РёСЃС‚РѕС‡РЅРёРєР°
+                                  , double ry      // y-СЂР°РґРёСѓСЃ СЌР»РёРїСЃР° РёСЃС‚РѕС‡РЅРёРєР°
+                                  , double sigmaKE //= 0.0			// СЃРёРіРјР° РіР°СѓСЃСЃРёР°РЅР° СЌРЅРµСЂРіРёР№
+)                                                  // РЅР°РїСЂР°РІР»РµРЅРёРµ РґРІРёР¶РµРЅРёСЏ (РµРґРёРЅРёС‡РЅС‹Р№ РІРµРєС‚РѕСЂ)
 {
    type_ = type;
    ke_ = ke;
@@ -40,22 +40,22 @@ void mcSourceSimpleParallel::sample(mcParticle& p, mcThread* thread)
    mcRng& rng = thread->rng();
    double x, y;
    do {
-      // единичный круг (x^2+y^2<=1)
-      x = 2.0 * ((rng.rnd()) - 0.5); // положение по x
-      y = 2.0 * ((rng.rnd()) - 0.5); // положение по y
+      // РµРґРёРЅРёС‡РЅС‹Р№ РєСЂСѓРі (x^2+y^2<=1)
+      x = 2.0 * ((rng.rnd()) - 0.5); // РїРѕР»РѕР¶РµРЅРёРµ РїРѕ x
+      y = 2.0 * ((rng.rnd()) - 0.5); // РїРѕР»РѕР¶РµРЅРёРµ РїРѕ y
    } while ((SQUARE(x) + SQUARE(y)) > 1);
    x *= rx_;
-   y *= ry_;                                           // растягиваем в эллипс( (x/rx)^2+(y/ry)^2<=1)
-   p.p = geomVector3D(p_.x() + x, p_.y() + y, p_.z()); // не забываем совместить центры координат
+   y *= ry_;                                           // СЂР°СЃС‚СЏРіРёРІР°РµРј РІ СЌР»Р»РёРїСЃ( (x/rx)^2+(y/ry)^2<=1)
+   p.p = geomVector3D(p_.x() + x, p_.y() + y, p_.z()); // РЅРµ Р·Р°Р±С‹РІР°РµРј СЃРѕРІРјРµСЃС‚РёС‚СЊ С†РµРЅС‚СЂС‹ РєРѕРѕСЂРґРёРЅР°С‚
    p.plast = p.p;
    if (sigmaKE_ == 0) {
       p.ke = ke_;
    } else {
-      // используем объявленные переменные x,y в другом смысле - для случ. сэмплирования энергии
-      // В этом методе сэмплирования ограничение числа сигм видимо ненужно
-      GaussStandardRnd_by_Marsaglia(rng, x, y); // случайно распределённые по Гауссу величины
+      // РёСЃРїРѕР»СЊР·СѓРµРј РѕР±СЉСЏРІР»РµРЅРЅС‹Рµ РїРµСЂРµРјРµРЅРЅС‹Рµ x,y РІ РґСЂСѓРіРѕРј СЃРјС‹СЃР»Рµ - РґР»СЏ СЃР»СѓС‡. СЃСЌРјРїР»РёСЂРѕРІР°РЅРёСЏ СЌРЅРµСЂРіРёРё
+      // Р’ СЌС‚РѕРј РјРµС‚РѕРґРµ СЃСЌРјРїР»РёСЂРѕРІР°РЅРёСЏ РѕРіСЂР°РЅРёС‡РµРЅРёРµ С‡РёСЃР»Р° СЃРёРіРј РІРёРґРёРјРѕ РЅРµРЅСѓР¶РЅРѕ
+      GaussStandardRnd_by_Marsaglia(rng, x, y); // СЃР»СѓС‡Р°Р№РЅРѕ СЂР°СЃРїСЂРµРґРµР»С‘РЅРЅС‹Рµ РїРѕ Р“Р°СѓСЃСЃСѓ РІРµР»РёС‡РёРЅС‹
       p.ke = ke_ - sigmaKE_ * x;
-      p.ke = (p.ke < 0) ? 0 : (p.ke); // проверяем, чтобы энергия не получилась отрицательной
+      p.ke = (p.ke < 0) ? 0 : (p.ke); // РїСЂРѕРІРµСЂСЏРµРј, С‡С‚РѕР±С‹ СЌРЅРµСЂРіРёСЏ РЅРµ РїРѕР»СѓС‡РёР»Р°СЃСЊ РѕС‚СЂРёС†Р°С‚РµР»СЊРЅРѕР№
    }
    p.u = v_;
    p.weight = 1;
@@ -88,3 +88,6 @@ void mcSourceSimpleParallel::dumpVRML(ostream& os) const
    os << "  }" << endl;
    os << "}" << endl;
 }
+
+
+

@@ -1,13 +1,13 @@
-#include "mcPhysicsCommon.h"
+п»ї#include "mcPhysicsCommon.h"
 #include "mcDefs.h"
 #include "mcRng.h"
 #include <math.h>
 //=================================
 // Standard Physical functions
 //---------------------------------
-// Возвращает энергию центра масс для покоящейся частицы c targetMass и 
-// налетающей с projectileMass и ПОЛНОЙ энергией totalProjectileEnergy
-// Всё в MeV
+// Р’РѕР·РІСЂР°С‰Р°РµС‚ СЌРЅРµСЂРіРёСЋ С†РµРЅС‚СЂР° РјР°СЃСЃ РґР»СЏ РїРѕРєРѕСЏС‰РµР№СЃСЏ С‡Р°СЃС‚РёС†С‹ c targetMass Рё 
+// РЅР°Р»РµС‚Р°СЋС‰РµР№ СЃ projectileMass Рё РџРћР›РќРћР™ СЌРЅРµСЂРіРёРµР№ totalProjectileEnergy
+// Р’СЃС‘ РІ MeV
 // rpp p.321, eq.38.3
 double ECenterOfMass(double targetMass, double projectileMass, double totalProjectileEnergy)
 {
@@ -15,21 +15,21 @@ double ECenterOfMass(double targetMass, double projectileMass, double totalProje
    a = sqrt(a);
    return a;
 } //=================================
-// Основные релятивистские формулы
+// РћСЃРЅРѕРІРЅС‹Рµ СЂРµР»СЏС‚РёРІРёСЃС‚СЃРєРёРµ С„РѕСЂРјСѓР»С‹
 //---------------------------------
-// Релятивистский фактор gamma=sqrt(1/(1-beta^2))
-// tEnergy - полная энергия частицы, Mass - её масса
+// Р РµР»СЏС‚РёРІРёСЃС‚СЃРєРёР№ С„Р°РєС‚РѕСЂ gamma=sqrt(1/(1-beta^2))
+// tEnergy - РїРѕР»РЅР°СЏ СЌРЅРµСЂРіРёСЏ С‡Р°СЃС‚РёС†С‹, Mass - РµС‘ РјР°СЃСЃР°
 inline double gamma(double Mass, double tEnergy)
 {
    return tEnergy / Mass;
-} // Скорость в единицах скорости света beta_squared=(velocity/light velocity)^2
-// tEnergy - полная энергия частицы, Mass - её масса
+} // РЎРєРѕСЂРѕСЃС‚СЊ РІ РµРґРёРЅРёС†Р°С… СЃРєРѕСЂРѕСЃС‚Рё СЃРІРµС‚Р° beta_squared=(velocity/light velocity)^2
+// tEnergy - РїРѕР»РЅР°СЏ СЌРЅРµСЂРіРёСЏ С‡Р°СЃС‚РёС†С‹, Mass - РµС‘ РјР°СЃСЃР°
 double betasq(double Mass, double tEnergy) // 
 {
    double g_1 = Mass / tEnergy;
    return 1 - SQUARE(g_1);
 } // (beta*gamma) squared = P/M
-// tEnergy - полная энергия частицы, Mass - её масса
+// tEnergy - РїРѕР»РЅР°СЏ СЌРЅРµСЂРіРёСЏ С‡Р°СЃС‚РёС†С‹, Mass - РµС‘ РјР°СЃСЃР°
 double betagammasq(double Mass, double tEnergy)
 {
    double g = gamma(Mass, tEnergy);
@@ -37,13 +37,13 @@ double betagammasq(double Mass, double tEnergy)
 } //=================================
 // Standard Random Numbers functions
 //---------------------------------
-// Гауссово распределённая случайная величина
-// Получаем 2-е случайные величины r1 r2, стандартному нормальному закону
-// (Гауссиана со средним = 0 и стандартным отклонением 1)
-// методом Marsaglia
-// Две потому что таково устройство метода
-// см. http://en.wikipedia.org/wiki/Marsaglia_polar_method
-// Генератор равномерно распределённых чисел rng.rnd() должен давать [0,1] -?
+// Р“Р°СѓСЃСЃРѕРІРѕ СЂР°СЃРїСЂРµРґРµР»С‘РЅРЅР°СЏ СЃР»СѓС‡Р°Р№РЅР°СЏ РІРµР»РёС‡РёРЅР°
+// РџРѕР»СѓС‡Р°РµРј 2-Рµ СЃР»СѓС‡Р°Р№РЅС‹Рµ РІРµР»РёС‡РёРЅС‹ r1 r2, СЃС‚Р°РЅРґР°СЂС‚РЅРѕРјСѓ РЅРѕСЂРјР°Р»СЊРЅРѕРјСѓ Р·Р°РєРѕРЅСѓ
+// (Р“Р°СѓСЃСЃРёР°РЅР° СЃРѕ СЃСЂРµРґРЅРёРј = 0 Рё СЃС‚Р°РЅРґР°СЂС‚РЅС‹Рј РѕС‚РєР»РѕРЅРµРЅРёРµРј 1)
+// РјРµС‚РѕРґРѕРј Marsaglia
+// Р”РІРµ РїРѕС‚РѕРјСѓ С‡С‚Рѕ С‚Р°РєРѕРІРѕ СѓСЃС‚СЂРѕР№СЃС‚РІРѕ РјРµС‚РѕРґР°
+// СЃРј. http://en.wikipedia.org/wiki/Marsaglia_polar_method
+// Р“РµРЅРµСЂР°С‚РѕСЂ СЂР°РІРЅРѕРјРµСЂРЅРѕ СЂР°СЃРїСЂРµРґРµР»С‘РЅРЅС‹С… С‡РёСЃРµР» rng.rnd() РґРѕР»Р¶РµРЅ РґР°РІР°С‚СЊ [0,1] -?
 int GaussStandardRnd_by_Marsaglia(mcRng& rng, double& r1, double& r2)
 {
    double x, y, s2;
@@ -57,3 +57,7 @@ int GaussStandardRnd_by_Marsaglia(mcRng& rng, double& r1, double& r2)
    r1 = x * r1;
    return 0;
 }
+
+
+
+

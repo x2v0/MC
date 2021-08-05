@@ -1,4 +1,4 @@
-#include "mcScoreAcceleratedBeam.h"
+п»ї#include "mcScoreAcceleratedBeam.h"
 #include "mcParticle.h"
 
 mcScoreAcceleratedBeam::mcScoreAcceleratedBeam(const char* module_name, int nThreads, enum mc_particle_t ptype, int ne,
@@ -8,7 +8,7 @@ mcScoreAcceleratedBeam::mcScoreAcceleratedBeam(const char* module_name, int nThr
                                                                  emax_(emax), rmax_(rmax), skipped_energy_(0)
 {
    if (nThreads != 1)
-      throw std::exception("mcScoreAcceleratedBeam: данный скоринг поддерживает только один поток");
+      throw std::exception("mcScoreAcceleratedBeam: РґР°РЅРЅС‹Р№ СЃРєРѕСЂРёРЅРі РїРѕРґРґРµСЂР¶РёРІР°РµС‚ С‚РѕР»СЊРєРѕ РѕРґРёРЅ РїРѕС‚РѕРє");
    de_ = (emax_ - emin_) / ne_;
    dr_ = rmax_ / nr_;
    thetmax_ = thetmax * PI / 180.0;
@@ -39,13 +39,13 @@ mcScoreAcceleratedBeam::mcScoreAcceleratedBeam(const char* module_name, int nThr
 void mcScoreAcceleratedBeam::ScoreFluence(const mcParticle& particle)
 {
    if (particle.t != ptype_)
-      return; // Координаты
+      return; // РљРѕРѕСЂРґРёРЅР°С‚С‹
    double e = particle.ke;
    double w = e * particle.weight;
    double x = particle.p(0), y = particle.p(1);
    double r = sqrt(x * x + y * y);
    double vx = particle.u(0), vy = particle.u(1), vz = particle.u(2);
-   etotal_[0] += w; // Рассчитываем индексы
+   etotal_[0] += w; // Р Р°СЃСЃС‡РёС‚С‹РІР°РµРј РёРЅРґРµРєСЃС‹
    int ie = int((particle.ke - emin_) / de_);
    if (ie < 0 || ie >= ne_) {
       skipped_energy_ += w;
@@ -96,7 +96,7 @@ void mcScoreAcceleratedBeam::ScoreFluence(const mcParticle& particle)
    if (ivy < 0 || ivy >= 2 * nthet_) {
       skipped_energy_ += w;
       return;
-   } // Наполняем массивы
+   } // РќР°РїРѕР»РЅСЏРµРј РјР°СЃСЃРёРІС‹
    espec_[ie] += w;
    rspec_[ir] += w;
    aspec_[iva] += w;
@@ -111,7 +111,7 @@ void mcScoreAcceleratedBeam::ScoreFluence(const mcParticle& particle)
 void mcScoreAcceleratedBeam::dumpStatistic(ostream& os) const
 {
    mcScore::dumpStatistic(os);
-   os << "Распределение частиц, падающих на радиационную мишень электронного ускорителя" << endl << endl;
+   os << "Р Р°СЃРїСЂРµРґРµР»РµРЅРёРµ С‡Р°СЃС‚РёС†, РїР°РґР°СЋС‰РёС… РЅР° СЂР°РґРёР°С†РёРѕРЅРЅСѓСЋ РјРёС€РµРЅСЊ СЌР»РµРєС‚СЂРѕРЅРЅРѕРіРѕ СѓСЃРєРѕСЂРёС‚РµР»СЏ" << endl << endl;
    os << "ptype_:\t" << ptype_ << endl;
    os << "ne_:\t" << ne_ << endl;
    os << "nr_:\t" << nr_ << endl;
@@ -122,38 +122,38 @@ void mcScoreAcceleratedBeam::dumpStatistic(ostream& os) const
    os << "rmax_:\t" << rmax_ << endl;
    os << "thetmax_:\t" << thetmax_ << endl;
    os << endl;
-   os << "Суммарная энергия:\t" << etotal_[0] << endl;
-   os << "Пропущенная энергия:\t" << skipped_energy_ << endl;
+   os << "РЎСѓРјРјР°СЂРЅР°СЏ СЌРЅРµСЂРіРёСЏ:\t" << etotal_[0] << endl;
+   os << "РџСЂРѕРїСѓС‰РµРЅРЅР°СЏ СЌРЅРµСЂРіРёСЏ:\t" << skipped_energy_ << endl;
    int i, j;
-   os << endl << "Суммарный энергетический спектр" << endl << endl;
+   os << endl << "РЎСѓРјРјР°СЂРЅС‹Р№ СЌРЅРµСЂРіРµС‚РёС‡РµСЃРєРёР№ СЃРїРµРєС‚СЂ" << endl << endl;
    for (i = 0; i < static_cast<int>(espec_.size()); i++)
       os << "\t" << emin_ + (i + 0.5) * de_;
    os << endl;
    for (i = 0; i < static_cast<int>(espec_.size()); i++)
       os << "\t" << espec_[i];
    os << endl;
-   os << endl << "Распределение энергии по радиусу" << endl << endl;
+   os << endl << "Р Р°СЃРїСЂРµРґРµР»РµРЅРёРµ СЌРЅРµСЂРіРёРё РїРѕ СЂР°РґРёСѓСЃСѓ" << endl << endl;
    for (i = 0; i < static_cast<int>(rspec_.size()); i++)
       os << "\t" << (i + 0.5) * dr_;
    os << endl;
    for (i = 0; i < static_cast<int>(rspec_.size()); i++)
       os << "\t" << rspec_[i] / (2 * i + 1);
    os << endl;
-   os << endl << "Распределение энергии по азимуту положения" << endl << endl;
+   os << endl << "Р Р°СЃРїСЂРµРґРµР»РµРЅРёРµ СЌРЅРµСЂРіРёРё РїРѕ Р°Р·РёРјСѓС‚Сѓ РїРѕР»РѕР¶РµРЅРёСЏ" << endl << endl;
    for (i = 0; i < static_cast<int>(aspec_.size()); i++)
       os << "\t" << (i + 0.5) * daxial_ * 180 / PI;
    os << endl;
    for (i = 0; i < static_cast<int>(aspec_.size()); i++)
       os << "\t" << aspec_[i];
    os << endl;
-   os << endl << "Распределение энергии по направлению" << endl << endl;
+   os << endl << "Р Р°СЃРїСЂРµРґРµР»РµРЅРёРµ СЌРЅРµСЂРіРёРё РїРѕ РЅР°РїСЂР°РІР»РµРЅРёСЋ" << endl << endl;
    for (i = 0; i < static_cast<int>(tspec_.size()); i++)
       os << "\t" << (i + 0.5) * dthet_ * 180 / PI;
    os << endl;
    for (i = 0; i < static_cast<int>(tspec_.size()); i++)
       os << "\t" << tspec_[i] / (2 * i + 1);
    os << endl;
-   os << endl << "Энергетические спектры в зависимости от радиуса" << endl << endl;
+   os << endl << "Р­РЅРµСЂРіРµС‚РёС‡РµСЃРєРёРµ СЃРїРµРєС‚СЂС‹ РІ Р·Р°РІРёСЃРёРјРѕСЃС‚Рё РѕС‚ СЂР°РґРёСѓСЃР°" << endl << endl;
    for (i = 0; i < static_cast<int>(espec_.size()); i++)
       os << "\t" << emin_ + (i + 0.5) * de_;
    os << endl;
@@ -163,7 +163,7 @@ void mcScoreAcceleratedBeam::dumpStatistic(ostream& os) const
          os << "\t" << evr_[i][j];
       os << endl;
    }
-   os << endl << "Энергетические спектры в зависимости от азимута" << endl << endl;
+   os << endl << "Р­РЅРµСЂРіРµС‚РёС‡РµСЃРєРёРµ СЃРїРµРєС‚СЂС‹ РІ Р·Р°РІРёСЃРёРјРѕСЃС‚Рё РѕС‚ Р°Р·РёРјСѓС‚Р°" << endl << endl;
    for (i = 0; i < static_cast<int>(aspec_.size()); i++)
       os << "\t" << emin_ + (i + 0.5) * de_;
    os << endl;
@@ -173,7 +173,7 @@ void mcScoreAcceleratedBeam::dumpStatistic(ostream& os) const
          os << "\t" << eva_[i][j];
       os << endl;
    }
-   os << endl << "Угловые распределения в зависимости от азимута" << endl << endl;
+   os << endl << "РЈРіР»РѕРІС‹Рµ СЂР°СЃРїСЂРµРґРµР»РµРЅРёСЏ РІ Р·Р°РІРёСЃРёРјРѕСЃС‚Рё РѕС‚ Р°Р·РёРјСѓС‚Р°" << endl << endl;
    for (i = 0; i < static_cast<int>(tspec_.size()); i++)
       os << "\t" << (i + 0.5) * dthet_ * 180 / PI;
    os << endl;
@@ -183,7 +183,7 @@ void mcScoreAcceleratedBeam::dumpStatistic(ostream& os) const
          os << "\t" << tva_[i][j] / (2 * j + 1);
       os << endl;
    }
-   os << endl << "Поток энергии в зависимости отположения" << endl << endl;
+   os << endl << "РџРѕС‚РѕРє СЌРЅРµСЂРіРёРё РІ Р·Р°РІРёСЃРёРјРѕСЃС‚Рё РѕС‚РїРѕР»РѕР¶РµРЅРёСЏ" << endl << endl;
    for (i = -nr_; i < nr_; i++)
       os << "\t" << (i + 0.5) * dr_;
    os << endl;
@@ -193,7 +193,7 @@ void mcScoreAcceleratedBeam::dumpStatistic(ostream& os) const
          os << "\t" << wvxy_[i][j];
       os << endl;
    }
-   os << endl << "Поток энергии в зависимости от угла" << endl << endl;
+   os << endl << "РџРѕС‚РѕРє СЌРЅРµСЂРіРёРё РІ Р·Р°РІРёСЃРёРјРѕСЃС‚Рё РѕС‚ СѓРіР»Р°" << endl << endl;
    for (i = -nthet_; i < nthet_; i++)
       os << "\t" << (i + 0.5) * dthet_ * 180 / PI;
    os << endl;
@@ -204,3 +204,6 @@ void mcScoreAcceleratedBeam::dumpStatistic(ostream& os) const
       os << endl;
    }
 }
+
+
+

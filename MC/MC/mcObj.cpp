@@ -1,4 +1,4 @@
-#include "mcObj.h"
+﻿#include "mcObj.h"
 
 mcObj::mcObj(void) : red_(0.5), green_(0.5), blue_(0.5), transparancy_(0.)
 {
@@ -26,3 +26,6 @@ ostream& operator <<(ostream& os, const mcObj& o)
    os << "Color (r,g,b,t):\t" << o.red_ << '\t' << o.green_ << '\t' << o.blue_ << '\t' << o.transparancy_ << endl;
    return os;
 }
+
+
+

@@ -67,3 +67,6 @@ protected:
    double step_;
    double* data_;
 };
+
+
+
